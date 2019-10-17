@@ -1,37 +1,37 @@
 package com.matera.cursoferias.digitalbank.domain.entity;
 
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
-import com.matera.cursoferias.digitalbank.domain.commons.Transacao;
+import com.matera.cursoferias.digitalbank.domain.commons.Lancamento;
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
 @Entity
 public class Transferencia extends EntidadeBase {
 
-	@Embedded
-	private Transacao transacao;
+    @OneToOne
+	@JoinColumn(name = "id_lancamento_debito")
+	private Lancamento lancamentoDebito;
 
-	@ManyToOne
-	@JoinColumn(name = "id_conta_destino")
-	private Conta contaDestino;
+    @OneToOne
+	@JoinColumn(name = "id_lancamento_credito")
+    private Lancamento lancamentoCredito;
 
-	public Transacao getTransacao() {
-		return transacao;
-	}
+    public Lancamento getLancamentoDebito() {
+        return lancamentoDebito;
+    }
 
-	public void setTransacao(Transacao transacao) {
-		this.transacao = transacao;
-	}
+    public void setLancamentoDebito(Lancamento lancamentoDebito) {
+        this.lancamentoDebito = lancamentoDebito;
+    }
 
-	public Conta getContaDestino() {
-		return contaDestino;
-	}
+    public Lancamento getLancamentoCredito() {
+        return lancamentoCredito;
+    }
 
-	public void setContaDestino(Conta contaDestino) {
-		this.contaDestino = contaDestino;
-	}
-	
+    public void setLancamentoCredito(Lancamento lancamentoCredito) {
+        this.lancamentoCredito = lancamentoCredito;
+    }
+
 }

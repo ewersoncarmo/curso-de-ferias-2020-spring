@@ -1,16 +1,15 @@
 package com.matera.cursoferias.digitalbank.domain.entity;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
-import com.matera.cursoferias.digitalbank.domain.commons.Transacao;
+import com.matera.cursoferias.digitalbank.domain.commons.Lancamento;
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
 @Entity
@@ -18,20 +17,20 @@ public class Conta extends EntidadeBase {
 
 	@Column(name = "numero_agencia")
 	private Integer numeroAgencia;
-	
+
 	@Column(name = "numero_conta")
 	private Long numeroConta;
-	
+
 	@Column
 	private BigDecimal saldo;
 
 	@OneToOne
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
-	
-	@Transient
-	private List<Transacao> transacoes;
-	
+
+	@OneToMany(mappedBy = "conta")
+	private List<Lancamento> lancamentos;
+
 	public Integer getNumeroAgencia() {
 		return numeroAgencia;
 	}
@@ -64,12 +63,12 @@ public class Conta extends EntidadeBase {
 		this.cliente = cliente;
 	}
 
-	public List<Transacao> getTransacoes() {
-		return Collections.unmodifiableList(transacoes);
-	}
+    public List<Lancamento> getLancamentos() {
+        return lancamentos;
+    }
 
-	public void addTransacao(Transacao transacao) {
-		this.transacoes.add(transacao);
-	}
+    public void setLancamentos(List<Lancamento> lancamentos) {
+        this.lancamentos = lancamentos;
+    }
 
 }

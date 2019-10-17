@@ -1,13 +1,16 @@
 package com.matera.cursoferias.digitalbank.domain.enumerator;
 
-public enum Natureza {
+public enum TipoLancamento {
 
-    CREDITO("C"),
-    DEBITO("D");
+    DEPOSITO("D"),
+    SAQUE("S"),
+    TRANSFERENCIA("T"),
+    PAGAMENTO("P"),
+    ESTORNO("E");
 
     private String codigo;
 
-    private Natureza(String codigo) {
+    private TipoLancamento(String codigo) {
         this.codigo = codigo;
     }
 
