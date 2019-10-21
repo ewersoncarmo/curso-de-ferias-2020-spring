@@ -1,24 +1,40 @@
 package com.matera.cursoferias.digitalbank.controller.base;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.matera.cursoferias.digitalbank.dto.response.ErroResponseDTO;
-import com.matera.cursoferias.digitalbank.util.BusinessException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
+import com.matera.cursoferias.digitalbank.util.exceptionhandler.BusinessExceptionHandler;
+import com.matera.cursoferias.digitalbank.util.exceptionhandler.InvalidFormatExceptionHandler;
+import com.matera.cursoferias.digitalbank.util.exceptionhandler.MethodArgumentNotValidExceptionHandler;
+import com.matera.cursoferias.digitalbank.util.exceptions.BusinessException;
 
 public class ControllerBase {
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({BusinessException.class})
-	public ErroResponseDTO handleBusinessException(BusinessException e) {
-		return ErroResponseDTO.withError(e.getMessage());
-	}
+	@Autowired
+	private BusinessExceptionHandler businessExceptionHandler;
 	
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({MethodArgumentNotValidException.class}) 
-	public ErroResponseDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-		return ErroResponseDTO.withError(e.getBindingResult().getFieldErrors());
+	@Autowired
+	private MethodArgumentNotValidExceptionHandler methodArgumentNotValidExceptionHandler;
+	
+	@Autowired
+	private InvalidFormatExceptionHandler invalidFormatExceptionHandler;
+	
+	@ExceptionHandler({BusinessException.class})
+	public ResponseEntity<ResponseDTO<Object>> handleException(BusinessException e) {
+		return businessExceptionHandler.handleException(e);
 	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseDTO<Object>> handleException(MethodArgumentNotValidException e) {
+		return methodArgumentNotValidExceptionHandler.handleException(e);
+    }
+	
+	@ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<ResponseDTO<Object>> handleException(InvalidFormatException e) {
+		return invalidFormatExceptionHandler.handleException(e);
+    }
 }

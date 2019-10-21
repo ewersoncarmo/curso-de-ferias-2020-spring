@@ -1,41 +1,39 @@
 package com.matera.cursoferias.digitalbank.dto.response;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import org.springframework.validation.FieldError;
-
+@JsonInclude(value = Include.NON_NULL)
 public class ErroResponseDTO {
 
-	private List<String> erros;
+	private String campo;
+	private String mensagem;
+
+	public ErroResponseDTO() {}
 	
-	public static ErroResponseDTO buildError(List<String> listaErros) {
-		ErroResponseDTO erroResponseDTO = new ErroResponseDTO();
-		erroResponseDTO.setErros(listaErros);
-		
-		return erroResponseDTO;
-	}
-	
-	public static ErroResponseDTO withError(String erro) {
-		List<String> listaErros = new ArrayList<>();
-		listaErros.add(erro);
-		
-		return buildError(listaErros);
-	}
-	
-	public static ErroResponseDTO withError(List<FieldError> erros) {
-		List<String> listaErros = new ArrayList<>();
-		erros.forEach(erro -> listaErros.add(String.format("%s: %s", erro.getField(), erro.getDefaultMessage())));
-		
-		return buildError(listaErros);
+	public ErroResponseDTO(String campo, String mensagem) {
+		this.campo = campo;
+		this.mensagem = mensagem;
 	}
 
-	public List<String> getErros() {
-		return erros;
+	public ErroResponseDTO(String mensagem) {
+		this.mensagem = mensagem;
 	}
 
-	public void setErros(List<String> erros) {
-		this.erros = erros;
+	public String getCampo() {
+		return campo;
+	}
+
+	public void setCampo(String campo) {
+		this.campo = campo;
+	}
+
+	public String getMensagem() {
+		return mensagem;
+	}
+	
+	public void setMensagem(String mensagem) {
+		this.mensagem = mensagem;
 	}
 	
 }

@@ -19,7 +19,7 @@ public class Cliente extends EntidadeBase {
 	@Column
 	private Long telefone;
 	
-	@Column(name = "renda_mensal")
+	@Column
 	private BigDecimal rendaMensal;
 	
 	@Column
@@ -36,6 +36,9 @@ public class Cliente extends EntidadeBase {
 	
 	@Column
 	private String cidade;
+	
+	@Column
+	private String estado;
 	
 	@Column
 	private String cep;
@@ -110,6 +113,14 @@ public class Cliente extends EntidadeBase {
 
 	public void setCidade(String cidade) {
 		this.cidade = cidade;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 	public String getCep() {

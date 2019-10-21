@@ -3,7 +3,6 @@ package com.matera.cursoferias.digitalbank.dto.request;
 import java.math.BigDecimal;
 
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -11,46 +10,45 @@ import org.hibernate.validator.constraints.br.CPF;
 
 public class ClienteRequestDTO {
 
-	@NotNull(message = "Nome é de preenchimento obrigatório.")
-	@NotBlank(message = "Nome é de preenchimento obrigatório.")
-	@Size(max = 100, message = "Nome não pode ultrapassar 100 caracteres.")
+	@NotNull
+	@Size(max = 100)
 	private String nome;
 	
-	@NotNull(message = "CPF é de preenchimento obrigatório.")
-	@CPF(message = "CPF inválido.")
+	@NotNull
+	@CPF
 	private String cpf;
 
-	@NotNull(message = "Telefone é de preenchimento obrigatório.")
+	@NotNull
 	private Long telefone;
 	
-	@NotNull(message = "Renda Mensal é de preenchimento obrigatório.")
-	@Digits(integer = 18, fraction = 2, message = "Renda Mensal tem um valor inválido.")
+	@NotNull
+	@Digits(integer = 18, fraction = 2)
 	private BigDecimal rendaMensal;
 	
-	@NotNull(message = "Logradouro é de preenchimento obrigatório.")
-	@NotBlank(message = "Logradouro é de preenchimento obrigatório.")
-	@Size(max = 100, message = "Logradouro não pode ultrapassar 100 caracteres.")
+	@NotNull
+	@Size(max = 100)
 	private String logradouro;
 	
-	@NotNull(message = "Número é de preenchimento obrigatório.")
+	@NotNull
 	private Integer numero;
 	
-	@Size(max = 100, message = "Complemento não pode ultrapassar 100 caracteres.")
+	@Size(max = 100)
 	private String complemento;
 	
-	@NotNull(message = "Bairro é de preenchimento obrigatório.")
-	@NotBlank(message = "Bairro é de preenchimento obrigatório.")
-	@Size(max = 100, message = "Bairro não pode ultrapassar 100 caracteres.")
+	@NotNull
+	@Size(max = 100)
 	private String bairro;
 	
-	@NotNull(message = "Cidade é de preenchimento obrigatório.")
-	@NotBlank(message = "Cidade é de preenchimento obrigatório.")
-	@Size(max = 100, message = "Cidade não pode ultrapassar 100 caracteres.")
+	@NotNull
+	@Size(max = 100)
 	private String cidade;
 	
-	@NotNull(message = "CEP é de preenchimento obrigatório.")
-	@NotBlank(message = "CEP é de preenchimento obrigatório.")
-	@Size(max = 8, message = "CEP não pode ultrapassar 8 caracteres.")
+	@NotNull
+	@Size(min = 2, max = 2)
+	private String estado;
+	
+	@NotNull
+	@Size(max = 8)
 	private String cep;
 
 	public String getNome() {
@@ -123,6 +121,14 @@ public class ClienteRequestDTO {
 
 	public void setCidade(String cidade) {
 		this.cidade = cidade;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 	public String getCep() {

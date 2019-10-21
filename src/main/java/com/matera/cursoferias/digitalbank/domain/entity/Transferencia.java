@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import com.matera.cursoferias.digitalbank.domain.commons.Lancamento;
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
 @Entity

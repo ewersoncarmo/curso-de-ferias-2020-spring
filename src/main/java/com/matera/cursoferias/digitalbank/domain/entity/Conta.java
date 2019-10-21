@@ -9,16 +9,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.matera.cursoferias.digitalbank.domain.commons.Lancamento;
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
 @Entity
 public class Conta extends EntidadeBase {
 
-	@Column(name = "numero_agencia")
-	private Integer numeroAgencia;
-
-	@Column(name = "numero_conta")
+	@Column
 	private Long numeroConta;
 
 	@Column
@@ -30,14 +26,6 @@ public class Conta extends EntidadeBase {
 
 	@OneToMany(mappedBy = "conta")
 	private List<Lancamento> lancamentos;
-
-	public Integer getNumeroAgencia() {
-		return numeroAgencia;
-	}
-
-	public void setNumeroAgencia(Integer numeroAgencia) {
-		this.numeroAgencia = numeroAgencia;
-	}
 
 	public Long getNumeroConta() {
 		return numeroConta;

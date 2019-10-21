@@ -1,24 +1,31 @@
-package com.matera.cursoferias.digitalbank.domain.commons;
+package com.matera.cursoferias.digitalbank.domain.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.matera.cursoferias.digitalbank.domain.entity.Conta;
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
-import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
-import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 
 @Entity
 public class Lancamento extends EntidadeBase {
 
+	@Column
 	private LocalDate data;
+	
+	@Column
 	private BigDecimal valor;
-	private Natureza natureza;
-	private TipoLancamento tipoLancamento;
+	
+	@Column
+	private String natureza;
+	
+	@Column
+	private String tipoLancamento;
+	
+	@Column
 	private String descricao;
 
 	@ManyToOne
@@ -41,19 +48,19 @@ public class Lancamento extends EntidadeBase {
 		this.valor = valor;
 	}
 
-	public Natureza getNatureza() {
+	public String getNatureza() {
 		return natureza;
 	}
 
-	public void setNatureza(Natureza natureza) {
+	public void setNatureza(String natureza) {
 		this.natureza = natureza;
 	}
 
-	public TipoLancamento getTipoLancamento() {
+	public String getTipoLancamento() {
         return tipoLancamento;
     }
 
-    public void setTipoLancamento(TipoLancamento tipoLancamento) {
+    public void setTipoLancamento(String tipoLancamento) {
         this.tipoLancamento = tipoLancamento;
     }
 

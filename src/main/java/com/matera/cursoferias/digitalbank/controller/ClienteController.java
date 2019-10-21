@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.matera.cursoferias.digitalbank.controller.base.ControllerBase;
 import com.matera.cursoferias.digitalbank.dto.request.ClienteRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
+import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
 import com.matera.cursoferias.digitalbank.service.ClienteService;
 
 @RestController
@@ -23,11 +24,11 @@ public class ClienteController extends ControllerBase {
 	private ClienteService clienteService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<ContaResponseDTO> post(@Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
-		ContaResponseDTO contaResponseDTO = clienteService.criarClienteEConta(clienteRequestDTO);
+	public ResponseEntity<ResponseDTO<ContaResponseDTO>> criarCadastro(@Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
+		ContaResponseDTO contaResponseDTO = clienteService.criarCadastro(clienteRequestDTO);
 		
 		return ResponseEntity
 				.status(HttpStatus.CREATED)
-				.body(contaResponseDTO);
+				.body(new ResponseDTO<ContaResponseDTO>(contaResponseDTO));
 	}
 }

@@ -1,5 +1,7 @@
 package com.matera.cursoferias.digitalbank.domain.enumerator;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum TipoLancamento {
 
     DEPOSITO("D"),
@@ -18,4 +20,9 @@ public enum TipoLancamento {
         return codigo;
     }
 
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(codigo);
+    }
 }

@@ -1,0 +1,216 @@
+{
+	"info": {
+		"_postman_id": "3a9a77be-3feb-4013-9442-49c73618312d",
+		"name": "DigitalBank - Apis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "Conta 1",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nome\": \"João\",\n\t\"cpf\": \"22985315875\",\n\t\"telefone\": 991059200,\n\t\"rendaMensal\": 10000.00,\n\t\"logradouro\": \"Rua Nardina Rodrigues Johansen\",\n\t\"numero\": 159,\n\t\"complemento\": \"Bloco 3, Apto 402\",\n\t\"bairro\": \"Loteamento Malbec\",\n\t\"cidade\": \"Maringá\",\n\t\"estado\": \"PR\",\n\t\"cep\": \"87005002\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/clientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Conta 2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nome\": \"Pedro\",\n\t\"cpf\": \"05223551966\",\n\t\"telefone\": 997115453,\n\t\"rendaMensal\": 10000.00,\n\t\"logradouro\": \"Rua Nardina Rodrigues Johansen\",\n\t\"numero\": 159,\n\t\"complemento\": \"Bloco 3, Apto 402\",\n\t\"bairro\": \"Loteamento Malbec\",\n\t\"cidade\": \"Maringá\",\n\t\"estado\": \"PR\",\n\t\"cep\": \"87005002\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/clientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Conta",
+			"item": [
+				{
+					"name": "Efetuar lançamento",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"valor\": 150.00,\n\t\"natureza\": \"C\",\n\t\"tipoLancamento\": \"D\",\n\t\"descricao\": \"Deposito\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/contas/1/efetuarlancamento",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"contas",
+								"1",
+								"efetuarlancamento"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Efetuar transferência",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"valor\": 150.00,\n\t\"natureza\": \"C\",\n\t\"tipoLancamento\": \"D\",\n\t\"descricao\": \"Deposito\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/contas/1/efetuarlancamento",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"contas",
+								"1",
+								"efetuarlancamento"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar extrato completo",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"numeroConta\": 997115453,\n\t\"valor\": 35.00,\n\t\"descricao\": \"Churrasco\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/contas/1/consultarextratocompleto",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"contas",
+								"1",
+								"consultarextratocompleto"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
