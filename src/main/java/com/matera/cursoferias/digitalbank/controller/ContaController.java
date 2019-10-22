@@ -50,7 +50,7 @@ public class ContaController extends ControllerBase {
 	
 	@RequestMapping(value = "/{id}/consultarextratocompleto", method = RequestMethod.GET)
 	public ResponseEntity<ResponseDTO<List<LancamentoResponseDTO>>> consultarextratocompleto(@PathVariable("id") Long id) {
-		List<LancamentoResponseDTO> lancamentosResponseDTO = contaService.consultarextratocompleto(id);
+		List<LancamentoResponseDTO> lancamentosResponseDTO = contaService.consultarExtratoCompleto(id);
 		
 		return ResponseEntity
 				.status(HttpStatus.OK) 

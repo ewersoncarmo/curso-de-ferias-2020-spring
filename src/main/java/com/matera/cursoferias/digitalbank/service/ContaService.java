@@ -25,7 +25,7 @@ public class ContaService {
 		return contaBusiness.efetuarTransferencia(id, transferenciaRequestDTO);
 	}
 
-	public List<LancamentoResponseDTO> consultarextratocompleto(Long id) {
-		return contaBusiness.consultarextratocompleto(id);
+	public List<LancamentoResponseDTO> consultarExtratoCompleto(Long id) {
+		return contaBusiness.consultarExtratoCompleto(id);
 	}
 }

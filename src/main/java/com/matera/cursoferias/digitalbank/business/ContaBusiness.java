@@ -1,8 +1,6 @@
 package com.matera.cursoferias.digitalbank.business;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,17 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.matera.cursoferias.digitalbank.domain.entity.Cliente;
 import com.matera.cursoferias.digitalbank.domain.entity.Conta;
-import com.matera.cursoferias.digitalbank.domain.entity.Lancamento;
-import com.matera.cursoferias.digitalbank.domain.entity.Transferencia;
 import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
-import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.TransferenicaRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.LancamentoResponseDTO;
 import com.matera.cursoferias.digitalbank.repository.ContaRepository;
-import com.matera.cursoferias.digitalbank.repository.LancamentoRepository;
-import com.matera.cursoferias.digitalbank.repository.TransferenciaRepository;
 import com.matera.cursoferias.digitalbank.util.exceptions.BusinessException;
 
 @Component
@@ -32,12 +25,9 @@ public class ContaBusiness {
 	private ContaRepository contaRepository;
 	
 	@Autowired
-	private LancamentoRepository lancamentoRepository;
+	private LancamentoBusiness lancamentoBusiness;
 	
-	@Autowired
-	private TransferenciaRepository transferenciaRepository;
-	
-	public ContaResponseDTO criarConta(Cliente cliente) {
+	public ContaResponseDTO cadastrar(Cliente cliente) {
 		validar(cliente);
 		
 		Conta conta = new Conta();
@@ -47,7 +37,7 @@ public class ContaBusiness {
 		
 		conta = contaRepository.save(conta);
 
-		return contaEntidadeParaContaResponseDTO(conta);
+		return entidadeParaResponseDTO(conta);
 	}
 
 	@Transactional
@@ -55,19 +45,11 @@ public class ContaBusiness {
 		Conta conta = findById(id);
 		conta.setSaldo(calcularSaldo(lancamentoRequestDTO.getNatureza(), lancamentoRequestDTO.getValor(), conta.getSaldo()));
 		
-		Lancamento lancamento = new Lancamento();
-		lancamento.setData(LocalDate.now());
-		lancamento.setValor(lancamentoRequestDTO.getValor());
-		lancamento.setNatureza(lancamentoRequestDTO.getNatureza().getCodigo());
-		lancamento.setTipoLancamento(lancamentoRequestDTO.getTipoLancamento().getCodigo());
-		lancamento.setDescricao(lancamentoRequestDTO.getDescricao());
-		lancamento.setConta(conta);
+		lancamentoBusiness.efetuarLancamento(lancamentoRequestDTO, conta);
 		
-		lancamentoRepository.save(lancamento);
-
-		contaRepository.save(conta);
+		conta = contaRepository.save(conta);
 		
-		return contaEntidadeParaContaResponseDTO(conta);
+		return entidadeParaResponseDTO(conta);
 	}
 
 	@Transactional
@@ -84,41 +66,13 @@ public class ContaBusiness {
 
 		contaRepository.saveAll(Arrays.asList(contaDebito, contaCredito));
 		
-		Lancamento lancamentoDebito = new Lancamento();
-		lancamentoDebito.setData(LocalDate.now());
-		lancamentoDebito.setValor(transferenciaRequestDTO.getValor());
-		lancamentoDebito.setNatureza(Natureza.DEBITO.getCodigo());
-		lancamentoDebito.setTipoLancamento(TipoLancamento.TRANSFERENCIA.getCodigo());
-		lancamentoDebito.setDescricao(transferenciaRequestDTO.getDescricao());
-		lancamentoDebito.setConta(contaDebito);
-
-		Lancamento lancamentoCredito = new Lancamento();
-		lancamentoCredito.setData(LocalDate.now());
-		lancamentoCredito.setValor(transferenciaRequestDTO.getValor());
-		lancamentoCredito.setNatureza(Natureza.CREDITO.getCodigo());
-		lancamentoCredito.setTipoLancamento(TipoLancamento.TRANSFERENCIA.getCodigo());
-		lancamentoCredito.setDescricao(transferenciaRequestDTO.getDescricao());
-		lancamentoCredito.setConta(contaCredito);
+		lancamentoBusiness.efetuarTransferencia(contaDebito, contaCredito, transferenciaRequestDTO);
 		
-		lancamentoRepository.saveAll(Arrays.asList(lancamentoDebito, lancamentoCredito));
-		
-		Transferencia transferencia = new Transferencia();
-		transferencia.setLancamentoDebito(lancamentoDebito);
-		transferencia.setLancamentoCredito(lancamentoCredito);
-		
-		transferenciaRepository.save(transferencia);
-		
-		return contaEntidadeParaContaResponseDTO(contaDebito);
+		return entidadeParaResponseDTO(contaDebito);
 	}
 
-	public List<LancamentoResponseDTO> consultarextratocompleto(Long id) {
-		findById(id);
-		List<Lancamento> lancamentos = lancamentoRepository.findByConta_Id(id);
-		
-		List<LancamentoResponseDTO> lancamentoResponseDTO = new ArrayList<>();
-		lancamentos.forEach(l -> lancamentoResponseDTO.add(lancamentoEntidadeParaLancamentoResponseDTO(l)));
-		
-		return lancamentoResponseDTO;
+	public List<LancamentoResponseDTO> consultarExtratoCompleto(Long id) {
+		return lancamentoBusiness.consultarExtratoCompleto(findById(id));
 	}
 	
 	private Conta findById(Long id) {
@@ -146,7 +100,7 @@ public class ContaBusiness {
 		return saldoFinal;
 	}
 	
-	private ContaResponseDTO contaEntidadeParaContaResponseDTO(Conta conta) {
+	private ContaResponseDTO entidadeParaResponseDTO(Conta conta) {
 		ContaResponseDTO contaResponseDTO = new ContaResponseDTO();
 		contaResponseDTO.setId(conta.getId());
 		contaResponseDTO.setNumeroConta(conta.getNumeroConta());
@@ -154,15 +108,5 @@ public class ContaBusiness {
 		
 		return contaResponseDTO;
 	}
-
-	private LancamentoResponseDTO lancamentoEntidadeParaLancamentoResponseDTO(Lancamento lancamento) {
-		LancamentoResponseDTO lancamentoResponseDTO = new LancamentoResponseDTO();
-		lancamentoResponseDTO.setData(lancamento.getData());
-		lancamentoResponseDTO.setValor(lancamento.getValor());
-		lancamentoResponseDTO.setNatureza(lancamento.getNatureza());
-		lancamentoResponseDTO.setTipoLancamento(lancamento.getTipoLancamento());
-		lancamentoResponseDTO.setDescricao(lancamento.getDescricao());
-		
-		return lancamentoResponseDTO;
-	}
+	
 }
