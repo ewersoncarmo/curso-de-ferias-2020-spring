@@ -1,7 +1,7 @@
 package com.matera.cursoferias.digitalbank.domain.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +14,10 @@ import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 public class Lancamento extends EntidadeBase {
 
 	@Column
-	private LocalDate data;
+	private String codigoAutenticacao;
+	
+	@Column
+	private LocalDateTime dataHora;
 	
 	@Column
 	private BigDecimal valor;
@@ -32,12 +35,20 @@ public class Lancamento extends EntidadeBase {
 	@JoinColumn(name = "id_conta")
 	private Conta conta;
 
-	public LocalDate getData() {
-		return data;
+	public String getCodigoAutenticacao() {
+		return codigoAutenticacao;
 	}
 
-	public void setData(LocalDate data) {
-		this.data = data;
+	public void setCodigoAutenticacao(String codigoAutenticacao) {
+		this.codigoAutenticacao = codigoAutenticacao;
+	}
+
+	public LocalDateTime getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(LocalDateTime dataHora) {
+		this.dataHora = dataHora;
 	}
 
 	public BigDecimal getValor() {

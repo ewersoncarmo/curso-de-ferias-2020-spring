@@ -8,6 +8,9 @@ import javax.validation.constraints.NotNull;
 public class TransferenicaRequestDTO {
 
 	@NotNull
+	private Integer numeroAgencia;
+	
+	@NotNull
 	private Long numeroConta;
 
 	@NotNull
@@ -15,6 +18,14 @@ public class TransferenicaRequestDTO {
 	private BigDecimal valor;
 	
 	private String descricao;
+
+	public Integer getNumeroAgencia() {
+		return numeroAgencia;
+	}
+
+	public void setNumeroAgencia(Integer numeroAgencia) {
+		this.numeroAgencia = numeroAgencia;
+	}
 
 	public Long getNumeroConta() {
 		return numeroConta;

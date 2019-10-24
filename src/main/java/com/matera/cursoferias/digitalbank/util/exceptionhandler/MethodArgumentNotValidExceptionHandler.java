@@ -14,13 +14,13 @@ import com.matera.cursoferias.digitalbank.dto.response.ErroResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
 
 @Component
-public class MethodArgumentNotValidExceptionHandler implements ExceptionHandler {
+public class MethodArgumentNotValidExceptionHandler implements ExceptionHandler<MethodArgumentNotValidException> {
 
 	@Override
-	public ResponseEntity<ResponseDTO<Object>> handleException(Exception e) {
+	public ResponseEntity<ResponseDTO<Object>> handleException(MethodArgumentNotValidException exception) {
 		List<ErroResponseDTO> erros = new ArrayList<>();
 
-		BindingResult bindingResult = ((MethodArgumentNotValidException) e).getBindingResult();
+		BindingResult bindingResult = exception.getBindingResult();
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {
 			String campo = fieldError.getField();
 			String mensagem = String.format("%s: %s", campo, fieldError.getDefaultMessage());

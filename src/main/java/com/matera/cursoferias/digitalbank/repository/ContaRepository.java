@@ -8,6 +8,6 @@ import com.matera.cursoferias.digitalbank.domain.entity.Conta;
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, Long> {
 
-	public Conta findByNumeroConta(Long numeroConta);
+	public Conta findByNumeroAgenciaAndNumeroConta(Integer numeroAgencia, Long numeroConta);
 
 }

@@ -81,6 +81,85 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Consultar",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nome\": \"Pedro\",\n\t\"cpf\": \"05223551966\",\n\t\"telefone\": 997115453,\n\t\"rendaMensal\": 10000.00,\n\t\"logradouro\": \"Rua Nardina Rodrigues Johansen\",\n\t\"numero\": 159,\n\t\"complemento\": \"Bloco 3, Apto 402\",\n\t\"bairro\": \"Loteamento Malbec\",\n\t\"cidade\": \"Maringá\",\n\t\"estado\": \"PR\",\n\t\"cep\": \"87005002\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/clientes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"clientes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nome\": \"Pedro\",\n\t\"cpf\": \"05223551966\",\n\t\"telefone\": 997115453,\n\t\"rendaMensal\": 10000.00,\n\t\"logradouro\": \"Rua\",\n\t\"numero\": 1,\n\t\"complemento\": \"Bloco\",\n\t\"bairro\": \"Loteamento\",\n\t\"cidade\": \"Mari\",\n\t\"estado\": \"SP\",\n\t\"cep\": \"87005001\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/clientes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"clientes",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -89,20 +168,20 @@
 			"name": "Conta",
 			"item": [
 				{
-					"name": "Efetuar lançamento",
+					"name": "Depositar",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
 								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"value": "application/json"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"valor\": 150.00,\n\t\"natureza\": \"C\",\n\t\"tipoLancamento\": \"D\",\n\t\"descricao\": \"Deposito\"\n}",
+							"raw": "{\n\t\"valor\": 100.00\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -110,7 +189,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/contas/1/efetuarlancamento",
+							"raw": "http://localhost:8080/api/v1/contas/1/depositar",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -121,14 +200,92 @@
 								"v1",
 								"contas",
 								"1",
-								"efetuarlancamento"
+								"depositar"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Efetuar transferência",
+					"name": "Sacar",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"valor\": 10.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/contas/1/sacar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"contas",
+								"1",
+								"sacar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pagar",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"valor\": 20.00,\n\t\"descricao\": \"Boleto\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/contas/1/pagar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"contas",
+								"1",
+								"pagar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transferir",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -141,7 +298,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"valor\": 150.00,\n\t\"natureza\": \"C\",\n\t\"tipoLancamento\": \"D\",\n\t\"descricao\": \"Deposito\"\n}",
+							"raw": "{\n\t\"numeroAgencia\": 1,\n\t\"numeroConta\": 997115453,\n\t\"valor\": 30,\n\t\"descricao\": \"Churrasco\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -149,7 +306,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/contas/1/efetuarlancamento",
+							"raw": "http://localhost:8080/api/v1/contas/1/transferir",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -160,7 +317,7 @@
 								"v1",
 								"contas",
 								"1",
-								"efetuarlancamento"
+								"transferir"
 							]
 						}
 					},
@@ -191,7 +348,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/contas/1/consultarextratocompleto",
+							"raw": "http://localhost:8080/api/v1/contas/1/lancamentos",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -202,7 +359,7 @@
 								"v1",
 								"contas",
 								"1",
-								"consultarextratocompleto"
+								"lancamentos"
 							]
 						}
 					},

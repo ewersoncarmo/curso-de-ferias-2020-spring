@@ -13,13 +13,13 @@ import com.matera.cursoferias.digitalbank.dto.response.ErroResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
 
 @Component
-public class InvalidFormatExceptionHandler implements ExceptionHandler {
+public class InvalidFormatExceptionHandler implements ExceptionHandler<InvalidFormatException> {
 
 	@Override
-	public ResponseEntity<ResponseDTO<Object>> handleException(Exception e) {
+	public ResponseEntity<ResponseDTO<Object>> handleException(InvalidFormatException exception) {
 		List<ErroResponseDTO> erros = new ArrayList<>();
 		
-		List<Reference> paths = ((InvalidFormatException) e).getPath();
+		List<Reference> paths = exception.getPath();
 		for (Reference path : paths) {
 			String campo = path.getFieldName();
 			String mensagem = String.format("%s: %s", campo, "O valor informado é inválido");

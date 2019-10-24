@@ -11,5 +11,4 @@ import com.matera.cursoferias.digitalbank.domain.entity.Lancamento;
 public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
 
 	public List<Lancamento> findByConta_Id(Long id);
-
 }

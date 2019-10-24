@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class ContaResponseDTO {
 
 	private Long id;
+	private Integer numeroAgencia;
 	private Long numeroConta;
 	private BigDecimal saldo;
 
@@ -14,6 +15,14 @@ public class ContaResponseDTO {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Integer getNumeroAgencia() {
+		return numeroAgencia;
+	}
+
+	public void setNumeroAgencia(Integer numeroAgencia) {
+		this.numeroAgencia = numeroAgencia;
 	}
 
 	public Long getNumeroConta() {

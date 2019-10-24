@@ -8,4 +8,5 @@ import com.matera.cursoferias.digitalbank.domain.entity.Transferencia;
 @Repository
 public interface TransferenciaRepository extends JpaRepository<Transferencia, Long> {
 
+
 }

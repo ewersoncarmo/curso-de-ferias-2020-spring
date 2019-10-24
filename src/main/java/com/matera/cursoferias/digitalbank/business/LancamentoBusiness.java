@@ -1,8 +1,9 @@
 package com.matera.cursoferias.digitalbank.business;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,8 +14,7 @@ import com.matera.cursoferias.digitalbank.domain.entity.Transferencia;
 import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
-import com.matera.cursoferias.digitalbank.dto.request.TransferenicaRequestDTO;
-import com.matera.cursoferias.digitalbank.dto.response.LancamentoResponseDTO;
+import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
 import com.matera.cursoferias.digitalbank.repository.LancamentoRepository;
 import com.matera.cursoferias.digitalbank.repository.TransferenciaRepository;
 
@@ -27,56 +27,49 @@ public class LancamentoBusiness {
 	@Autowired
 	private TransferenciaRepository transferenciaRepository;
 	
-	public Lancamento efetuarLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta) {
+	public Lancamento efetuarLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
 		Lancamento lancamento = new Lancamento();
-		lancamento.setData(LocalDate.now());
+		lancamento.setDataHora(LocalDateTime.now());
+		lancamento.setCodigoAutenticacao(UUID.randomUUID().toString());
 		lancamento.setValor(lancamentoRequestDTO.getValor());
-		lancamento.setNatureza(lancamentoRequestDTO.getNatureza().getCodigo());
-		lancamento.setTipoLancamento(lancamentoRequestDTO.getTipoLancamento().getCodigo());
+		lancamento.setNatureza(natureza.getCodigo());
+		lancamento.setTipoLancamento(tipoLancamento.getCodigo());
 		lancamento.setDescricao(lancamentoRequestDTO.getDescricao());
 		lancamento.setConta(conta);
 		
 		return lancamentoRepository.save(lancamento);
 	}
-
-	public void efetuarTransferencia(Conta contaDebito, Conta contaCredito, TransferenicaRequestDTO transferenciaRequestDTO) {
-		Lancamento lancamentoDebito = efetuarLancamento(transferenciaRequestDTO, contaDebito, Natureza.DEBITO);
-		Lancamento lancamentoCredito = efetuarLancamento(transferenciaRequestDTO, contaCredito, Natureza.CREDITO);
-		
+	
+	public ComprovanteResponseDTO efetuarTransferencia(Lancamento lancamentoDebito, Lancamento lancamentoCredito) {
 		Transferencia transferencia = new Transferencia();
 		transferencia.setLancamentoDebito(lancamentoDebito);
 		transferencia.setLancamentoCredito(lancamentoCredito);
 		
 		transferenciaRepository.save(transferencia);
+		
+		return lancamentoEntidadeParaComprovanteResponseDTO(lancamentoDebito);
 	}
 
-	public List<LancamentoResponseDTO> consultarExtratoCompleto(Conta conta) {
+	public List<ComprovanteResponseDTO> consultarExtratoCompleto(Conta conta) {
 		List<Lancamento> lancamentos = lancamentoRepository.findByConta_Id(conta.getId());
 		
-		List<LancamentoResponseDTO> lancamentoResponseDTO = new ArrayList<>();
-		lancamentos.forEach(l -> lancamentoResponseDTO.add(entidadeParaResponseDTO(l)));
+		List<ComprovanteResponseDTO> comprovantesResponseDTO = new ArrayList<>();
+		lancamentos.forEach(l -> comprovantesResponseDTO.add(lancamentoEntidadeParaComprovanteResponseDTO(l)));
 		
-		return lancamentoResponseDTO;
+		return comprovantesResponseDTO;
 	}
 	
-	private Lancamento efetuarLancamento(TransferenicaRequestDTO transferenciaRequestDTO, Conta conta, Natureza natureza) {
-		LancamentoRequestDTO lancamentoRequestDTO = new LancamentoRequestDTO();
-		lancamentoRequestDTO.setValor(transferenciaRequestDTO.getValor());
-		lancamentoRequestDTO.setNatureza(natureza);
-		lancamentoRequestDTO.setTipoLancamento(TipoLancamento.TRANSFERENCIA);
-		lancamentoRequestDTO.setDescricao(transferenciaRequestDTO.getDescricao());
+	public ComprovanteResponseDTO lancamentoEntidadeParaComprovanteResponseDTO(Lancamento lancamento) {
+		ComprovanteResponseDTO comprovanteResponseDTO = new ComprovanteResponseDTO();
+		comprovanteResponseDTO.setIdLancamento(lancamento.getId());
+		comprovanteResponseDTO.setCodigoAutenticacao(lancamento.getCodigoAutenticacao());
+		comprovanteResponseDTO.setDataHora(lancamento.getDataHora());
+		comprovanteResponseDTO.setValor(lancamento.getValor());
+		comprovanteResponseDTO.setNatureza(lancamento.getNatureza());
+		comprovanteResponseDTO.setTipoLancamento(lancamento.getTipoLancamento());
+		comprovanteResponseDTO.setDescricao(lancamento.getDescricao());
 		
-		return efetuarLancamento(lancamentoRequestDTO, conta);
+		return comprovanteResponseDTO;
 	}
 
-	private LancamentoResponseDTO entidadeParaResponseDTO(Lancamento lancamento) {
-		LancamentoResponseDTO lancamentoResponseDTO = new LancamentoResponseDTO();
-		lancamentoResponseDTO.setData(lancamento.getData());
-		lancamentoResponseDTO.setValor(lancamento.getValor());
-		lancamentoResponseDTO.setNatureza(lancamento.getNatureza());
-		lancamentoResponseDTO.setTipoLancamento(lancamento.getTipoLancamento());
-		lancamentoResponseDTO.setDescricao(lancamento.getDescricao());
-		
-		return lancamentoResponseDTO;
-	}
 }

@@ -1,15 +1,15 @@
 package com.matera.cursoferias.digitalbank.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.matera.cursoferias.digitalbank.business.ContaBusiness;
+import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
+import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.TransferenicaRequestDTO;
-import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
-import com.matera.cursoferias.digitalbank.dto.response.LancamentoResponseDTO;
+import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
+import com.matera.cursoferias.digitalbank.dto.response.ExtratoResponseDTO;
 
 @Service
 public class ContaService {
@@ -17,15 +17,16 @@ public class ContaService {
 	@Autowired
 	private ContaBusiness contaBusiness;
 	
-	public ContaResponseDTO efetuarLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO) {
-		return contaBusiness.efetuarLancamento(id, lancamentoRequestDTO);
+	public ComprovanteResponseDTO efetuarLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
+		return contaBusiness.efetuarLancamento(id, lancamentoRequestDTO, natureza, tipoLancamento);
 	}
 
-	public ContaResponseDTO efetuarTransferencia(Long id, TransferenicaRequestDTO transferenciaRequestDTO) {
+	public ComprovanteResponseDTO efetuarTransferencia(Long id, TransferenicaRequestDTO transferenciaRequestDTO) {
 		return contaBusiness.efetuarTransferencia(id, transferenciaRequestDTO);
 	}
 
-	public List<LancamentoResponseDTO> consultarExtratoCompleto(Long id) {
+	public ExtratoResponseDTO consultarExtratoCompleto(Long id) {
 		return contaBusiness.consultarExtratoCompleto(id);
 	}
+
 }

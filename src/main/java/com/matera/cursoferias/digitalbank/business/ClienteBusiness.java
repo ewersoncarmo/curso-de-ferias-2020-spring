@@ -24,7 +24,7 @@ public class ClienteBusiness {
 	public ContaResponseDTO cadastrar(ClienteRequestDTO clienteRequestDTO) {
 		validar(clienteRequestDTO);
 		
-		Cliente cliente = requestDTOClienteEntidade(clienteRequestDTO, new Cliente());
+		Cliente cliente = requestDTOParaEntidade(clienteRequestDTO, new Cliente());
 		
 		cliente = clienteRepository.save(cliente);
 
@@ -51,7 +51,7 @@ public class ClienteBusiness {
 	}
 
 	public void atualizar(Long id, ClienteRequestDTO clienteRequestDTO) {
-		Cliente cliente = requestDTOClienteEntidade(clienteRequestDTO, findById(id));
+		Cliente cliente = requestDTOParaEntidade(clienteRequestDTO, findById(id));
 		
 		clienteRepository.save(cliente);
 	}
@@ -66,7 +66,7 @@ public class ClienteBusiness {
 		}
 	}
 
-	private Cliente requestDTOClienteEntidade(ClienteRequestDTO clienteRequestDTO, Cliente cliente) {
+	private Cliente requestDTOParaEntidade(ClienteRequestDTO clienteRequestDTO, Cliente cliente) {
 		cliente.setNome(clienteRequestDTO.getNome());
 		cliente.setCpf(clienteRequestDTO.getCpf());
 		cliente.setTelefone(clienteRequestDTO.getTelefone());

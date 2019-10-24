@@ -9,11 +9,11 @@ import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
 import com.matera.cursoferias.digitalbank.util.exceptions.BusinessException;
 
 @Component
-public class BusinessExceptionHandler implements ExceptionHandler {
+public class BusinessExceptionHandler implements ExceptionHandler<BusinessException> {
 
 	@Override
-	public ResponseEntity<ResponseDTO<Object>> handleException(Exception e) {
-		ErroResponseDTO erro = new ErroResponseDTO(((BusinessException) e).getMessage());
+	public ResponseEntity<ResponseDTO<Object>> handleException(BusinessException exception) {
+		ErroResponseDTO erro = new ErroResponseDTO(exception.getMessage());
 		
 		return ResponseEntity
 				.status(HttpStatus.BAD_REQUEST)

@@ -15,6 +15,9 @@ import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 public class Conta extends EntidadeBase {
 
 	@Column
+	private Integer numeroAgencia;
+	
+	@Column
 	private Long numeroConta;
 
 	@Column
@@ -26,6 +29,14 @@ public class Conta extends EntidadeBase {
 
 	@OneToMany(mappedBy = "conta")
 	private List<Lancamento> lancamentos;
+
+	public Integer getNumeroAgencia() {
+		return numeroAgencia;
+	}
+
+	public void setNumeroAgencia(Integer numeroAgencia) {
+		this.numeroAgencia = numeroAgencia;
+	}
 
 	public Long getNumeroConta() {
 		return numeroConta;
