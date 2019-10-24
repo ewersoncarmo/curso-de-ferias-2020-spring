@@ -1,1 +1,1 @@
-# curso-de-ferias-2020-apring
+# curso-de-ferias-2020-spring
