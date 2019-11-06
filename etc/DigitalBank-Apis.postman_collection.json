@@ -1,0 +1,3846 @@
+{
+	"info": {
+		"_postman_id": "5a5b2618-50a6-4bc0-9271-e633758cca82",
+		"name": "FGC - Apis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Integração posição analítica dos credores",
+			"item": [
+				{
+					"name": "Integração sistema externo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94d8fb32-ef31-425a-aef0-5012f223b699",
+								"exec": [
+									"pm.test(\"Status code is 207\", function () {\r",
+									"    pm.response.to.have.status(207);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body contains data attribute\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"data\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"itemId\": \"fkjasdflkjasdlkfjlasdjflkajslkfaaaaaadddddddddaaaaaaaaa\",\r\n      \"idSubSistema\": \"API_EXTERNO\",\r\n      \"cnpjEmissor\": \"11758741000152\",\r\n      \"conta\": {\r\n        \"agencia\": 3713,\r\n        \"digitoAgencia\": 0,\r\n        \"numeroConta\": 26567,\r\n        \"digitoConta\": 0,\r\n        \"tipoConta\": \"I\",\r\n        \"quantidadeTitulares\": 1,\r\n        \"idTipoTitularidade\": 1,\r\n        \"endereco\": {\r\n          \"logradouro\": \"RUA\",\r\n          \"numero\": 159,\r\n          \"complemento\": \"APARTAMENTO 402\",\r\n          \"bairro\": \"MALBEC\",\r\n          \"cidade\": \"MARINGA\",\r\n          \"estado\": \"PR\",\r\n          \"cep\": 87005002\r\n        },\r\n        \"titulares\": [\r\n          {\r\n            \"nomeCliente\": \"PEDRO\",\r\n            \"documentoCliente\": \"05223551966\",\r\n            \"isencaoIR\": \"S\",\r\n            \"dataNascimentoCriacaoFundacao\": \"2019-09-04\"\r\n          }\r\n        ],\r\n        \"produtos\": [\r\n          {\r\n            \"idProduto\": 11,\r\n            \"idTipoGarantia\": 1,\r\n            \"instrumentosFinanceiros\": [\r\n              {\r\n                \"codigoInstrumentoFinanceiro\": \"ABC\",\r\n                \"dataAquisicao\": \"2019-09-04\",\r\n                \"quantidadeEmitida\": 1,\r\n                \"quantidadeDataBase\": 10000.00,\r\n                \"valorEmitido\": 10000.00,\r\n                \"valorAtualDataBase\": 10000.00\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/informes/api/v1/fgc303/posicao-analitica-credores?dataBase=2019-08-30&cnpjConglomerado=11758741000152",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"informes",
+								"api",
+								"v1",
+								"fgc303",
+								"posicao-analitica-credores"
+							],
+							"query": [
+								{
+									"key": "dataBase",
+									"value": "2019-08-30"
+								},
+								{
+									"key": "cnpjConglomerado",
+									"value": "11758741000152"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "oauth2",
+				"oauth2": [
+					{
+						"key": "accessToken",
+						"value": "fd41af16-679f-4194-83cc-7a02c85c3b33",
+						"type": "string"
+					},
+					{
+						"key": "tokenType",
+						"value": "bearer",
+						"type": "string"
+					},
+					{
+						"key": "addTokenTo",
+						"value": "header",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d01e03e8-6993-4471-8bac-4f19ea7c1f06",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4cd6cabf-dffb-4e49-b6dc-52a15cfd3694",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "FGC300",
+			"item": [
+				{
+					"name": "Validação de cabeçalho",
+					"item": [
+						{
+							"name": "Com código transação vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "efd256d0-e1b6-466d-bd04-5420f7e26c6f",
+										"exec": [
+											"pm.test(\"Código de Transação não informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00021\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Código de Transação não informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com código leiaute vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7c960f3c-aad7-4f24-8cc4-1272226ccf46",
+										"exec": [
+											"pm.test(\"Código de Leiaute não informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00022\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Código de Leiaute não informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com código leiaute não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ac21f04d-815b-4dd0-b63e-3008deed1766",
+										"exec": [
+											"pm.test(\"Código de Leiaute não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00023\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Código de Leiaute não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"ABC123\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com versão leiaute vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "bfdcf866-7aee-4ad5-9e05-5e241d1ae948",
+										"exec": [
+											"pm.test(\"Versão do Leiaute não informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00009\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Versão do Leiaute não informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com versão leiaute não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c658b796-294b-4647-b018-55b506722d39",
+										"exec": [
+											"pm.test(\"Versão do Leiaute não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00010\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Versão do Leiaute não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"5\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com data base vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6824d95f-ab81-42d4-a4cc-2b9cf678ede7",
+										"exec": [
+											"pm.test(\"Data Base de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00004\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Data Base de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com data base fora do prazo",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "40137bc8-8d13-426c-81db-295e474fe18a",
+										"exec": [
+											"pm.test(\"Data Base enviada fora do prazo regulamentar\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00005\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Data Base enviada fora do prazo regulamentar\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "{{Content-Type}}",
+										"type": "text"
+									},
+									{
+										"key": "X-API-Version",
+										"value": "{{X-API-Version}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"value": "{{X-IBM-Client-Id}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"value": "{{X-IBM-Client-Secret}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"value": "{{X-IBM-Client-Certificate}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201901\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com cnpj vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c6ddb31c-496a-40a2-b4cc-563eb4322b00",
+										"exec": [
+											"pm.test(\"CNPJ do Conglomerado ou Instituição Financeira de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00001\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"CNPJ do Conglomerado ou Instituição Financeira de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com cnpj não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "11e32e5b-92a7-4318-b780-b608780cf764",
+										"exec": [
+											"pm.test(\"CNPJ do Conglomerado ou Instituição Financeira não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00002\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"CNPJ do Conglomerado ou Instituição Financeira não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"12345678\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com parte vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7a51760a-e6cf-4206-8c5a-6b15e6bd02ed",
+										"exec": [
+											"pm.test(\"Nome do Conglomerado ou Instituição Financeira de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00003\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Nome do Conglomerado ou Instituição Financeira de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com nome vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c7b8cf6e-b4d8-4725-ac81-9db494dd4b99",
+										"exec": [
+											"pm.test(\"Nome do Contato de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00006\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Nome do Contato de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com telefone vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6bf4feac-04e9-4686-94f3-6544427d3877",
+										"exec": [
+											"pm.test(\"Telefone do Contato de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00007\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Telefone do Contato de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com e-mail vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "361c1d56-d53d-4ed7-9de0-688aedb06957",
+										"exec": [
+											"pm.test(\"E-mail do Contato de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00008\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"E-mail do Contato de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Validação de corpo",
+					"item": [
+						{
+							"name": "Com idProduto vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "aed7cd87-cbb0-475b-aae4-f82fff873aee",
+										"exec": [
+											"pm.test(\"Código do Produto não informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00026\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código do Produto não informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idProduto não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "11c9e6a4-1248-456f-813d-76891eee759b",
+										"exec": [
+											"pm.test(\"Código do Produto não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00013\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código do Produto não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"50\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idProduto zero {0}",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d3e1014e-c31e-4d29-8f69-99d4b4d5524f",
+										"exec": [
+											"pm.test(\"Censo acatado com valores zerado para data base\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00031\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Censo acatado com valores zerado para data base\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"0\"\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idTipoTitularidade vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c0d37895-ca0e-45cf-8bd5-1366088b51bb",
+										"exec": [
+											"pm.test(\"Código da Titularidade não informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00025\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código da Titularidade não informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idTipoTitularidade não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f5713313-c321-4c8f-8aa4-031ae76b841a",
+										"exec": [
+											"pm.test(\"Código da Titularidade não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00011\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código da Titularidade não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"10\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idFaixa vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fdabd3c8-aaf1-47ed-bb61-5ed50c7d11f7",
+										"exec": [
+											"pm.test(\"Código da Faixa Não Informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00024\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código da Faixa Não Informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idFaixa não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ea058f3a-7884-4e35-ae65-2a4e3a28f5a1",
+										"exec": [
+											"pm.test(\"Código da Faixa não Reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00012\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código da Faixa não Reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"50\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com relação idProduto, idTipoTitularidade e idFaixa em duplicidade",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "93c5f7f4-c28e-4c61-8013-5fd64d59ab94",
+										"exec": [
+											"pm.test(\"Relação de informações idProduto, idTipoTitularidade e idFaixa em duplicidade\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00017\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Relação de informações idProduto, idTipoTitularidade e idFaixa em duplicidade\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        },\r\n\t        {\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Relação valor/quantidade de clientes de uma faixa tem resultado menor que limite inferior da faixa",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6500e03e-d55c-414e-8863-0767c91f9578",
+										"exec": [
+											"pm.test(\"Valor Médio Mínimo Inconsistente na relação da Quantidade de Clientes x Valor de Depósito para o Código de Faixa de Valor Informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00014\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Valor Médio Mínimo Inconsistente na relação da Quantidade de Clientes x Valor de Depósito para o Código de Faixa de Valor Informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"20\",\r\n\t\t\t                    \"quantidadeClientes\": \"1\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Relação valor/quantidade de clientes de uma faixa tem resultado maior que limite superior da faixa ",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a1aa71b1-6f1a-4db7-b19b-7c81299659df",
+										"exec": [
+											"pm.test(\"Valor Médio Máximo Inconsistente na relação da Quantidade de Clientes x Valor de Depósito para o Código de Faixa de Valor Informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00015\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Valor Médio Máximo Inconsistente na relação da Quantidade de Clientes x Valor de Depósito para o Código de Faixa de Valor Informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"1\",\r\n\t\t\t                    \"valor\": \"100000000.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Sucesso",
+					"item": [
+						{
+							"name": "fgc300",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "{{Content-Type}}",
+										"type": "text"
+									},
+									{
+										"key": "X-API-Version",
+										"value": "{{X-API-Version}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"value": "{{X-IBM-Client-Id}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"value": "{{X-IBM-Client-Secret}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"value": "{{X-IBM-Client-Certificate}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC300\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"produtos\": [\r\n\t\t\t{\r\n\t            \"idProduto\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/produto",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"produto"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "FGC301",
+			"item": [
+				{
+					"name": "Validação de cabeçalho",
+					"item": [
+						{
+							"name": "Com código transação vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "68c79332-71ef-4dcb-94a6-94eafca7a939",
+										"exec": [
+											"pm.test(\"Código de Transação não informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00021\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Código de Transação não informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "{{Content-Type}}",
+										"type": "text"
+									},
+									{
+										"key": "X-API-Version",
+										"value": "{{X-API-Version}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"value": "{{X-IBM-Client-Id}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"value": "{{X-IBM-Client-Secret}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"value": "{{X-IBM-Client-Certificate}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com código leiaute vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1f5ee813-9ab5-4fba-a967-a34257435a99",
+										"exec": [
+											"pm.test(\"Código de Leiaute não informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00022\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Código de Leiaute não informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com código leiaute não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "311860f1-f731-42b6-8714-1aeb792c65f3",
+										"exec": [
+											"pm.test(\"Código de Leiaute não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00023\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Código de Leiaute não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "{{Content-Type}}",
+										"type": "text"
+									},
+									{
+										"key": "X-API-Version",
+										"value": "{{X-API-Version}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"value": "{{X-IBM-Client-Id}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"value": "{{X-IBM-Client-Secret}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"value": "{{X-IBM-Client-Certificate}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"ABC123\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                },\r\n\t\t\t                {\r\n\t\t\t                    \"idFaixa\": \"2\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"50.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            },\r\n\t\t            {\r\n\t\t                \"idTipoTitularidade\": \"2\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"7\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"6000\"\r\n\t\t\t                },\r\n\t\t\t                {\r\n\t\t\t                    \"idFaixa\": \"2\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"50.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com versão leiaute vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b82d6fa6-34c3-48ca-bfb9-ca62fcbdfc6f",
+										"exec": [
+											"pm.test(\"Versão do Leiaute não informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00009\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Versão do Leiaute não informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com versão leiaute não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "10bc6446-d0bb-4a72-94d1-93c5b58594f4",
+										"exec": [
+											"pm.test(\"Versão do Leiaute não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00010\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Versão do Leiaute não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "{{Content-Type}}",
+										"type": "text"
+									},
+									{
+										"key": "X-API-Version",
+										"value": "{{X-API-Version}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"value": "{{X-IBM-Client-Id}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"value": "{{X-IBM-Client-Secret}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"value": "{{X-IBM-Client-Certificate}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"5\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com data base vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c38ae394-3903-4f95-ba59-8b496f5f609a",
+										"exec": [
+											"pm.test(\"Data Base de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00004\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Data Base de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com data base fora do prazo",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4ea525a6-f125-4a6d-a18e-c056f3c6ef99",
+										"exec": [
+											"pm.test(\"Data Base enviada fora do prazo regulamentar\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[0].codigoErro).to.eql(\"00005\");\r",
+											"});\r",
+											"\r",
+											"tests[\"mensagemErro\"] = responseBody.has(\"Data Base enviada fora do prazo regulamentar\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201901\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com cnpj vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "81ae1d3f-1e81-4303-bef2-8c788f493f85",
+										"exec": [
+											"pm.test(\"CNPJ do Conglomerado ou Instituição Financeira de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00001\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"CNPJ do Conglomerado ou Instituição Financeira de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com cnpj não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ba1d31d9-d231-4fc2-a749-b1f7aa28424c",
+										"exec": [
+											"pm.test(\"CNPJ do Conglomerado ou Instituição Financeira não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00002\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"CNPJ do Conglomerado ou Instituição Financeira não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"12345678\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com parte vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a2f8efe4-3576-4a84-a361-03b68bf15500",
+										"exec": [
+											"pm.test(\"Nome do Conglomerado ou Instituição Financeira de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00003\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Nome do Conglomerado ou Instituição Financeira de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com nome vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "219dd2be-4942-4b3d-a890-ef5aff4fe45b",
+										"exec": [
+											"pm.test(\"Nome do Contato de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00006\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Nome do Contato de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com telefone vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0dc4aba9-651a-4235-82f2-2bc98990ae61",
+										"exec": [
+											"pm.test(\"Telefone do Contato de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00007\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Telefone do Contato de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com e-mail vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "530e636d-4019-43d4-b013-883c72b31787",
+										"exec": [
+											"pm.test(\"E-mail do Contato de preenchimento obrigatório\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00008\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"E-mail do Contato de preenchimento obrigatório\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Validação de corpo",
+					"item": [
+						{
+							"name": "Com idTipoGarantia vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Tipo de Garantia não informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00029\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Tipo de Garantia não informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idTipoGarantia não existene",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Tipo de Garantia não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00030\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Tipo de Garantia não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t\t\t\t\"idTipoGarantia\": 10,\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idTipoTitularidade vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Código do Tipo Titularidade não Informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00025\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código do Tipo Titularidade não Informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t\t\t\t\"idTipoGarantia\": 1,\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idTipoTitularidade não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Código do Tipo Titularidade não reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00011\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código do Tipo Titularidade não reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t\t\t\t\"idTipoGarantia\": 1,\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"idTipoTitularidade\": 10,\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idTipoTitularidade zero {0}",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Censo acatado com valores zerado para data base\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00031\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Censo acatado com valores zerado para data base\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t\t\t\t\"idTipoGarantia\": 1,\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"idTipoTitularidade\": 0\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idFaixa vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Código da Faixa Não Informado\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00024\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código da Faixa Não Informado\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com idFaixa não existente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Código da Faixa não Reconhecido\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00012\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Código da Faixa não Reconhecido\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\t\"idFaixa\": 50,\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Com relação idTipoTitularidade e idFaixa em duplicidade",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Relação de informações Código do Tipo Titularidade e Código da Faixa em duplicidade\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00016\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Relação de informações Código do Tipo Titularidade e Código da Faixa em duplicidade\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\t\"idFaixa\": 1,\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        },\r\n\t        {\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\t\"idFaixa\": 1,\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Relação valor/quantidade de clientes de uma faixa tem resultado menor que limite inferior da faixa",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Val. Médio Mín. Inconsistente na relação da Qtd. de Clientes x Val. de Depósito para o idFaixa\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00014\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Val. Médio Mín. Inconsistente na relação da Qtd. de Clientes x Val. de Depósito para o idFaixa\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\t\"idFaixa\": 20,\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Relação valor/quantidade de clientes de uma faixa tem resultado maior que limite superior da faixa",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ebb7fb81-7e59-44ed-b26c-8111ef2189e6",
+										"exec": [
+											"pm.test(\"Val. Médio Máx. Inconsistente na relação da Qtd. de Clientes x Val. de Depósito para o idFaixa\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.detalhesErro[1].codigoErro).to.eql(\"00015\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"tests[\"message\"] = responseBody.has(\"Val. Médio Máx. Inconsistente na relação da Qtd. de Clientes x Val. de Depósito para o idFaixa\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "{{Content-Type}}"
+									},
+									{
+										"key": "X-API-Version",
+										"type": "text",
+										"value": "{{X-API-Version}}"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"type": "text",
+										"value": "{{X-IBM-Client-Id}}"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"type": "text",
+										"value": "{{X-IBM-Client-Secret}}"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"type": "text",
+										"value": "{{X-IBM-Client-Certificate}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\t\"idFaixa\": 1,\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"100000000.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Sucesso",
+					"item": [
+						{
+							"name": "fgc301",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "{{Content-Type}}",
+										"type": "text"
+									},
+									{
+										"key": "X-API-Version",
+										"value": "{{X-API-Version}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Id",
+										"value": "{{X-IBM-Client-Id}}",
+										"type": "text"
+									},
+									{
+										"key": "X-IBM-Client-Secret",
+										"value": "{{X-IBM-Client-Secret}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Client-Certificate",
+										"value": "{{X-IBM-Client-Certificate}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"codigoTransacao\": \"3114af3c-9a14-43cc-98cb-36ad90f99b08\",\r\n    \"data\":  {\r\n        \"codigoLeiaute\": \"FGC301\",\r\n        \"versaoLeiaute\": \"1\",\r\n        \"dataBase\": \"201912\",\r\n        \"cnpj\": \"82376366\",\r\n        \"parte\": \"BANCO MATERA SYSTEMS\",\r\n        \"contato\":  {\r\n            \"nome\": \"BANCO PETRA\",\r\n            \"telefone\": \"4130740909\",\r\n            \"email\": \"CONTATO@EMAIL.COM.BR\"\r\n        },\r\n        \"tiposGarantia\": [\r\n\t\t\t{\r\n\t            \"idTipoGarantia\": \"1\",\r\n\t            \"tiposTitularidade\": [ \r\n\t\t\t\t\t{\r\n\t\t                \"idTipoTitularidade\": \"1\",\r\n\t\t                \"faixas\": [ \r\n\t\t\t\t\t\t\t{\r\n\t\t\t                    \"idFaixa\": \"1\",\r\n\t\t\t                    \"quantidadeClientes\": \"2\",\r\n\t\t\t                    \"valor\": \"8.0\"\r\n\t\t\t                }\r\n\t\t                ]\r\n\t\t            }\r\n\t\t\t\t]\r\n\t        }\r\n\t\t]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://apihmg.fgc.org.br/api/censo-if/titularidade",
+									"protocol": "https",
+									"host": [
+										"apihmg",
+										"fgc",
+										"org",
+										"br"
+									],
+									"path": [
+										"api",
+										"censo-if",
+										"titularidade"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "FGC311",
+			"item": [
+				{
+					"name": "fgc311",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{Content-Type}}",
+								"type": "text"
+							},
+							{
+								"key": "X-API-Version",
+								"value": "{{X-API-Version}}",
+								"type": "text"
+							},
+							{
+								"key": "X-IBM-Client-Id",
+								"value": "{{X-IBM-Client-Id}}",
+								"type": "text"
+							},
+							{
+								"key": "X-IBM-Client-Secret",
+								"value": "{{X-IBM-Client-Secret}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Client-Certificate",
+								"value": "{{X-IBM-Client-Certificate}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://apihmg.fgc.org.br/api/censo-if/consultaresultadocenso?dataBase=201908&cnpj=11758741",
+							"protocol": "https",
+							"host": [
+								"apihmg",
+								"fgc",
+								"org",
+								"br"
+							],
+							"path": [
+								"api",
+								"censo-if",
+								"consultaresultadocenso"
+							],
+							"query": [
+								{
+									"key": "dataBase",
+									"value": "201908"
+								},
+								{
+									"key": "cnpj",
+									"value": "11758741"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

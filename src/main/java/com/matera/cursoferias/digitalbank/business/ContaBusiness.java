@@ -31,7 +31,7 @@ public class ContaBusiness {
 	private LancamentoBusiness lancamentoBusiness;
 	
 	public ContaResponseDTO cadastrar(Cliente cliente) {
-		int numeroAgencia = new Random().nextInt(5);
+		int numeroAgencia = new Random().nextInt(5) + 1;
 
 		validar(numeroAgencia, cliente);
 		
