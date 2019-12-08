@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
-import com.matera.cursoferias.digitalbank.util.exceptionhandler.BusinessExceptionHandler;
-import com.matera.cursoferias.digitalbank.util.exceptionhandler.InvalidFormatExceptionHandler;
-import com.matera.cursoferias.digitalbank.util.exceptionhandler.MethodArgumentNotValidExceptionHandler;
-import com.matera.cursoferias.digitalbank.util.exceptions.BusinessException;
+import com.matera.cursoferias.digitalbank.exception.BusinessException;
+import com.matera.cursoferias.digitalbank.exception.handler.BusinessExceptionHandler;
+import com.matera.cursoferias.digitalbank.exception.handler.InvalidFormatExceptionHandler;
+import com.matera.cursoferias.digitalbank.exception.handler.MethodArgumentNotValidExceptionHandler;
 
 public class ControllerBase {
 

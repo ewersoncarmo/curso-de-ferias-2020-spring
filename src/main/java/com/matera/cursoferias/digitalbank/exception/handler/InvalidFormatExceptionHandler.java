@@ -1,4 +1,4 @@
-package com.matera.cursoferias.digitalbank.util.exceptionhandler;
+package com.matera.cursoferias.digitalbank.exception.handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class InvalidFormatExceptionHandler implements ExceptionHandler<InvalidFo
 		List<Reference> paths = exception.getPath();
 		for (Reference path : paths) {
 			String campo = path.getFieldName();
-			String mensagem = String.format("%s: %s", campo, "O valor informado é inválido");
+			String mensagem = String.format("%s: %s", campo, "O valor informado ï¿½ invï¿½lido");
 			
 			erros.add(new ErroResponseDTO(campo, mensagem));
 		}

@@ -18,8 +18,8 @@ import com.matera.cursoferias.digitalbank.dto.request.TransferenicaRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ExtratoResponseDTO;
+import com.matera.cursoferias.digitalbank.exception.BusinessException;
 import com.matera.cursoferias.digitalbank.repository.ContaRepository;
-import com.matera.cursoferias.digitalbank.util.exceptions.BusinessException;
 
 @Component
 public class ContaBusiness {
@@ -61,7 +61,7 @@ public class ContaBusiness {
 		
 		Conta contaCredito = contaRepository.findByNumeroAgenciaAndNumeroConta(transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta());
 		if (contaCredito == null) {
-			throw new BusinessException(String.format("Conta de destino não encontrada"));
+			throw new BusinessException(String.format("Conta de destino nï¿½o encontrada"));
 		}
 		
 		Lancamento lancamentoDebito = criarLancamento(new LancamentoRequestDTO(transferenciaRequestDTO.getValor(), transferenciaRequestDTO.getDescricao()), contaDebito, Natureza.DEBITO, TipoLancamento.TRANSFERENCIA);
@@ -83,12 +83,12 @@ public class ContaBusiness {
 	}
 	
 	private Conta findById(Long id) {
-		return contaRepository.findById(id).orElseThrow(() -> new BusinessException(String.format("Conta %d não encontrada", id)));
+		return contaRepository.findById(id).orElseThrow(() -> new BusinessException(String.format("Conta %d nï¿½o encontrada", id)));
 	}
 	
 	private void validar(Integer numeroAgencia, Cliente cliente) {
 		if (contaRepository.findByNumeroAgenciaAndNumeroConta(numeroAgencia, cliente.getTelefone()) != null) {
-			throw new BusinessException("Já existe uma Conta cadastrada com o número informado.");
+			throw new BusinessException("Jï¿½ existe uma Conta cadastrada com o nï¿½mero informado.");
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class ContaBusiness {
 			saldoFinal = saldoAtual.subtract(valor);
 
 			if (saldoFinal.compareTo(BigDecimal.ZERO) == -1) {
-				throw new BusinessException("Saldo indisponível para efetuar lançamento");
+				throw new BusinessException("Saldo indisponï¿½vel para efetuar lanï¿½amento");
 			}
 		} else {
 			saldoFinal = saldoAtual.add(valor);

@@ -1,4 +1,4 @@
-package com.matera.cursoferias.digitalbank.util.exceptionhandler;
+package com.matera.cursoferias.digitalbank.exception.handler;
 
 import org.springframework.http.ResponseEntity;
 

@@ -8,8 +8,8 @@ import com.matera.cursoferias.digitalbank.domain.entity.Cliente;
 import com.matera.cursoferias.digitalbank.dto.request.ClienteRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ClienteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
+import com.matera.cursoferias.digitalbank.exception.BusinessException;
 import com.matera.cursoferias.digitalbank.repository.ClienteRepository;
-import com.matera.cursoferias.digitalbank.util.exceptions.BusinessException;
 
 @Component
 public class ClienteBusiness {
@@ -57,12 +57,12 @@ public class ClienteBusiness {
 	}
 	
 	private Cliente findById(Long id) {
-		return clienteRepository.findById(id).orElseThrow(() -> new BusinessException(String.format("Cliente %d não encontrado", id)));
+		return clienteRepository.findById(id).orElseThrow(() -> new BusinessException(String.format("Cliente %d nï¿½o encontrado", id)));
 	}
 	
 	private void validar(ClienteRequestDTO clienteRequestDTO) {
 		if (clienteRepository.findByCpf(clienteRequestDTO.getCpf()) != null) {
-			throw new BusinessException("Já existe um Cliente cadastrado com o CPF informado.");
+			throw new BusinessException("Jï¿½ existe um Cliente cadastrado com o CPF informado.");
 		}
 	}
 

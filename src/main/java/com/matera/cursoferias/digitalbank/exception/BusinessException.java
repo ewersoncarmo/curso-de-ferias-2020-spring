@@ -1,4 +1,4 @@
-package com.matera.cursoferias.digitalbank.util.exceptions;
+package com.matera.cursoferias.digitalbank.exception;
 
 public class BusinessException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package com.matera.cursoferias.digitalbank.util.exceptionhandler;
+package com.matera.cursoferias.digitalbank.exception.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.matera.cursoferias.digitalbank.dto.response.ErroResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
-import com.matera.cursoferias.digitalbank.util.exceptions.BusinessException;
+import com.matera.cursoferias.digitalbank.exception.BusinessException;
 
 @Component
 public class BusinessExceptionHandler implements ExceptionHandler<BusinessException> {

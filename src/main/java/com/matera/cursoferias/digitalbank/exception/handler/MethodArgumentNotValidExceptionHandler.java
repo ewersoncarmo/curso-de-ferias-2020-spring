@@ -1,4 +1,4 @@
-package com.matera.cursoferias.digitalbank.util.exceptionhandler;
+package com.matera.cursoferias.digitalbank.exception.handler;
 
 import java.util.ArrayList;
 import java.util.List;
