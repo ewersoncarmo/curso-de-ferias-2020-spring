@@ -12,17 +12,17 @@ import com.matera.cursoferias.digitalbank.exception.handler.BusinessExceptionHan
 import com.matera.cursoferias.digitalbank.exception.handler.InvalidFormatExceptionHandler;
 import com.matera.cursoferias.digitalbank.exception.handler.MethodArgumentNotValidExceptionHandler;
 
-public class ControllerBase {
+public abstract class ControllerBase {
 
 	@Autowired
 	private BusinessExceptionHandler businessExceptionHandler;
-	
+
 	@Autowired
 	private MethodArgumentNotValidExceptionHandler methodArgumentNotValidExceptionHandler;
-	
+
 	@Autowired
 	private InvalidFormatExceptionHandler invalidFormatExceptionHandler;
-	
+
 	@ExceptionHandler({BusinessException.class})
 	public ResponseEntity<ResponseDTO<Object>> handleException(BusinessException e) {
 		return businessExceptionHandler.handleException(e);
@@ -32,9 +32,10 @@ public class ControllerBase {
     public ResponseEntity<ResponseDTO<Object>> handleException(MethodArgumentNotValidException e) {
 		return methodArgumentNotValidExceptionHandler.handleException(e);
     }
-	
+
 	@ExceptionHandler(InvalidFormatException.class)
     public ResponseEntity<ResponseDTO<Object>> handleException(InvalidFormatException e) {
 		return invalidFormatExceptionHandler.handleException(e);
     }
+
 }
