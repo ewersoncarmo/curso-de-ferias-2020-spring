@@ -31,7 +31,7 @@ public class ContaBusiness {
 	@Autowired
 	private LancamentoBusiness lancamentoBusiness;
 
-	@Value("${agencia.numeroMaximo:3}")
+	@Value("${agencia.numeroMaximo:5}")
 	private Integer numeroMaximoAgencia;
 
 	public ContaResponseDTO cadastrar(Cliente cliente) {
@@ -65,7 +65,7 @@ public class ContaBusiness {
 
 		Conta contaCredito = contaRepository.findByNumeroAgenciaAndNumeroConta(transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta());
 		if (contaCredito == null) {
-			throw new BusinessException(String.format("Conta de destino não encontrada"));
+			throw new BusinessException("DB-5", transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta());
 		}
 
 		Lancamento lancamentoDebito = criarLancamento(new LancamentoRequestDTO(transferenciaRequestDTO.getValor(), transferenciaRequestDTO.getDescricao()), contaDebito, Natureza.DEBITO, TipoLancamento.TRANSFERENCIA);
@@ -87,12 +87,12 @@ public class ContaBusiness {
 	}
 
 	private Conta findById(Long id) {
-		return contaRepository.findById(id).orElseThrow(() -> new BusinessException(String.format("Conta %d não encontrada", id)));
+		return contaRepository.findById(id).orElseThrow(() -> new BusinessException("DB-3", id));
 	}
 
 	private void validar(Integer numeroAgencia, Cliente cliente) {
 		if (contaRepository.findByNumeroAgenciaAndNumeroConta(numeroAgencia, cliente.getTelefone()) != null) {
-			throw new BusinessException("Já existe uma Conta cadastrada com o número de telefone informado.");
+			throw new BusinessException("DB-4", cliente.getTelefone().toString());
 		}
 	}
 
@@ -109,8 +109,8 @@ public class ContaBusiness {
 		if (natureza == Natureza.DEBITO) {
 			saldoFinal = saldoAtual.subtract(valor);
 
-			if (saldoFinal.compareTo(BigDecimal.ZERO) == -1) {
-				throw new BusinessException("Saldo indisponível para efetuar lançamento");
+			if (saldoFinal.compareTo(BigDecimal.ZERO) < 0) {
+				throw new BusinessException("DB-6");
 			}
 		} else {
 			saldoFinal = saldoAtual.add(valor);

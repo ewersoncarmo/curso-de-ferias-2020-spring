@@ -57,12 +57,12 @@ public class ClienteBusiness {
 	}
 
 	private Cliente findById(Long id) {
-		return clienteRepository.findById(id).orElseThrow(() -> new BusinessException(String.format("Cliente %d não encontrado", id)));
+		return clienteRepository.findById(id).orElseThrow(() -> new BusinessException("DB-1", id));
 	}
 
 	private void validar(ClienteRequestDTO clienteRequestDTO) {
 		if (clienteRepository.findByCpf(clienteRequestDTO.getCpf()) != null) {
-			throw new BusinessException("Já existe um Cliente cadastrado com o CPF informado.");
+			throw new BusinessException("DB-2", clienteRequestDTO.getCpf());
 		}
 	}
 
