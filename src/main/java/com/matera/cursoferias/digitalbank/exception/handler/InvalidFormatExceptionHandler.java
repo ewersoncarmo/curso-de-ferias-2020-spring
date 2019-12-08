@@ -18,15 +18,15 @@ public class InvalidFormatExceptionHandler implements ExceptionHandler<InvalidFo
 	@Override
 	public ResponseEntity<ResponseDTO<Object>> handleException(InvalidFormatException exception) {
 		List<ErroResponseDTO> erros = new ArrayList<>();
-		
+
 		List<Reference> paths = exception.getPath();
 		for (Reference path : paths) {
 			String campo = path.getFieldName();
-			String mensagem = String.format("%s: %s", campo, "O valor informado � inv�lido");
-			
+			String mensagem = String.format("%s: %s", campo, "O valor informado é inválido");
+
 			erros.add(new ErroResponseDTO(campo, mensagem));
 		}
-		
+
 		return ResponseEntity
 				.status(HttpStatus.BAD_REQUEST)
 				.body(ResponseDTO.comErros(erros));

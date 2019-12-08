@@ -30,10 +30,10 @@ public class ClienteIntegrationTest {
 		cliente.setNumero(159);
 		cliente.setComplemento("Apto");
 		cliente.setBairro("Malbec");
-		cliente.setCidade("Maring·");
+		cliente.setCidade("Maring√°");
 		cliente.setEstado("PR");
 		cliente.setCep("87005002");
-		
+
 		given().
 			spec(requestValida(cliente)).
 			log().
@@ -46,7 +46,7 @@ public class ClienteIntegrationTest {
 				body("numeroConta", equalTo(cliente.getTelefone().intValue())).
 				body("saldo", equalTo(BigDecimal.ZERO.intValue()));
 	}
-	
+
 	private RequestSpecification requestValida(Object body) {
 		return new RequestSpecBuilder()
 				.setContentType(ContentType.JSON)

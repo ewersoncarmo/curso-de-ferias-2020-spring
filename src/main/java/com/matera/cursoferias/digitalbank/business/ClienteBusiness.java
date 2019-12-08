@@ -16,16 +16,16 @@ public class ClienteBusiness {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
-	
+
 	@Autowired
 	private ContaBusiness contaBusiness;
-	
+
 	@Transactional
 	public ContaResponseDTO cadastrar(ClienteRequestDTO clienteRequestDTO) {
 		validar(clienteRequestDTO);
-		
+
 		Cliente cliente = requestDTOParaEntidade(clienteRequestDTO, new Cliente());
-		
+
 		cliente = clienteRepository.save(cliente);
 
 		return contaBusiness.cadastrar(cliente);
@@ -33,7 +33,7 @@ public class ClienteBusiness {
 
 	public ClienteResponseDTO consultar(Long id) {
 		Cliente cliente = findById(id);
-		
+
 		ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO();
 		clienteResponseDTO.setId(cliente.getId());
 		clienteResponseDTO.setNome(cliente.getNome());
@@ -46,23 +46,23 @@ public class ClienteBusiness {
 		clienteResponseDTO.setBairro(cliente.getBairro());
 		clienteResponseDTO.setCidade(cliente.getCidade());
 		clienteResponseDTO.setCep(cliente.getCep());
-		
+
 		return clienteResponseDTO;
 	}
 
 	public void atualizar(Long id, ClienteRequestDTO clienteRequestDTO) {
 		Cliente cliente = requestDTOParaEntidade(clienteRequestDTO, findById(id));
-		
+
 		clienteRepository.save(cliente);
 	}
-	
+
 	private Cliente findById(Long id) {
-		return clienteRepository.findById(id).orElseThrow(() -> new BusinessException(String.format("Cliente %d n�o encontrado", id)));
+		return clienteRepository.findById(id).orElseThrow(() -> new BusinessException(String.format("Cliente %d não encontrado", id)));
 	}
-	
+
 	private void validar(ClienteRequestDTO clienteRequestDTO) {
 		if (clienteRepository.findByCpf(clienteRequestDTO.getCpf()) != null) {
-			throw new BusinessException("J� existe um Cliente cadastrado com o CPF informado.");
+			throw new BusinessException("Já existe um Cliente cadastrado com o CPF informado.");
 		}
 	}
 
@@ -78,7 +78,7 @@ public class ClienteBusiness {
 		cliente.setCidade(clienteRequestDTO.getCidade());
 		cliente.setEstado(clienteRequestDTO.getEstado());
 		cliente.setCep(clienteRequestDTO.getCep());
-		
+
 		return cliente;
 	}
 
