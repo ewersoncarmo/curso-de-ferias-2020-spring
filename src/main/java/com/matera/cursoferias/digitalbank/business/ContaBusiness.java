@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,11 @@ public class ContaBusiness {
 	@Autowired
 	private LancamentoBusiness lancamentoBusiness;
 
+	@Value("${agencia.numeroMaximo:3}")
+	private Integer numeroMaximoAgencia;
+
 	public ContaResponseDTO cadastrar(Cliente cliente) {
-		int numeroAgencia = new Random().nextInt(5) + 1;
+		Integer numeroAgencia = new Random().nextInt(numeroMaximoAgencia) + 1;
 
 		validar(numeroAgencia, cliente);
 
@@ -88,7 +92,7 @@ public class ContaBusiness {
 
 	private void validar(Integer numeroAgencia, Cliente cliente) {
 		if (contaRepository.findByNumeroAgenciaAndNumeroConta(numeroAgencia, cliente.getTelefone()) != null) {
-			throw new BusinessException("Já existe uma Conta cadastrada com o número informado.");
+			throw new BusinessException("Já existe uma Conta cadastrada com o número de telefone informado.");
 		}
 	}
 
