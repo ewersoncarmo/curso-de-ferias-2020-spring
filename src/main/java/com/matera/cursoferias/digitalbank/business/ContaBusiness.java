@@ -15,7 +15,7 @@ import com.matera.cursoferias.digitalbank.domain.entity.Lancamento;
 import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
-import com.matera.cursoferias.digitalbank.dto.request.TransferenicaRequestDTO;
+import com.matera.cursoferias.digitalbank.dto.request.TransferenciaRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ExtratoResponseDTO;
@@ -60,7 +60,7 @@ public class ContaBusiness {
 	}
 
 	@Transactional
-	public ComprovanteResponseDTO efetuarTransferencia(Long id, TransferenicaRequestDTO transferenciaRequestDTO) {
+	public ComprovanteResponseDTO efetuarTransferencia(Long id, TransferenciaRequestDTO transferenciaRequestDTO) {
 		Conta contaDebito = findById(id);
 
 		Conta contaCredito = contaRepository.findByNumeroAgenciaAndNumeroConta(transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta());

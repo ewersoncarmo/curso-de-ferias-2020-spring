@@ -6,12 +6,12 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class LancamentoRequestDTO {
 
 	@NotNull

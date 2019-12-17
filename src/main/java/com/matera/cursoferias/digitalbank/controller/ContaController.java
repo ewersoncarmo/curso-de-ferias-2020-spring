@@ -16,7 +16,7 @@ import com.matera.cursoferias.digitalbank.controller.base.ControllerBase;
 import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
-import com.matera.cursoferias.digitalbank.dto.request.TransferenicaRequestDTO;
+import com.matera.cursoferias.digitalbank.dto.request.TransferenciaRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ExtratoResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
@@ -61,7 +61,7 @@ public class ContaController extends ControllerBase {
 
 	@PostMapping(value = "/{id}/transferir")
 	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> transferir(@PathVariable("id") Long id,
-			@Valid @RequestBody TransferenicaRequestDTO transferenciaRequestDTO) {
+			@Valid @RequestBody TransferenciaRequestDTO transferenciaRequestDTO) {
 		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuarTransferencia(id, transferenciaRequestDTO);
 
 		return ResponseEntity

@@ -2,13 +2,11 @@ package com.matera.cursoferias.digitalbank.dto.response;
 
 import java.math.BigDecimal;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 public class ContaResponseDTO {
 
 	private Long id;
