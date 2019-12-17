@@ -35,10 +35,9 @@ public class ContaBusiness {
 	private Integer numeroMaximoAgencia;
 
 	public ContaResponseDTO cadastrar(Cliente cliente) {
+		validar(cliente);
+
 		Integer numeroAgencia = new Random().nextInt(numeroMaximoAgencia) + 1;
-
-		validar(numeroAgencia, cliente);
-
 		Conta conta = new Conta();
 		conta.setNumeroAgencia(numeroAgencia);
 		conta.setNumeroConta(cliente.getTelefone());
@@ -90,8 +89,8 @@ public class ContaBusiness {
 		return contaRepository.findById(id).orElseThrow(() -> new BusinessException("DB-3", id));
 	}
 
-	private void validar(Integer numeroAgencia, Cliente cliente) {
-		if (contaRepository.findByNumeroAgenciaAndNumeroConta(numeroAgencia, cliente.getTelefone()) != null) {
+	private void validar(Cliente cliente) {
+		if (contaRepository.findByNumeroConta(cliente.getTelefone()) != null) {
 			throw new BusinessException("DB-4", cliente.getTelefone().toString());
 		}
 	}
