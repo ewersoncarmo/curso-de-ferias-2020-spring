@@ -2,6 +2,9 @@ package com.matera.cursoferias.digitalbank.exception;
 
 import java.util.Arrays;
 
+import lombok.Getter;
+
+@Getter
 public class BusinessException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
@@ -14,14 +17,6 @@ public class BusinessException extends RuntimeException {
 
 		this.codigoErro = codigoErro;
 		this.parametros = parametros;
-	}
-
-	public String getCodigoErro() {
-		return codigoErro;
-	}
-
-	public Object[] getParametros() {
-		return parametros;
 	}
 
 }

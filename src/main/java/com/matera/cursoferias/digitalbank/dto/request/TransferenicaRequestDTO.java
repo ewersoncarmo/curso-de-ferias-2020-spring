@@ -5,50 +5,25 @@ import java.math.BigDecimal;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TransferenicaRequestDTO {
 
 	@NotNull
 	private Integer numeroAgencia;
-	
+
 	@NotNull
 	private Long numeroConta;
 
 	@NotNull
 	@Digits(integer = 18, fraction = 2)
 	private BigDecimal valor;
-	
+
 	private String descricao;
-
-	public Integer getNumeroAgencia() {
-		return numeroAgencia;
-	}
-
-	public void setNumeroAgencia(Integer numeroAgencia) {
-		this.numeroAgencia = numeroAgencia;
-	}
-
-	public Long getNumeroConta() {
-		return numeroConta;
-	}
-
-	public void setNumeroConta(Long numeroConta) {
-		this.numeroConta = numeroConta;
-	}
-
-	public BigDecimal getValor() {
-		return valor;
-	}
-
-	public void setValor(BigDecimal valor) {
-		this.valor = valor;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
 
 }

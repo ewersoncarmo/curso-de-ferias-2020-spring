@@ -11,12 +11,17 @@ import javax.persistence.OneToOne;
 
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 public class Conta extends EntidadeBase {
 
 	@Column
 	private Integer numeroAgencia;
-	
+
 	@Column
 	private Long numeroConta;
 
@@ -29,45 +34,5 @@ public class Conta extends EntidadeBase {
 
 	@OneToMany(mappedBy = "conta")
 	private List<Lancamento> lancamentos;
-
-	public Integer getNumeroAgencia() {
-		return numeroAgencia;
-	}
-
-	public void setNumeroAgencia(Integer numeroAgencia) {
-		this.numeroAgencia = numeroAgencia;
-	}
-
-	public Long getNumeroConta() {
-		return numeroConta;
-	}
-
-	public void setNumeroConta(Long numeroConta) {
-		this.numeroConta = numeroConta;
-	}
-
-	public BigDecimal getSaldo() {
-		return saldo;
-	}
-
-	public void setSaldo(BigDecimal saldo) {
-		this.saldo = saldo;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-    public List<Lancamento> getLancamentos() {
-        return lancamentos;
-    }
-
-    public void setLancamentos(List<Lancamento> lancamentos) {
-        this.lancamentos = lancamentos;
-    }
 
 }

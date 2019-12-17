@@ -8,6 +8,13 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClienteRequestDTO {
 
 	@NotNull
@@ -50,93 +57,5 @@ public class ClienteRequestDTO {
 	@NotNull
 	@Size(max = 8)
 	private String cep;
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public Long getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(Long telefone) {
-		this.telefone = telefone;
-	}
-
-	public BigDecimal getRendaMensal() {
-		return rendaMensal;
-	}
-
-	public void setRendaMensal(BigDecimal rendaMensal) {
-		this.rendaMensal = rendaMensal;
-	}
-
-	public String getLogradouro() {
-		return logradouro;
-	}
-
-	public void setLogradouro(String logradouro) {
-		this.logradouro = logradouro;
-	}
-
-	public Integer getNumero() {
-		return numero;
-	}
-
-	public void setNumero(Integer numero) {
-		this.numero = numero;
-	}
-
-	public String getComplemento() {
-		return complemento;
-	}
-
-	public void setComplemento(String complemento) {
-		this.complemento = complemento;
-	}
-
-	public String getBairro() {
-		return bairro;
-	}
-
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
-	}
-
-	public String getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getCep() {
-		return cep;
-	}
-
-	public void setCep(String cep) {
-		this.cep = cep;
-	}
 
 }
