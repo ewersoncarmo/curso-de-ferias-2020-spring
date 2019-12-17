@@ -1,6 +1,7 @@
 package com.matera.cursoferias.digitalbank.business;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -84,6 +85,15 @@ public class ContaBusiness {
 
 		return extratoResponseDTO;
 	}
+
+	public List<ContaResponseDTO> consultarTodas() {
+	    List<Conta> contas = contaRepository.findAll();
+	    List<ContaResponseDTO> contasResponseDTO = new ArrayList<>();
+
+	    contas.forEach(conta -> contasResponseDTO.add(entidadeParaResponseDTO(conta)));
+
+        return contasResponseDTO;
+    }
 
 	private Conta findById(Long id) {
 		return contaRepository.findById(id).orElseThrow(() -> new BusinessException("DB-3", id));

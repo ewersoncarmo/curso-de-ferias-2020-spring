@@ -1,5 +1,7 @@
 package com.matera.cursoferias.digitalbank.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ public class ClienteController extends ControllerBase {
 
 		return ResponseEntity
 				.status(HttpStatus.CREATED)
-				.body(new ResponseDTO<ContaResponseDTO>(contaResponseDTO));
+				.body(new ResponseDTO<>(contaResponseDTO));
 	}
 
 	@GetMapping(value = "/{id}")
@@ -42,8 +44,17 @@ public class ClienteController extends ControllerBase {
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(new ResponseDTO<ClienteResponseDTO>(clienteResponseDTO));
+				.body(new ResponseDTO<>(clienteResponseDTO));
 	}
+
+	@GetMapping
+    public ResponseEntity<ResponseDTO<List<ClienteResponseDTO>>> consultarTodos() {
+        List<ClienteResponseDTO> clientesResponseDTO = clienteService.consultarTodos();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDTO<>(clientesResponseDTO));
+    }
 
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> atualizar(@PathVariable("id") Long id,

@@ -1,5 +1,7 @@
 package com.matera.cursoferias.digitalbank.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,7 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteBusiness clienteBusiness;
-	
+
 	public ContaResponseDTO cadastrar(ClienteRequestDTO clienteRequestDTO) {
 		return clienteBusiness.cadastrar(clienteRequestDTO);
 	}
@@ -21,6 +23,10 @@ public class ClienteService {
 	public ClienteResponseDTO consultar(Long id) {
 		return clienteBusiness.consultar(id);
 	}
+
+	public List<ClienteResponseDTO> consultarTodos() {
+        return clienteBusiness.consultarTodos();
+    }
 
 	public void atualizar(Long id, ClienteRequestDTO clienteRequestDTO) {
 		clienteBusiness.atualizar(id, clienteRequestDTO);

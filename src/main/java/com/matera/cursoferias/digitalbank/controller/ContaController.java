@@ -1,5 +1,7 @@
 package com.matera.cursoferias.digitalbank.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.TransferenciaRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
+import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ExtratoResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
 import com.matera.cursoferias.digitalbank.service.ContaService;
@@ -36,7 +39,7 @@ public class ContaController extends ControllerBase {
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(new ResponseDTO<ComprovanteResponseDTO>(comprovanteResponseDTO));
+				.body(new ResponseDTO<>(comprovanteResponseDTO));
 	}
 
 	@PostMapping(value = "/{id}/sacar")
@@ -46,7 +49,7 @@ public class ContaController extends ControllerBase {
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(new ResponseDTO<ComprovanteResponseDTO>(comprovanteResponseDTO));
+				.body(new ResponseDTO<>(comprovanteResponseDTO));
 	}
 
 	@PostMapping(value = "/{id}/pagar")
@@ -56,7 +59,7 @@ public class ContaController extends ControllerBase {
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(new ResponseDTO<ComprovanteResponseDTO>(comprovanteResponseDTO));
+				.body(new ResponseDTO<>(comprovanteResponseDTO));
 	}
 
 	@PostMapping(value = "/{id}/transferir")
@@ -66,7 +69,7 @@ public class ContaController extends ControllerBase {
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(new ResponseDTO<ComprovanteResponseDTO>(comprovanteResponseDTO));
+				.body(new ResponseDTO<>(comprovanteResponseDTO));
 	}
 
 	@GetMapping(value = "/{id}/lancamentos")
@@ -75,6 +78,16 @@ public class ContaController extends ControllerBase {
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(new ResponseDTO<ExtratoResponseDTO>(extratoResponseDTO));
+				.body(new ResponseDTO<>(extratoResponseDTO));
 	}
+
+    @GetMapping
+    public ResponseEntity<ResponseDTO<List<ContaResponseDTO>>> consultarTodas() {
+        List<ContaResponseDTO> contasResponseDTO = contaService.consultarTodas();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDTO<>(contasResponseDTO));
+    }
+
 }

@@ -1,5 +1,8 @@
 package com.matera.cursoferias.digitalbank.business;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,21 +37,17 @@ public class ClienteBusiness {
 	public ClienteResponseDTO consultar(Long id) {
 		Cliente cliente = findById(id);
 
-		ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO();
-		clienteResponseDTO.setId(cliente.getId());
-		clienteResponseDTO.setNome(cliente.getNome());
-		clienteResponseDTO.setCpf(cliente.getCpf());
-		clienteResponseDTO.setTelefone(cliente.getTelefone());
-		clienteResponseDTO.setRendaMensal(cliente.getRendaMensal());
-		clienteResponseDTO.setLogradouro(cliente.getLogradouro());
-		clienteResponseDTO.setNumero(cliente.getNumero());
-		clienteResponseDTO.setComplemento(cliente.getComplemento());
-		clienteResponseDTO.setBairro(cliente.getBairro());
-		clienteResponseDTO.setCidade(cliente.getCidade());
-		clienteResponseDTO.setCep(cliente.getCep());
-
-		return clienteResponseDTO;
+		return entidadeParaResponseDTO(cliente);
 	}
+
+	public List<ClienteResponseDTO> consultarTodos() {
+        List<Cliente> clientes = clienteRepository.findAll();
+        List<ClienteResponseDTO> clientesResponseDTO = new ArrayList<>();
+
+        clientes.forEach(c -> clientesResponseDTO.add(entidadeParaResponseDTO(c)));
+
+        return clientesResponseDTO;
+    }
 
 	public void atualizar(Long id, ClienteRequestDTO clienteRequestDTO) {
 		Cliente cliente = requestDTOParaEntidade(clienteRequestDTO, findById(id));
@@ -81,5 +80,22 @@ public class ClienteBusiness {
 
 		return cliente;
 	}
+
+	private ClienteResponseDTO entidadeParaResponseDTO(Cliente cliente) {
+        ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO();
+        clienteResponseDTO.setId(cliente.getId());
+        clienteResponseDTO.setNome(cliente.getNome());
+        clienteResponseDTO.setCpf(cliente.getCpf());
+        clienteResponseDTO.setTelefone(cliente.getTelefone());
+        clienteResponseDTO.setRendaMensal(cliente.getRendaMensal());
+        clienteResponseDTO.setLogradouro(cliente.getLogradouro());
+        clienteResponseDTO.setNumero(cliente.getNumero());
+        clienteResponseDTO.setComplemento(cliente.getComplemento());
+        clienteResponseDTO.setBairro(cliente.getBairro());
+        clienteResponseDTO.setCidade(cliente.getCidade());
+        clienteResponseDTO.setCep(cliente.getCep());
+
+        return clienteResponseDTO;
+    }
 
 }
