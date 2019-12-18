@@ -72,6 +72,15 @@ public class ContaController extends ControllerBase {
 				.body(new ResponseDTO<>(comprovanteResponseDTO));
 	}
 
+	@PostMapping(value = "/{idConta}/lancamentos/{idLancamento}/estornar")
+    public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> estornarLancamento(@PathVariable("idConta") Long idConta, @PathVariable("idLancamento") Long idLancamento) {
+        ComprovanteResponseDTO comprovanteResponseDTO = contaService.estornarLancamento(idConta, idLancamento);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDTO<>(comprovanteResponseDTO));
+    }
+
 	@GetMapping(value = "/{id}/lancamentos")
 	public ResponseEntity<ResponseDTO<ExtratoResponseDTO>> consultarExtratoCompleto(@PathVariable("id") Long id) {
 		ExtratoResponseDTO extratoResponseDTO = contaService.consultarExtratoCompleto(id);
@@ -89,14 +98,5 @@ public class ContaController extends ControllerBase {
                 .status(HttpStatus.OK)
                 .body(new ResponseDTO<>(contasResponseDTO));
     }
-
-    @PostMapping(value = "/{idConta}/lancamentos/{idLancamento}/estornar")
-	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> estornarLancamento(@PathVariable("idConta") Long idConta, @PathVariable("idLancamento") Long idLancamento) {
-		ComprovanteResponseDTO comprovanteResponseDTO = contaService.estornarLancamento(idConta, idLancamento);
-
-		return ResponseEntity
-				.status(HttpStatus.OK)
-				.body(new ResponseDTO<>(comprovanteResponseDTO));
-	}
 
 }
