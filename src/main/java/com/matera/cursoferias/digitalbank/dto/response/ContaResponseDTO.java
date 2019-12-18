@@ -11,7 +11,8 @@ import lombok.Setter;
 @Builder
 public class ContaResponseDTO {
 
-	private Long id;
+    private Long idCliente;
+	private Long idConta;
 	private Integer numeroAgencia;
 	private Long numeroConta;
 	private BigDecimal saldo;
