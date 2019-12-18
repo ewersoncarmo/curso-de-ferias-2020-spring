@@ -35,15 +35,14 @@ public class LancamentoBusiness {
 	private EstornoRepository estornoRepository;
 
 	public Lancamento efetuarLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
-		Lancamento lancamento = new Lancamento();
-
-		lancamento.setDataHora(LocalDateTime.now());
-		lancamento.setCodigoAutenticacao(geraAutenticacao());
-		lancamento.setValor(lancamentoRequestDTO.getValor());
-		lancamento.setNatureza(natureza.getCodigo());
-		lancamento.setTipoLancamento(tipoLancamento.getCodigo());
-		lancamento.setDescricao(lancamentoRequestDTO.getDescricao());
-		lancamento.setConta(conta);
+		Lancamento lancamento = Lancamento.builder().dataHora(LocalDateTime.now())
+                                            		.codigoAutenticacao(geraAutenticacao())
+                                            		.valor(lancamentoRequestDTO.getValor())
+                                            		.natureza(natureza.getCodigo())
+                                            		.tipoLancamento(tipoLancamento.getCodigo())
+                                            		.descricao(lancamentoRequestDTO.getDescricao())
+                                            		.conta(conta)
+                                            		.build();
 
 		return lancamentoRepository.save(lancamento);
 	}
@@ -69,17 +68,14 @@ public class LancamentoBusiness {
 	}
 
 	public ComprovanteResponseDTO entidadeParaComprovanteResponseDTO(Lancamento lancamento) {
-		ComprovanteResponseDTO comprovanteResponseDTO = new ComprovanteResponseDTO();
-
-		comprovanteResponseDTO.setIdLancamento(lancamento.getId());
-		comprovanteResponseDTO.setCodigoAutenticacao(lancamento.getCodigoAutenticacao());
-		comprovanteResponseDTO.setDataHora(lancamento.getDataHora());
-		comprovanteResponseDTO.setValor(lancamento.getValor());
-		comprovanteResponseDTO.setNatureza(lancamento.getNatureza());
-		comprovanteResponseDTO.setTipoLancamento(lancamento.getTipoLancamento());
-		comprovanteResponseDTO.setDescricao(lancamento.getDescricao());
-
-		return comprovanteResponseDTO;
+		return ComprovanteResponseDTO.builder().idLancamento(lancamento.getId())
+                                        	   .codigoAutenticacao(lancamento.getCodigoAutenticacao())
+                                        	   .dataHora(lancamento.getDataHora())
+                                        	   .valor(lancamento.getValor())
+                                        	   .natureza(lancamento.getNatureza())
+                                        	   .tipoLancamento(lancamento.getTipoLancamento())
+                                        	   .descricao(lancamento.getDescricao())
+                                        	   .build();
 	}
 
 	public ComprovanteResponseDTO estornarLancamento(Long idConta, Long idLancamento) {

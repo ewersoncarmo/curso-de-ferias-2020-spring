@@ -11,17 +11,13 @@ import javax.persistence.ManyToOne;
 
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 public class Lancamento extends EntidadeBase {
 

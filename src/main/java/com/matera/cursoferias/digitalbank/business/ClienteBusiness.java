@@ -82,20 +82,18 @@ public class ClienteBusiness {
 	}
 
 	private ClienteResponseDTO entidadeParaResponseDTO(Cliente cliente) {
-        ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO();
-        clienteResponseDTO.setId(cliente.getId());
-        clienteResponseDTO.setNome(cliente.getNome());
-        clienteResponseDTO.setCpf(cliente.getCpf());
-        clienteResponseDTO.setTelefone(cliente.getTelefone());
-        clienteResponseDTO.setRendaMensal(cliente.getRendaMensal());
-        clienteResponseDTO.setLogradouro(cliente.getLogradouro());
-        clienteResponseDTO.setNumero(cliente.getNumero());
-        clienteResponseDTO.setComplemento(cliente.getComplemento());
-        clienteResponseDTO.setBairro(cliente.getBairro());
-        clienteResponseDTO.setCidade(cliente.getCidade());
-        clienteResponseDTO.setCep(cliente.getCep());
-
-        return clienteResponseDTO;
+        return ClienteResponseDTO.builder().id(cliente.getId())
+                                           .nome(cliente.getNome())
+                                           .cpf(cliente.getCpf())
+                                           .telefone(cliente.getTelefone())
+                                           .rendaMensal(cliente.getRendaMensal())
+                                           .logradouro(cliente.getLogradouro())
+                                           .numero(cliente.getNumero())
+                                           .complemento(cliente.getComplemento())
+                                           .bairro(cliente.getBairro())
+                                           .cidade(cliente.getCidade())
+                                           .cep(cliente.getCep())
+                                           .build();
     }
 
 }

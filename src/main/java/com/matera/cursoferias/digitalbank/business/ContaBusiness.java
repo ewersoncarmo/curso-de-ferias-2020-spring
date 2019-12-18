@@ -124,13 +124,11 @@ public class ContaBusiness {
 	}
 
 	private ContaResponseDTO entidadeParaResponseDTO(Conta conta) {
-		ContaResponseDTO contaResponseDTO = new ContaResponseDTO();
-		contaResponseDTO.setId(conta.getId());
-		contaResponseDTO.setNumeroAgencia(conta.getNumeroAgencia());
-		contaResponseDTO.setNumeroConta(conta.getNumeroConta());
-		contaResponseDTO.setSaldo(conta.getSaldo());
-
-		return contaResponseDTO;
+		return ContaResponseDTO.builder().id(conta.getId())
+                                         .numeroAgencia(conta.getNumeroAgencia())
+                                         .numeroConta(conta.getNumeroConta())
+                                         .saldo(conta.getSaldo())
+                                         .build();
 	}
 
 }
