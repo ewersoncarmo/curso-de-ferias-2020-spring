@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
 import com.matera.cursoferias.digitalbank.exception.BusinessException;
 import com.matera.cursoferias.digitalbank.exception.handler.BusinessExceptionHandler;
+import com.matera.cursoferias.digitalbank.exception.handler.GenericExceptionHandler;
 import com.matera.cursoferias.digitalbank.exception.handler.InvalidFormatExceptionHandler;
 import com.matera.cursoferias.digitalbank.exception.handler.MethodArgumentNotValidExceptionHandler;
 
@@ -23,19 +24,27 @@ public abstract class ControllerBase {
 	@Autowired
 	private InvalidFormatExceptionHandler invalidFormatExceptionHandler;
 
-	@ExceptionHandler({BusinessException.class})
-	public ResponseEntity<ResponseDTO<Object>> handleException(BusinessException e) {
-		return businessExceptionHandler.handleException(e);
+	@Autowired
+	private GenericExceptionHandler genericExceptionHandler;
+
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<ResponseDTO<Object>> handleException(BusinessException exception) {
+		return businessExceptionHandler.handleException(exception);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ResponseDTO<Object>> handleException(MethodArgumentNotValidException e) {
-		return methodArgumentNotValidExceptionHandler.handleException(e);
+    public ResponseEntity<ResponseDTO<Object>> handleException(MethodArgumentNotValidException exception) {
+		return methodArgumentNotValidExceptionHandler.handleException(exception);
     }
 
 	@ExceptionHandler(InvalidFormatException.class)
-    public ResponseEntity<ResponseDTO<Object>> handleException(InvalidFormatException e) {
-		return invalidFormatExceptionHandler.handleException(e);
+    public ResponseEntity<ResponseDTO<Object>> handleException(InvalidFormatException exception) {
+		return invalidFormatExceptionHandler.handleException(exception);
+    }
+
+	@ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseDTO<Object>> handleException(Exception exception) {
+	    return genericExceptionHandler.handleException(exception);
     }
 
 }
