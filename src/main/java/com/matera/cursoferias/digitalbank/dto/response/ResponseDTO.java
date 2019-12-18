@@ -16,11 +16,11 @@ import lombok.Setter;
 @JsonInclude(value = Include.NON_NULL)
 public class ResponseDTO<T> {
 
-	private T dado;
+	private T dados;
 	private List<ErroResponseDTO> erros;
 
-	public ResponseDTO(T dado){
-		this.dado = dado;
+	public ResponseDTO(T dados){
+		this.dados = dados;
 	}
 
 	public static ResponseDTO<Object> comErros(List<ErroResponseDTO> erros) {
