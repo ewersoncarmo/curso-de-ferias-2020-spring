@@ -90,4 +90,13 @@ public class ContaController extends ControllerBase {
                 .body(new ResponseDTO<>(contasResponseDTO));
     }
 
+    @PostMapping(value = "/{idConta}/lancamentos/{idLancamento}/estornar")
+	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> estornarLancamento(@PathVariable("idConta") Long idConta, @PathVariable("idLancamento") Long idLancamento) {
+		ComprovanteResponseDTO comprovanteResponseDTO = contaService.estornarLancamento(idConta, idLancamento);
+
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new ResponseDTO<>(comprovanteResponseDTO));
+	}
+
 }

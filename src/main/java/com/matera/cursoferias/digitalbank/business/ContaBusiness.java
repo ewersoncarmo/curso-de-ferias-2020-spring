@@ -22,6 +22,7 @@ import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ExtratoResponseDTO;
 import com.matera.cursoferias.digitalbank.exception.BusinessException;
 import com.matera.cursoferias.digitalbank.repository.ContaRepository;
+import com.matera.cursoferias.digitalbank.utils.DigitalBankUtils;
 
 @Component
 public class ContaBusiness {
@@ -56,7 +57,7 @@ public class ContaBusiness {
 
 		Lancamento lancamento = criarLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);
 
-		return lancamentoBusiness.lancamentoEntidadeParaComprovanteResponseDTO(lancamento);
+		return lancamentoBusiness.entidadeParaComprovanteResponseDTO(lancamento);
 	}
 
 	@Transactional
@@ -95,6 +96,10 @@ public class ContaBusiness {
         return contasResponseDTO;
     }
 
+	public ComprovanteResponseDTO estornarLancamento(Long idConta, Long idLancamento) {
+		return lancamentoBusiness.estornarLancamento(idConta, idLancamento);
+	}
+
 	private Conta findById(Long id) {
 		return contaRepository.findById(id).orElseThrow(() -> new BusinessException("DB-3", id));
 	}
@@ -106,26 +111,16 @@ public class ContaBusiness {
 	}
 
 	private Lancamento criarLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
-		conta.setSaldo(calcularSaldo(natureza, lancamentoRequestDTO.getValor(), conta.getSaldo()));
+		BigDecimal saldo = DigitalBankUtils.calculaSaldo(natureza, lancamentoRequestDTO.getValor(), conta.getSaldo());
 
+		if (saldo.compareTo(BigDecimal.ZERO) < 0) {
+			throw new BusinessException("DB-6");
+		}
+
+		conta.setSaldo(saldo);
 		conta = contaRepository.save(conta);
 
 		return lancamentoBusiness.efetuarLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);
-	}
-
-	private BigDecimal calcularSaldo(Natureza natureza, BigDecimal valor, BigDecimal saldoAtual) {
-		BigDecimal saldoFinal;
-		if (natureza == Natureza.DEBITO) {
-			saldoFinal = saldoAtual.subtract(valor);
-
-			if (saldoFinal.compareTo(BigDecimal.ZERO) < 0) {
-				throw new BusinessException("DB-6");
-			}
-		} else {
-			saldoFinal = saldoAtual.add(valor);
-		}
-
-		return saldoFinal;
 	}
 
 	private ContaResponseDTO entidadeParaResponseDTO(Conta conta) {

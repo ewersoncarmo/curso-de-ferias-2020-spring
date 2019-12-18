@@ -6,6 +6,6 @@ import com.matera.cursoferias.digitalbank.domain.entity.Cliente;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
-	public Cliente findByCpf(String cpf);
+	Cliente findByCpf(String cpf);
 
 }

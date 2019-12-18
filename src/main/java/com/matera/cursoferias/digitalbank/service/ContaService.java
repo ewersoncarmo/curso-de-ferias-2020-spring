@@ -36,4 +36,8 @@ public class ContaService {
         return contaBusiness.consultarTodas();
     }
 
+    public ComprovanteResponseDTO estornarLancamento(Long idConta, Long idLancamento) {
+		return contaBusiness.estornarLancamento(idConta, idLancamento);
+	}
+
 }
