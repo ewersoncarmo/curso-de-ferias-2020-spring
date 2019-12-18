@@ -59,7 +59,7 @@ public class LancamentoBusiness {
 	}
 
 	public List<ComprovanteResponseDTO> consultarExtratoCompleto(Conta conta) {
-		List<Lancamento> lancamentos = lancamentoRepository.findByConta_Id(conta.getId());
+		List<Lancamento> lancamentos = lancamentoRepository.findByConta_IdOrderByIdDesc(conta.getId());
 
 		List<ComprovanteResponseDTO> comprovantesResponseDTO = new ArrayList<>();
 		lancamentos.forEach(l -> comprovantesResponseDTO.add(entidadeParaComprovanteResponseDTO(l)));
