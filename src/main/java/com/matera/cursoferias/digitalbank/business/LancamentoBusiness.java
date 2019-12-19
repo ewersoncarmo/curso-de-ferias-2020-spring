@@ -13,6 +13,7 @@ import com.matera.cursoferias.digitalbank.domain.entity.Estorno;
 import com.matera.cursoferias.digitalbank.domain.entity.Lancamento;
 import com.matera.cursoferias.digitalbank.domain.entity.Transferencia;
 import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
+import com.matera.cursoferias.digitalbank.domain.enumerator.SituacaoConta;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
@@ -94,6 +95,10 @@ public class LancamentoBusiness {
 	}
 
 	private void validaLancamento(Lancamento lancamento) {
+	    if (SituacaoConta.BLOQUEADA.getCodigo().equals(lancamento.getConta().getSituacao())) {
+            throw new BusinessException("DB-15", lancamento.getConta().getId());
+        }
+
 	    if (Natureza.DEBITO.getCodigo().equals(lancamento.getNatureza()) && lancamento.getConta().getSaldo().compareTo(lancamento.getValor()) < 0) {
             throw new BusinessException("DB-6");
         }
@@ -116,9 +121,13 @@ public class LancamentoBusiness {
 			throw new BusinessException("DB-10");
 		}
 
+		if (SituacaoConta.BLOQUEADA.getCodigo().equals(lancamento.getConta().getSituacao())) {
+            throw new BusinessException("DB-15", lancamento.getConta().getId());
+        }
+
 		if (Natureza.CREDITO.getCodigo().equals(lancamento.getNatureza()) && lancamento.getConta().getSaldo().compareTo(lancamento.getValor()) < 0) {
-			throw new BusinessException("DB-11");
-	    }
+            throw new BusinessException("DB-11");
+        }
 	}
 
 	private ComprovanteResponseDTO trataEstornoTransferencia(Transferencia transferencia) {
