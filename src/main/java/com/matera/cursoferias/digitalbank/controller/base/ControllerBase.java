@@ -1,5 +1,8 @@
 package com.matera.cursoferias.digitalbank.controller.base;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +17,8 @@ import com.matera.cursoferias.digitalbank.exception.handler.InvalidFormatExcepti
 import com.matera.cursoferias.digitalbank.exception.handler.MethodArgumentNotValidExceptionHandler;
 
 public abstract class ControllerBase {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ControllerBase.class);
 
 	@Autowired
 	private BusinessExceptionHandler businessExceptionHandler;
@@ -44,6 +49,8 @@ public abstract class ControllerBase {
 
 	@ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDTO<Object>> handleException(Exception exception) {
+	    LOG.error(ExceptionUtils.getStackTrace(exception));
+
 	    return genericExceptionHandler.handleException(exception);
     }
 
