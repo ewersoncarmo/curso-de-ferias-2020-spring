@@ -33,9 +33,9 @@ public class ContaController extends ControllerBase {
 	private ContaService contaService;
 
 	@PostMapping(value = "/{id}/depositar")
-	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> depositar(@PathVariable("id") Long id,
+	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaDeposito(@PathVariable("id") Long id,
 			@Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
-		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuarLancamento(id, lancamentoRequestDTO, Natureza.CREDITO, TipoLancamento.DEPOSITO);
+		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.CREDITO, TipoLancamento.DEPOSITO);
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -43,9 +43,9 @@ public class ContaController extends ControllerBase {
 	}
 
 	@PostMapping(value = "/{id}/sacar")
-	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> sacar(@PathVariable("id") Long id,
+	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaSaque(@PathVariable("id") Long id,
 			@Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
-		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuarLancamento(id, lancamentoRequestDTO, Natureza.DEBITO, TipoLancamento.SAQUE);
+		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.DEBITO, TipoLancamento.SAQUE);
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -53,9 +53,9 @@ public class ContaController extends ControllerBase {
 	}
 
 	@PostMapping(value = "/{id}/pagar")
-	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> pagar(@PathVariable("id") Long id,
+	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaPagamento(@PathVariable("id") Long id,
 			@Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
-		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuarLancamento(id, lancamentoRequestDTO, Natureza.DEBITO, TipoLancamento.PAGAMENTO);
+		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.DEBITO, TipoLancamento.PAGAMENTO);
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -63,9 +63,9 @@ public class ContaController extends ControllerBase {
 	}
 
 	@PostMapping(value = "/{id}/transferir")
-	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> transferir(@PathVariable("id") Long id,
+	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaTransferencia(@PathVariable("id") Long id,
 			@Valid @RequestBody TransferenciaRequestDTO transferenciaRequestDTO) {
-		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuarTransferencia(id, transferenciaRequestDTO);
+		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaTransferencia(id, transferenciaRequestDTO);
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -73,8 +73,8 @@ public class ContaController extends ControllerBase {
 	}
 
 	@PostMapping(value = "/{idConta}/lancamentos/{idLancamento}/estornar")
-    public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> estornarLancamento(@PathVariable("idConta") Long idConta, @PathVariable("idLancamento") Long idLancamento) {
-        ComprovanteResponseDTO comprovanteResponseDTO = contaService.estornarLancamento(idConta, idLancamento);
+    public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> estornaLancamento(@PathVariable("idConta") Long idConta, @PathVariable("idLancamento") Long idLancamento) {
+        ComprovanteResponseDTO comprovanteResponseDTO = contaService.estornaLancamento(idConta, idLancamento);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -82,8 +82,8 @@ public class ContaController extends ControllerBase {
     }
 
 	@GetMapping(value = "/{id}/lancamentos")
-	public ResponseEntity<ResponseDTO<ExtratoResponseDTO>> consultarExtratoCompleto(@PathVariable("id") Long id) {
-		ExtratoResponseDTO extratoResponseDTO = contaService.consultarExtratoCompleto(id);
+	public ResponseEntity<ResponseDTO<ExtratoResponseDTO>> consultaExtratoCompleto(@PathVariable("id") Long id) {
+		ExtratoResponseDTO extratoResponseDTO = contaService.consultaExtratoCompleto(id);
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -91,8 +91,8 @@ public class ContaController extends ControllerBase {
 	}
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<List<ContaResponseDTO>>> consultarTodas() {
-        List<ContaResponseDTO> contasResponseDTO = contaService.consultarTodas();
+    public ResponseEntity<ResponseDTO<List<ContaResponseDTO>>> consultaTodas() {
+        List<ContaResponseDTO> contasResponseDTO = contaService.consultaTodas();
 
         return ResponseEntity
                 .status(HttpStatus.OK)

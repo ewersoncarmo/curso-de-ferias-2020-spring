@@ -83,7 +83,7 @@ public class LancamentoBusiness {
 
 	public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
 		Lancamento lancamento = lancamentoRepository.findByIdAndConta_Id(idLancamento, idConta).orElse(null);
-		Transferencia transferencia = transferenciaRepository.buscaTransferenciaPorIdLancamento(idLancamento).orElse(null);
+		Transferencia transferencia = transferenciaRepository.consultaTransferenciaPorIdLancamento(idLancamento).orElse(null);
 
 		validaEstorno(lancamento, transferencia, idConta, idLancamento);
 

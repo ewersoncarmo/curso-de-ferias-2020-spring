@@ -20,23 +20,23 @@ public class ContaService {
 	@Autowired
 	private ContaBusiness contaBusiness;
 
-	public ComprovanteResponseDTO efetuarLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
+	public ComprovanteResponseDTO efetuaLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
 		return contaBusiness.efetuaLancamento(id, lancamentoRequestDTO, natureza, tipoLancamento);
 	}
 
-	public ComprovanteResponseDTO efetuarTransferencia(Long id, TransferenciaRequestDTO transferenciaRequestDTO) {
+	public ComprovanteResponseDTO efetuaTransferencia(Long id, TransferenciaRequestDTO transferenciaRequestDTO) {
 		return contaBusiness.efetuaTransferencia(id, transferenciaRequestDTO);
 	}
 
-	public ExtratoResponseDTO consultarExtratoCompleto(Long id) {
+	public ExtratoResponseDTO consultaExtratoCompleto(Long id) {
 		return contaBusiness.consultaExtratoCompleto(id);
 	}
 
-    public List<ContaResponseDTO> consultarTodas() {
+    public List<ContaResponseDTO> consultaTodas() {
         return contaBusiness.consultaTodas();
     }
 
-    public ComprovanteResponseDTO estornarLancamento(Long idConta, Long idLancamento) {
+    public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
 		return contaBusiness.estornaLancamento(idConta, idLancamento);
 	}
 
