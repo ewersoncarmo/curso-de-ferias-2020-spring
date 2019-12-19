@@ -100,17 +100,17 @@ public class LancamentoBusiness {
 			throw new BusinessException("DB-8", lancamento.getTipoLancamento());
 		}
 
-		if (TipoLancamento.TRANSFERENCIA.getCodigo().equals(lancamento.getTipoLancamento())) {
-			if (!lancamento.getId().equals(transferencia.getLancamentoCredito().getId())) {
-				throw new BusinessException("DB-9");
-			}
-
-		    if (transferencia.getLancamentoCredito().getConta().getSaldo().compareTo(lancamento.getValor()) < 0) {
-				throw new BusinessException("DB-10");
-		    }
+		if (estornoRepository.findByLancamentoOriginal_Id(lancamento.getId()) != null) {
+			throw new BusinessException("DB-9");
 		}
 
-		//TODO validar se as contas envolvidas estão ativas para realizar o estorno
+		if (TipoLancamento.TRANSFERENCIA.getCodigo().equals(lancamento.getTipoLancamento()) && !lancamento.getId().equals(transferencia.getLancamentoCredito().getId())) {
+			throw new BusinessException("DB-10");
+		}
+
+		if (Natureza.CREDITO.getCodigo().equals(lancamento.getNatureza()) && lancamento.getConta().getSaldo().compareTo(lancamento.getValor()) < 0) {
+			throw new BusinessException("DB-11");
+	    }
 	}
 
 	private ComprovanteResponseDTO trataEstornoTransferencia(Transferencia transferencia) {

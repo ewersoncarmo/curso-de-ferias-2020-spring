@@ -6,4 +6,6 @@ import com.matera.cursoferias.digitalbank.domain.entity.Estorno;
 
 public interface EstornoRepository extends JpaRepository<Estorno, Long> {
 
+	Estorno findByLancamentoOriginal_Id(Long idLancamentoOriginal);
+
 }
