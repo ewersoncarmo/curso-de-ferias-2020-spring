@@ -19,7 +19,7 @@ public class GenericExceptionHandler implements ExceptionHandler<Exception> {
 	@Override
 	public ResponseEntity<ResponseDTO<Object>> handleException(Exception exception) {
 		String mensagemErro = messageSource.getMessage("DB-99", null, LocaleContextHolder.getLocale());
-		ErroResponseDTO erro = new ErroResponseDTO(mensagemErro);
+		ErroResponseDTO erro = new ErroResponseDTO("DB-99: " + mensagemErro);
 
 		return ResponseEntity
 				.status(HttpStatus.INTERNAL_SERVER_ERROR)

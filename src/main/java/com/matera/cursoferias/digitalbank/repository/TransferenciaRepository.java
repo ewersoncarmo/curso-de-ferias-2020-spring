@@ -1,7 +1,10 @@
 package com.matera.cursoferias.digitalbank.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.matera.cursoferias.digitalbank.domain.entity.Transferencia;
 
@@ -11,6 +14,6 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, Lo
 		   "FROM   Transferencia t " +
 		   "WHERE  t.lancamentoDebito.id  = :idLancamento OR " +
 		   "       t.lancamentoCredito.id = :idLancamento ")
-	Transferencia buscaTransferenciaPorIdLancamento(Long idLancamento);
+	Optional<Transferencia> buscaTransferenciaPorIdLancamento(@Param("idLancamento") Long idLancamento);
 
 }

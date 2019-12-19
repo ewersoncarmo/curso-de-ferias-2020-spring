@@ -48,7 +48,7 @@ public class ContaBusiness {
 		                             .situacao(SituacaoConta.ABERTA.getCodigo())
 		                             .build();
 
-		conta = contaRepository.save(conta);
+		contaRepository.save(conta);
 
 		return entidadeParaResponseDTO(conta);
 	}
@@ -66,10 +66,8 @@ public class ContaBusiness {
 	public ComprovanteResponseDTO efetuaTransferencia(Long id, TransferenciaRequestDTO transferenciaRequestDTO) {
 		Conta contaDebito = findById(id);
 
-		Conta contaCredito = contaRepository.findByNumeroAgenciaAndNumeroConta(transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta());
-		if (contaCredito == null) {
-			throw new BusinessException("DB-5", transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta());
-		}
+		Conta contaCredito = contaRepository.findByNumeroAgenciaAndNumeroConta(transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta())
+		                                    .orElseThrow(() -> new BusinessException("DB-5", transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta().toString()));
 
 		Lancamento lancamentoDebito = insereLancamento(new LancamentoRequestDTO(transferenciaRequestDTO.getValor(), transferenciaRequestDTO.getDescricao()), contaDebito, Natureza.DEBITO, TipoLancamento.TRANSFERENCIA);
 		Lancamento lancamentoCredito = insereLancamento(new LancamentoRequestDTO(transferenciaRequestDTO.getValor(), transferenciaRequestDTO.getDescricao()), contaCredito, Natureza.CREDITO, TipoLancamento.TRANSFERENCIA);
@@ -131,7 +129,7 @@ public class ContaBusiness {
 	}
 
 	private void validaCadastro(Cliente cliente) {
-		if (contaRepository.findByNumeroConta(cliente.getTelefone()) != null) {
+		if (contaRepository.findByNumeroConta(cliente.getTelefone()).isPresent()) {
 			throw new BusinessException("DB-4", cliente.getTelefone().toString());
 		}
 	}

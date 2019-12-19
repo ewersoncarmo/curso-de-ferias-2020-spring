@@ -64,7 +64,7 @@ public class ClienteBusiness {
 	}
 
 	private void valida(ClienteRequestDTO clienteRequestDTO) {
-		if (clienteRepository.findByCpf(clienteRequestDTO.getCpf()) != null) {
+		if (clienteRepository.findByCpf(clienteRequestDTO.getCpf()).isPresent()) {
 			throw new BusinessException("DB-2", clienteRequestDTO.getCpf());
 		}
 	}

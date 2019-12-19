@@ -79,8 +79,8 @@ public class LancamentoBusiness {
 	}
 
 	public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
-		Lancamento lancamento = lancamentoRepository.findByIdAndConta_Id(idLancamento, idConta);
-		Transferencia transferencia = transferenciaRepository.buscaTransferenciaPorIdLancamento(idLancamento);
+		Lancamento lancamento = lancamentoRepository.findByIdAndConta_Id(idLancamento, idConta).orElse(null);
+		Transferencia transferencia = transferenciaRepository.buscaTransferenciaPorIdLancamento(idLancamento).orElse(null);
 
 		validaEstorno(lancamento, transferencia, idConta, idLancamento);
 
@@ -100,7 +100,7 @@ public class LancamentoBusiness {
 			throw new BusinessException("DB-8", lancamento.getTipoLancamento());
 		}
 
-		if (estornoRepository.findByLancamentoOriginal_Id(lancamento.getId()) != null) {
+		if (estornoRepository.findByLancamentoOriginal_Id(lancamento.getId()).isPresent()) {
 			throw new BusinessException("DB-9");
 		}
 
