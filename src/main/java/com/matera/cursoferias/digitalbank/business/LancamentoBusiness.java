@@ -44,10 +44,12 @@ public class LancamentoBusiness {
                                             		.conta(conta)
                                             		.build();
 
+		validaLancamento(lancamento);
+
 		return lancamentoRepository.save(lancamento);
 	}
 
-	public ComprovanteResponseDTO efetuaTransferencia(Lancamento lancamentoDebito, Lancamento lancamentoCredito) {
+    public ComprovanteResponseDTO efetuaTransferencia(Lancamento lancamentoDebito, Lancamento lancamentoCredito) {
 		Transferencia transferencia = new Transferencia();
 
 		transferencia.setLancamentoDebito(lancamentoDebito);
@@ -90,6 +92,12 @@ public class LancamentoBusiness {
 			return trataEstornoLancamento(lancamento);
 		}
 	}
+
+	private void validaLancamento(Lancamento lancamento) {
+	    if (Natureza.DEBITO.getCodigo().equals(lancamento.getNatureza()) && lancamento.getConta().getSaldo().compareTo(lancamento.getValor()) < 0) {
+            throw new BusinessException("DB-6");
+        }
+    }
 
 	private void validaEstorno(Lancamento lancamento, Transferencia transferencia, Long idConta, Long idLancamento) {
 		if (lancamento == null) {

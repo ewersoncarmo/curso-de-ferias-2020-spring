@@ -135,17 +135,19 @@ public class ContaBusiness {
 	}
 
 	private Lancamento insereLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
-		BigDecimal saldo = DigitalBankUtils.calculaSaldo(natureza, lancamentoRequestDTO.getValor(), conta.getSaldo());
+	    Lancamento lancamento = lancamentoBusiness.efetuaLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);
 
-		if (saldo.compareTo(BigDecimal.ZERO) < 0) {
-			throw new BusinessException("DB-6");
-		}
+		atualizaSaldo(conta, lancamento.getValor(), natureza);
+
+        return lancamento;
+	}
+
+    private void atualizaSaldo(Conta conta, BigDecimal valorLancamento, Natureza natureza) {
+        BigDecimal saldo = DigitalBankUtils.calculaSaldo(natureza, valorLancamento, conta.getSaldo());
 
 		conta.setSaldo(saldo);
-		conta = contaRepository.save(conta);
-
-		return lancamentoBusiness.efetuaLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);
-	}
+		contaRepository.save(conta);
+    }
 
     private void validaBloqueio(Conta conta) {
         if (SituacaoConta.BLOQUEADA.getCodigo().equals(conta.getSituacao())) {
