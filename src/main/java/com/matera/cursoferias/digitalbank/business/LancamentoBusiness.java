@@ -34,7 +34,7 @@ public class LancamentoBusiness {
 	@Autowired
 	private EstornoRepository estornoRepository;
 
-	public Lancamento efetuarLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
+	public Lancamento efetuaLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
 		Lancamento lancamento = Lancamento.builder().dataHora(LocalDateTime.now())
                                             		.codigoAutenticacao(geraAutenticacao())
                                             		.valor(lancamentoRequestDTO.getValor())
@@ -47,7 +47,7 @@ public class LancamentoBusiness {
 		return lancamentoRepository.save(lancamento);
 	}
 
-	public ComprovanteResponseDTO efetuarTransferencia(Lancamento lancamentoDebito, Lancamento lancamentoCredito) {
+	public ComprovanteResponseDTO efetuaTransferencia(Lancamento lancamentoDebito, Lancamento lancamentoCredito) {
 		Transferencia transferencia = new Transferencia();
 
 		transferencia.setLancamentoDebito(lancamentoDebito);
@@ -78,7 +78,7 @@ public class LancamentoBusiness {
                                         	   .build();
 	}
 
-	public ComprovanteResponseDTO estornarLancamento(Long idConta, Long idLancamento) {
+	public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
 		Lancamento lancamento = lancamentoRepository.findByIdAndConta_Id(idLancamento, idConta);
 		Transferencia transferencia = transferenciaRepository.buscaTransferenciaPorIdLancamento(idLancamento);
 

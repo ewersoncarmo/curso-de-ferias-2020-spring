@@ -24,23 +24,23 @@ public class ClienteBusiness {
 	private ContaBusiness contaBusiness;
 
 	@Transactional
-	public ContaResponseDTO cadastrar(ClienteRequestDTO clienteRequestDTO) {
-		validar(clienteRequestDTO);
+	public ContaResponseDTO cadastra(ClienteRequestDTO clienteRequestDTO) {
+		valida(clienteRequestDTO);
 
 		Cliente cliente = requestDTOParaEntidade(clienteRequestDTO, new Cliente());
 
 		cliente = clienteRepository.save(cliente);
 
-		return contaBusiness.cadastrar(cliente);
+		return contaBusiness.cadastra(cliente);
 	}
 
-	public ClienteResponseDTO consultar(Long id) {
+	public ClienteResponseDTO consulta(Long id) {
 		Cliente cliente = findById(id);
 
 		return entidadeParaResponseDTO(cliente);
 	}
 
-	public List<ClienteResponseDTO> consultarTodos() {
+	public List<ClienteResponseDTO> consultaTodos() {
         List<Cliente> clientes = clienteRepository.findAll();
         List<ClienteResponseDTO> clientesResponseDTO = new ArrayList<>();
 
@@ -49,17 +49,21 @@ public class ClienteBusiness {
         return clientesResponseDTO;
     }
 
-	public void atualizar(Long id, ClienteRequestDTO clienteRequestDTO) {
+	public void atualiza(Long id, ClienteRequestDTO clienteRequestDTO) {
 		Cliente cliente = requestDTOParaEntidade(clienteRequestDTO, findById(id));
 
 		clienteRepository.save(cliente);
+	}
+
+	public ContaResponseDTO consultaContaPorIdCliente(Long idCliente) {
+	    return contaBusiness.consultaContaPorIdCliente(idCliente);
 	}
 
 	private Cliente findById(Long id) {
 		return clienteRepository.findById(id).orElseThrow(() -> new BusinessException("DB-1", id));
 	}
 
-	private void validar(ClienteRequestDTO clienteRequestDTO) {
+	private void valida(ClienteRequestDTO clienteRequestDTO) {
 		if (clienteRepository.findByCpf(clienteRequestDTO.getCpf()) != null) {
 			throw new BusinessException("DB-2", clienteRequestDTO.getCpf());
 		}

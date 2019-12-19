@@ -30,8 +30,8 @@ public class ClienteController extends ControllerBase {
 	private ClienteService clienteService;
 
 	@PostMapping
-	public ResponseEntity<ResponseDTO<ContaResponseDTO>> cadastrar(@Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
-		ContaResponseDTO contaResponseDTO = clienteService.cadastrar(clienteRequestDTO);
+	public ResponseEntity<ResponseDTO<ContaResponseDTO>> cadastra(@Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
+		ContaResponseDTO contaResponseDTO = clienteService.cadastra(clienteRequestDTO);
 
 		return ResponseEntity
 				.status(HttpStatus.CREATED)
@@ -39,17 +39,26 @@ public class ClienteController extends ControllerBase {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ResponseDTO<ClienteResponseDTO>> consultar(@PathVariable("id") Long id) {
-		ClienteResponseDTO clienteResponseDTO = clienteService.consultar(id);
+	public ResponseEntity<ResponseDTO<ClienteResponseDTO>> consultaPorId(@PathVariable("id") Long id) {
+		ClienteResponseDTO clienteResponseDTO = clienteService.consultaPorId(id);
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(new ResponseDTO<>(clienteResponseDTO));
 	}
 
+	@GetMapping(value = "/{id}/conta")
+    public ResponseEntity<ResponseDTO<ContaResponseDTO>> consultaContaPorIdCliente(@PathVariable("id") Long id) {
+	    ContaResponseDTO contaResponseDTO = clienteService.consultaContaPorIdCliente(id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDTO<>(contaResponseDTO));
+    }
+
 	@GetMapping
-    public ResponseEntity<ResponseDTO<List<ClienteResponseDTO>>> consultarTodos() {
-        List<ClienteResponseDTO> clientesResponseDTO = clienteService.consultarTodos();
+    public ResponseEntity<ResponseDTO<List<ClienteResponseDTO>>> consultaTodos() {
+        List<ClienteResponseDTO> clientesResponseDTO = clienteService.consultaTodos();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -57,9 +66,8 @@ public class ClienteController extends ControllerBase {
     }
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Void> atualizar(@PathVariable("id") Long id,
-			@Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
-		clienteService.atualizar(id, clienteRequestDTO);
+	public ResponseEntity<Void> atualiza(@PathVariable("id") Long id, @Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
+		clienteService.atualiza(id, clienteRequestDTO);
 
 		return ResponseEntity
 				.noContent()

@@ -21,23 +21,31 @@ public class ContaService {
 	private ContaBusiness contaBusiness;
 
 	public ComprovanteResponseDTO efetuarLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
-		return contaBusiness.efetuarLancamento(id, lancamentoRequestDTO, natureza, tipoLancamento);
+		return contaBusiness.efetuaLancamento(id, lancamentoRequestDTO, natureza, tipoLancamento);
 	}
 
 	public ComprovanteResponseDTO efetuarTransferencia(Long id, TransferenciaRequestDTO transferenciaRequestDTO) {
-		return contaBusiness.efetuarTransferencia(id, transferenciaRequestDTO);
+		return contaBusiness.efetuaTransferencia(id, transferenciaRequestDTO);
 	}
 
 	public ExtratoResponseDTO consultarExtratoCompleto(Long id) {
-		return contaBusiness.consultarExtratoCompleto(id);
+		return contaBusiness.consultaExtratoCompleto(id);
 	}
 
     public List<ContaResponseDTO> consultarTodas() {
-        return contaBusiness.consultarTodas();
+        return contaBusiness.consultaTodas();
     }
 
     public ComprovanteResponseDTO estornarLancamento(Long idConta, Long idLancamento) {
-		return contaBusiness.estornarLancamento(idConta, idLancamento);
+		return contaBusiness.estornaLancamento(idConta, idLancamento);
 	}
+
+    public void bloqueiaConta(Long id) {
+        contaBusiness.bloqueiaConta(id);
+    }
+
+    public void desbloqueiaConta(Long id) {
+        contaBusiness.desbloqueiaConta(id);
+    }
 
 }

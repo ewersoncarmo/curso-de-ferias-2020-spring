@@ -19,6 +19,7 @@ public class ContaResponseDTO {
 	private Long idConta;
 	private Integer numeroAgencia;
 	private Long numeroConta;
+	private String situacao;
 	private BigDecimal saldo;
 
 }

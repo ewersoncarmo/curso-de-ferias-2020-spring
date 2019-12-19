@@ -99,4 +99,22 @@ public class ContaController extends ControllerBase {
                 .body(new ResponseDTO<>(contasResponseDTO));
     }
 
+    @PostMapping(value = "/{id}/bloquear")
+    public ResponseEntity<Void> bloqueia(@PathVariable("id") Long id) {
+        contaService.bloqueiaConta(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @PostMapping(value = "/{id}/desbloquear")
+    public ResponseEntity<Void> desbloqueia(@PathVariable("id") Long id) {
+        contaService.desbloqueiaConta(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
 }

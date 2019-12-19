@@ -14,6 +14,7 @@ import com.matera.cursoferias.digitalbank.domain.entity.Cliente;
 import com.matera.cursoferias.digitalbank.domain.entity.Conta;
 import com.matera.cursoferias.digitalbank.domain.entity.Lancamento;
 import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
+import com.matera.cursoferias.digitalbank.domain.enumerator.SituacaoConta;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.TransferenciaRequestDTO;
@@ -36,15 +37,16 @@ public class ContaBusiness {
 	@Value("${agencia.numeroMaximo:5}")
 	private Integer numeroMaximoAgencia;
 
-	public ContaResponseDTO cadastrar(Cliente cliente) {
-		validar(cliente);
+	public ContaResponseDTO cadastra(Cliente cliente) {
+		validaCadastro(cliente);
 
 		Integer numeroAgencia = new Random().nextInt(numeroMaximoAgencia) + 1;
-		Conta conta = new Conta();
-		conta.setNumeroAgencia(numeroAgencia);
-		conta.setNumeroConta(cliente.getTelefone());
-		conta.setSaldo(BigDecimal.ZERO);
-		conta.setCliente(cliente);
+		Conta conta = Conta.builder().numeroAgencia(numeroAgencia)
+		                             .numeroConta(cliente.getTelefone())
+		                             .saldo(BigDecimal.ZERO)
+		                             .cliente(cliente)
+		                             .situacao(SituacaoConta.ABERTA.getCodigo())
+		                             .build();
 
 		conta = contaRepository.save(conta);
 
@@ -52,16 +54,16 @@ public class ContaBusiness {
 	}
 
 	@Transactional
-	public ComprovanteResponseDTO efetuarLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
+	public ComprovanteResponseDTO efetuaLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
 		Conta conta = findById(id);
 
-		Lancamento lancamento = criarLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);
+		Lancamento lancamento = insereLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);
 
 		return lancamentoBusiness.entidadeParaComprovanteResponseDTO(lancamento);
 	}
 
 	@Transactional
-	public ComprovanteResponseDTO efetuarTransferencia(Long id, TransferenciaRequestDTO transferenciaRequestDTO) {
+	public ComprovanteResponseDTO efetuaTransferencia(Long id, TransferenciaRequestDTO transferenciaRequestDTO) {
 		Conta contaDebito = findById(id);
 
 		Conta contaCredito = contaRepository.findByNumeroAgenciaAndNumeroConta(transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta());
@@ -69,13 +71,13 @@ public class ContaBusiness {
 			throw new BusinessException("DB-5", transferenciaRequestDTO.getNumeroAgencia(), transferenciaRequestDTO.getNumeroConta());
 		}
 
-		Lancamento lancamentoDebito = criarLancamento(new LancamentoRequestDTO(transferenciaRequestDTO.getValor(), transferenciaRequestDTO.getDescricao()), contaDebito, Natureza.DEBITO, TipoLancamento.TRANSFERENCIA);
-		Lancamento lancamentoCredito = criarLancamento(new LancamentoRequestDTO(transferenciaRequestDTO.getValor(), transferenciaRequestDTO.getDescricao()), contaCredito, Natureza.CREDITO, TipoLancamento.TRANSFERENCIA);
+		Lancamento lancamentoDebito = insereLancamento(new LancamentoRequestDTO(transferenciaRequestDTO.getValor(), transferenciaRequestDTO.getDescricao()), contaDebito, Natureza.DEBITO, TipoLancamento.TRANSFERENCIA);
+		Lancamento lancamentoCredito = insereLancamento(new LancamentoRequestDTO(transferenciaRequestDTO.getValor(), transferenciaRequestDTO.getDescricao()), contaCredito, Natureza.CREDITO, TipoLancamento.TRANSFERENCIA);
 
-		return lancamentoBusiness.efetuarTransferencia(lancamentoDebito, lancamentoCredito);
+		return lancamentoBusiness.efetuaTransferencia(lancamentoDebito, lancamentoCredito);
 	}
 
-	public ExtratoResponseDTO consultarExtratoCompleto(Long id) {
+	public ExtratoResponseDTO consultaExtratoCompleto(Long id) {
 		Conta conta = findById(id);
 
 		List<ComprovanteResponseDTO> comprovantesResponseDTO = lancamentoBusiness.consultarExtratoCompleto(conta);
@@ -87,7 +89,7 @@ public class ContaBusiness {
 		return extratoResponseDTO;
 	}
 
-	public List<ContaResponseDTO> consultarTodas() {
+	public List<ContaResponseDTO> consultaTodas() {
 	    List<Conta> contas = contaRepository.findAll();
 	    List<ContaResponseDTO> contasResponseDTO = new ArrayList<>();
 
@@ -96,21 +98,45 @@ public class ContaBusiness {
         return contasResponseDTO;
     }
 
-	public ComprovanteResponseDTO estornarLancamento(Long idConta, Long idLancamento) {
-		return lancamentoBusiness.estornarLancamento(idConta, idLancamento);
+	public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
+		return lancamentoBusiness.estornaLancamento(idConta, idLancamento);
 	}
 
-	private Conta findById(Long id) {
+	public ContaResponseDTO consultaContaPorIdCliente(Long idCliente) {
+	    Conta conta = contaRepository.findByCliente_Id(idCliente).orElseThrow(() -> new BusinessException("DB-12", idCliente));
+
+	    return entidadeParaResponseDTO(conta);
+	}
+
+	public void bloqueiaConta(Long id) {
+	    Conta conta = findById(id);
+
+	    validaBloqueio(conta);
+
+	    conta.setSituacao(SituacaoConta.BLOQUEADA.getCodigo());
+	    contaRepository.save(conta);
+	}
+
+	public void desbloqueiaConta(Long id) {
+        Conta conta = findById(id);
+
+        validaDesbloqueio(conta);
+
+        conta.setSituacao(SituacaoConta.ABERTA.getCodigo());
+        contaRepository.save(conta);
+    }
+
+    private Conta findById(Long id) {
 		return contaRepository.findById(id).orElseThrow(() -> new BusinessException("DB-3", id));
 	}
 
-	private void validar(Cliente cliente) {
+	private void validaCadastro(Cliente cliente) {
 		if (contaRepository.findByNumeroConta(cliente.getTelefone()) != null) {
 			throw new BusinessException("DB-4", cliente.getTelefone().toString());
 		}
 	}
 
-	private Lancamento criarLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
+	private Lancamento insereLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
 		BigDecimal saldo = DigitalBankUtils.calculaSaldo(natureza, lancamentoRequestDTO.getValor(), conta.getSaldo());
 
 		if (saldo.compareTo(BigDecimal.ZERO) < 0) {
@@ -120,14 +146,27 @@ public class ContaBusiness {
 		conta.setSaldo(saldo);
 		conta = contaRepository.save(conta);
 
-		return lancamentoBusiness.efetuarLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);
+		return lancamentoBusiness.efetuaLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);
 	}
+
+    private void validaBloqueio(Conta conta) {
+        if (SituacaoConta.BLOQUEADA.getCodigo().equals(conta.getSituacao())) {
+            throw new BusinessException("DB-13", conta.getId());
+        }
+    }
+
+    private void validaDesbloqueio(Conta conta) {
+        if (SituacaoConta.ABERTA.getCodigo().equals(conta.getSituacao())) {
+            throw new BusinessException("DB-14", conta.getId());
+        }
+    }
 
 	private ContaResponseDTO entidadeParaResponseDTO(Conta conta) {
 		return ContaResponseDTO.builder().idCliente(conta.getCliente().getId())
 		                                 .idConta(conta.getId())
                                          .numeroAgencia(conta.getNumeroAgencia())
                                          .numeroConta(conta.getNumeroConta())
+                                         .situacao(conta.getSituacao())
                                          .saldo(conta.getSaldo())
                                          .build();
 	}

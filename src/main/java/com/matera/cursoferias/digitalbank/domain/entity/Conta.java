@@ -11,11 +11,17 @@ import javax.persistence.OneToOne;
 
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Conta extends EntidadeBase {
 
@@ -31,6 +37,9 @@ public class Conta extends EntidadeBase {
 	@OneToOne
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
+
+	@Column
+	private String situacao;
 
 	@OneToMany(mappedBy = "conta")
 	private List<Lancamento> lancamentos;

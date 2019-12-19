@@ -16,19 +16,23 @@ public class ClienteService {
 	@Autowired
 	private ClienteBusiness clienteBusiness;
 
-	public ContaResponseDTO cadastrar(ClienteRequestDTO clienteRequestDTO) {
-		return clienteBusiness.cadastrar(clienteRequestDTO);
+	public ContaResponseDTO cadastra(ClienteRequestDTO clienteRequestDTO) {
+		return clienteBusiness.cadastra(clienteRequestDTO);
 	}
 
-	public ClienteResponseDTO consultar(Long id) {
-		return clienteBusiness.consultar(id);
+	public ClienteResponseDTO consultaPorId(Long id) {
+		return clienteBusiness.consulta(id);
 	}
 
-	public List<ClienteResponseDTO> consultarTodos() {
-        return clienteBusiness.consultarTodos();
+	public List<ClienteResponseDTO> consultaTodos() {
+        return clienteBusiness.consultaTodos();
     }
 
-	public void atualizar(Long id, ClienteRequestDTO clienteRequestDTO) {
-		clienteBusiness.atualizar(id, clienteRequestDTO);
+	public void atualiza(Long id, ClienteRequestDTO clienteRequestDTO) {
+		clienteBusiness.atualiza(id, clienteRequestDTO);
 	}
+
+	public ContaResponseDTO consultaContaPorIdCliente(Long idCliente) {
+        return clienteBusiness.consultaContaPorIdCliente(idCliente);
+    }
 }
