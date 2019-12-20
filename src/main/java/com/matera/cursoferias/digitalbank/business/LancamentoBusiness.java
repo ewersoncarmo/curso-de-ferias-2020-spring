@@ -104,6 +104,12 @@ public class LancamentoBusiness {
 		}
 	}
 
+	public ComprovanteResponseDTO consultaComprovanteLancamento(Long idConta, Long idLancamento) {
+		Lancamento lancamento = lancamentoRepository.findByIdAndConta_Id(idLancamento, idConta).orElseThrow(() -> new BusinessException("DB-7", idLancamento, idConta));
+
+		return entidadeParaComprovanteResponseDTO(lancamento);
+	}
+
 	private void validaLancamento(Lancamento lancamento) {
 	    if (SituacaoConta.BLOQUEADA.getCodigo().equals(lancamento.getConta().getSituacao())) {
             throw new BusinessException("DB-15", lancamento.getConta().getId());
@@ -159,7 +165,9 @@ public class LancamentoBusiness {
 														   .valor(lancamento.getValor())
 														   .build();
 
-		lancamentoRepository.saveAndFlush(lancamentoEstorno);
+		lancamento.setDescricao(lancamento.getDescricao() + " - Estornado");
+		lancamentoRepository.save(lancamento);
+		lancamentoRepository.save(lancamentoEstorno);
 
 		Estorno estorno = Estorno.builder().lancamentoEstorno(lancamentoEstorno)
 										   .lancamentoOriginal(lancamento)
