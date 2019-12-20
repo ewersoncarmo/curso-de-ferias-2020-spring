@@ -1,10 +1,13 @@
 package com.matera.cursoferias.digitalbank.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.matera.cursoferias.digitalbank.controller.base.ControllerBase;
@@ -72,6 +76,26 @@ public class ContaController extends ControllerBase {
 				.body(new ResponseDTO<>(comprovanteResponseDTO));
 	}
 
+	@GetMapping(value = "/{id}/lancamentos", params = { "!dataInicial", "!dataFinal" })
+	public ResponseEntity<ResponseDTO<ExtratoResponseDTO>> consultaExtratoCompleto(@PathVariable("id") Long id) {
+		ExtratoResponseDTO extratoResponseDTO = contaService.consultaExtratoCompleto(id);
+
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new ResponseDTO<>(extratoResponseDTO));
+	}
+
+	@GetMapping(value = "/{id}/lancamentos", params = { "dataInicial" })
+	public ResponseEntity<ResponseDTO<ExtratoResponseDTO>> consultaExtratoPorPeriodo(@PathVariable("id") Long id,
+																				     @RequestParam(value = "dataInicial", required = true) @DateTimeFormat(iso = ISO.DATE) LocalDate dataInicial,
+																				     @RequestParam(value = "dataFinal", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dataFinal) {
+		ExtratoResponseDTO extratoResponseDTO = contaService.consultaExtratoPorPeriodo(id, dataInicial, dataFinal);
+
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new ResponseDTO<>(extratoResponseDTO));
+	}
+
 	@PostMapping(value = "/{idConta}/lancamentos/{idLancamento}/estornar")
     public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> estornaLancamento(@PathVariable("idConta") Long idConta, @PathVariable("idLancamento") Long idLancamento) {
         ComprovanteResponseDTO comprovanteResponseDTO = contaService.estornaLancamento(idConta, idLancamento);
@@ -80,15 +104,6 @@ public class ContaController extends ControllerBase {
                 .status(HttpStatus.OK)
                 .body(new ResponseDTO<>(comprovanteResponseDTO));
     }
-
-	@GetMapping(value = "/{id}/lancamentos")
-	public ResponseEntity<ResponseDTO<ExtratoResponseDTO>> consultaExtratoCompleto(@PathVariable("id") Long id) {
-		ExtratoResponseDTO extratoResponseDTO = contaService.consultaExtratoCompleto(id);
-
-		return ResponseEntity
-				.status(HttpStatus.OK)
-				.body(new ResponseDTO<>(extratoResponseDTO));
-	}
 
     @GetMapping
     public ResponseEntity<ResponseDTO<List<ContaResponseDTO>>> consultaTodas() {

@@ -1,6 +1,7 @@
 package com.matera.cursoferias.digitalbank.business;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -78,13 +79,29 @@ public class ContaBusiness {
 	public ExtratoResponseDTO consultaExtratoCompleto(Long id) {
 		Conta conta = findById(id);
 
-		List<ComprovanteResponseDTO> comprovantesResponseDTO = lancamentoBusiness.consultarExtratoCompleto(conta);
+		List<ComprovanteResponseDTO> comprovantesResponseDTO = lancamentoBusiness.consultaExtratoCompleto(conta);
 
 		ExtratoResponseDTO extratoResponseDTO = new ExtratoResponseDTO();
 		extratoResponseDTO.setConta(entidadeParaResponseDTO(conta));
 		extratoResponseDTO.setLancamentos(comprovantesResponseDTO);
 
 		return extratoResponseDTO;
+	}
+
+	public ExtratoResponseDTO consultaExtratoPorPeriodo(Long id, LocalDate dataInicial, LocalDate dataFinal) {
+		Conta conta = findById(id);
+
+		List<ComprovanteResponseDTO> comprovantesResponseDTO = lancamentoBusiness.consultaExtratoPorPeriodo(dataInicial, dataFinal);
+
+		ExtratoResponseDTO extratoResponseDTO = new ExtratoResponseDTO();
+		extratoResponseDTO.setConta(entidadeParaResponseDTO(conta));
+		extratoResponseDTO.setLancamentos(comprovantesResponseDTO);
+
+		return extratoResponseDTO;
+	}
+
+	public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
+		return lancamentoBusiness.estornaLancamento(idConta, idLancamento);
 	}
 
 	public List<ContaResponseDTO> consultaTodas() {
@@ -95,10 +112,6 @@ public class ContaBusiness {
 
         return contasResponseDTO;
     }
-
-	public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
-		return lancamentoBusiness.estornaLancamento(idConta, idLancamento);
-	}
 
 	public ContaResponseDTO consultaContaPorIdCliente(Long idCliente) {
 	    Conta conta = contaRepository.findByCliente_Id(idCliente).orElseThrow(() -> new BusinessException("DB-12", idCliente));

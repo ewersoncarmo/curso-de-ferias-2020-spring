@@ -1,5 +1,6 @@
 package com.matera.cursoferias.digitalbank.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,17 @@ public class ContaService {
 		return contaBusiness.consultaExtratoCompleto(id);
 	}
 
+	public ExtratoResponseDTO consultaExtratoPorPeriodo(Long id, LocalDate dataInicial, LocalDate dataFinal) {
+		return contaBusiness.consultaExtratoPorPeriodo(id, dataInicial, dataFinal);
+	}
+
+	public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
+		return contaBusiness.estornaLancamento(idConta, idLancamento);
+	}
+
     public List<ContaResponseDTO> consultaTodas() {
         return contaBusiness.consultaTodas();
     }
-
-    public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
-		return contaBusiness.estornaLancamento(idConta, idLancamento);
-	}
 
     public void bloqueiaConta(Long id) {
         contaBusiness.bloqueiaConta(id);

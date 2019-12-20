@@ -13,7 +13,7 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, Lo
 	@Query("SELECT t " +
 		   "FROM   Transferencia t " +
 		   "WHERE  t.lancamentoDebito.id  = :idLancamento OR " +
-		   "       t.lancamentoCredito.id = :idLancamento ")
+		   "       t.lancamentoCredito.id = :idLancamento")
 	Optional<Transferencia> consultaTransferenciaPorIdLancamento(@Param("idLancamento") Long idLancamento);
 
 }

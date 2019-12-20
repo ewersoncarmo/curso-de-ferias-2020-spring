@@ -1,5 +1,6 @@
 package com.matera.cursoferias.digitalbank.business;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +62,17 @@ public class LancamentoBusiness {
 		return entidadeParaComprovanteResponseDTO(lancamentoDebito);
 	}
 
-	public List<ComprovanteResponseDTO> consultarExtratoCompleto(Conta conta) {
+	public List<ComprovanteResponseDTO> consultaExtratoCompleto(Conta conta) {
 		List<Lancamento> lancamentos = lancamentoRepository.findByConta_IdOrderByIdDesc(conta.getId());
+
+		List<ComprovanteResponseDTO> comprovantesResponseDTO = new ArrayList<>();
+		lancamentos.forEach(l -> comprovantesResponseDTO.add(entidadeParaComprovanteResponseDTO(l)));
+
+		return comprovantesResponseDTO;
+	}
+
+	public List<ComprovanteResponseDTO> consultaExtratoPorPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
+		List<Lancamento> lancamentos = lancamentoRepository.consultaLancamentosPorPeriodo(dataInicial, dataFinal);
 
 		List<ComprovanteResponseDTO> comprovantesResponseDTO = new ArrayList<>();
 		lancamentos.forEach(l -> comprovantesResponseDTO.add(entidadeParaComprovanteResponseDTO(l)));
@@ -87,7 +97,7 @@ public class LancamentoBusiness {
 
 		validaEstorno(lancamento, transferencia, idConta, idLancamento);
 
-		if (TipoLancamento.TRANSFERENCIA.getCodigo().equals(lancamento.getTipoLancamento())) {
+		if (transferencia != null) {
 			return trataEstornoTransferencia(transferencia);
 		} else {
 			return trataEstornoLancamento(lancamento);
