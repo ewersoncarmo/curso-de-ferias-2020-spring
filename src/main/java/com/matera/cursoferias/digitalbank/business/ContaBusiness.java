@@ -101,6 +101,7 @@ public class ContaBusiness {
 		return extratoResponseDTO;
 	}
 
+	@Transactional
 	public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
 		return lancamentoBusiness.estornaLancamento(idConta, idLancamento);
 	}

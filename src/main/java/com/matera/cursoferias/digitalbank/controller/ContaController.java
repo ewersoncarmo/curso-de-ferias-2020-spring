@@ -47,7 +47,8 @@ public class ContaController extends ControllerBase {
 
     @PostMapping(value = "/{id}/depositar")
 	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaDeposito(@PathVariable("id") Long id,
-			@Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
+			                                                                  @Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
+
 		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.CREDITO, TipoLancamento.DEPOSITO);
 
 		return ResponseEntity
@@ -57,7 +58,8 @@ public class ContaController extends ControllerBase {
 
 	@PostMapping(value = "/{id}/sacar")
 	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaSaque(@PathVariable("id") Long id,
-			@Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
+			                                                               @Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
+
 		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.DEBITO, TipoLancamento.SAQUE);
 
 		return ResponseEntity
@@ -67,7 +69,8 @@ public class ContaController extends ControllerBase {
 
 	@PostMapping(value = "/{id}/pagar")
 	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaPagamento(@PathVariable("id") Long id,
-			@Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
+			                                                                   @Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
+
 		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.DEBITO, TipoLancamento.PAGAMENTO);
 
 		return ResponseEntity
@@ -77,7 +80,8 @@ public class ContaController extends ControllerBase {
 
 	@PostMapping(value = "/{id}/transferir")
 	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaTransferencia(@PathVariable("id") Long id,
-			@Valid @RequestBody TransferenciaRequestDTO transferenciaRequestDTO) {
+			                                                                       @Valid @RequestBody TransferenciaRequestDTO transferenciaRequestDTO) {
+
 		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaTransferencia(id, transferenciaRequestDTO);
 
 		return ResponseEntity
@@ -98,6 +102,7 @@ public class ContaController extends ControllerBase {
 	public ResponseEntity<ResponseDTO<ExtratoResponseDTO>> consultaExtratoPorPeriodo(@PathVariable("id") Long id,
 																				     @RequestParam(value = "dataInicial", required = true) @DateTimeFormat(iso = ISO.DATE) LocalDate dataInicial,
 																				     @RequestParam(value = "dataFinal", required = true) @DateTimeFormat(iso = ISO.DATE) LocalDate dataFinal) {
+
 		ExtratoResponseDTO extratoResponseDTO = contaService.consultaExtratoPorPeriodo(id, dataInicial, dataFinal);
 
 		return ResponseEntity
