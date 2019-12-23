@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
@@ -26,14 +27,17 @@ public class ClienteRequestDTO {
 	private String nome;
 
 	@NotNull
+	@Size(min = 11, max = 11)
 	@CPF
 	private String cpf;
 
 	@NotNull
+	@Digits(integer = 12, fraction = 0)
 	private Long telefone;
 
 	@NotNull
 	@Digits(integer = 18, fraction = 2)
+	@Positive
 	private BigDecimal rendaMensal;
 
 	@NotNull
@@ -41,6 +45,7 @@ public class ClienteRequestDTO {
 	private String logradouro;
 
 	@NotNull
+	@Digits(integer = 5, fraction = 0)
 	private Integer numero;
 
 	@Size(max = 100)
