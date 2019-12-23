@@ -94,10 +94,10 @@ public class ContaController extends ControllerBase {
 				.body(new ResponseDTO<>(extratoResponseDTO));
 	}
 
-	@GetMapping(value = "/{id}/lancamentos", params = { "dataInicial" })
+	@GetMapping(value = "/{id}/lancamentos", params = { "dataInicial", "dataFinal" })
 	public ResponseEntity<ResponseDTO<ExtratoResponseDTO>> consultaExtratoPorPeriodo(@PathVariable("id") Long id,
 																				     @RequestParam(value = "dataInicial", required = true) @DateTimeFormat(iso = ISO.DATE) LocalDate dataInicial,
-																				     @RequestParam(value = "dataFinal", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dataFinal) {
+																				     @RequestParam(value = "dataFinal", required = true) @DateTimeFormat(iso = ISO.DATE) LocalDate dataFinal) {
 		ExtratoResponseDTO extratoResponseDTO = contaService.consultaExtratoPorPeriodo(id, dataInicial, dataFinal);
 
 		return ResponseEntity
