@@ -39,6 +39,7 @@ public class ContaBusiness {
         this.lancamentoBusiness = lancamentoBusiness;
     }
 
+	@Transactional
     public ContaResponseDTO cadastra(Cliente cliente) {
 		validaCadastro(cliente);
 
@@ -125,6 +126,7 @@ public class ContaBusiness {
 	    return entidadeParaResponseDTO(conta);
 	}
 
+	@Transactional
 	public void bloqueiaConta(Long id) {
 	    Conta conta = findById(id);
 
@@ -134,6 +136,7 @@ public class ContaBusiness {
 	    contaRepository.save(conta);
 	}
 
+	@Transactional
 	public void desbloqueiaConta(Long id) {
         Conta conta = findById(id);
 

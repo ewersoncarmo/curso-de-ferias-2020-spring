@@ -50,6 +50,7 @@ public class ClienteBusiness {
         return clientesResponseDTO;
     }
 
+	@Transactional
 	public void atualiza(Long id, ClienteRequestDTO clienteRequestDTO) {
 		Cliente cliente = requestDTOParaEntidade(clienteRequestDTO, findById(id));
 
