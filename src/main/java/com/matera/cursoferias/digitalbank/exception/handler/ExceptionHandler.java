@@ -7,4 +7,5 @@ import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
 public interface ExceptionHandler<T extends Exception> {
 
 	public ResponseEntity<ResponseDTO<Object>> handleException(T exception);
+
 }

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.matera.cursoferias.digitalbank.domain.entity.Conta;
@@ -27,16 +26,17 @@ import com.matera.cursoferias.digitalbank.utils.DigitalBankUtils;
 @Component
 public class LancamentoBusiness {
 
-	@Autowired
-	private LancamentoRepository lancamentoRepository;
+	private final LancamentoRepository lancamentoRepository;
+	private final TransferenciaRepository transferenciaRepository;
+	private final EstornoRepository estornoRepository;
 
-	@Autowired
-	private TransferenciaRepository transferenciaRepository;
+	public LancamentoBusiness(LancamentoRepository lancamentoRepository, TransferenciaRepository transferenciaRepository, EstornoRepository estornoRepository) {
+        this.lancamentoRepository = lancamentoRepository;
+        this.transferenciaRepository = transferenciaRepository;
+        this.estornoRepository = estornoRepository;
+    }
 
-	@Autowired
-	private EstornoRepository estornoRepository;
-
-	public Lancamento efetuaLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
+    public Lancamento efetuaLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
 		Lancamento lancamento = Lancamento.builder().dataHora(LocalDateTime.now())
                                             		.codigoAutenticacao(geraAutenticacao())
                                             		.valor(lancamentoRequestDTO.getValor())

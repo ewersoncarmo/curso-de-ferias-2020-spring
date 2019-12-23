@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,16 +19,26 @@ import com.matera.cursoferias.digitalbank.dto.request.ClienteRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ClienteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
+import com.matera.cursoferias.digitalbank.exception.handler.BusinessExceptionHandler;
+import com.matera.cursoferias.digitalbank.exception.handler.GenericExceptionHandler;
+import com.matera.cursoferias.digitalbank.exception.handler.InvalidFormatExceptionHandler;
+import com.matera.cursoferias.digitalbank.exception.handler.MethodArgumentNotValidExceptionHandler;
 import com.matera.cursoferias.digitalbank.service.ClienteService;
 
 @RestController
 @RequestMapping("/api/v1/clientes")
 public class ClienteController extends ControllerBase {
 
-	@Autowired
-	private ClienteService clienteService;
+	private final ClienteService clienteService;
 
-	@PostMapping
+	public ClienteController(ClienteService clienteService, BusinessExceptionHandler businessExceptionHandler,
+	                         MethodArgumentNotValidExceptionHandler methodArgumentNotValidExceptionHandler,
+	                         InvalidFormatExceptionHandler invalidFormatExceptionHandler, GenericExceptionHandler genericExceptionHandler) {
+	    super(businessExceptionHandler, methodArgumentNotValidExceptionHandler, invalidFormatExceptionHandler, genericExceptionHandler);
+	    this.clienteService = clienteService;
+    }
+
+    @PostMapping
 	public ResponseEntity<ResponseDTO<ContaResponseDTO>> cadastra(@Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
 		ContaResponseDTO contaResponseDTO = clienteService.cadastra(clienteRequestDTO);
 
@@ -73,4 +82,5 @@ public class ClienteController extends ControllerBase {
 				.noContent()
 				.build();
 	}
+
 }

@@ -24,12 +24,13 @@ public class MethodArgumentNotValidExceptionHandler implements ExceptionHandler<
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {
 			String campo = fieldError.getField();
 			String mensagem = String.format("%s: %s", campo, fieldError.getDefaultMessage());
-			
+
 			erros.add(new ErroResponseDTO(campo, mensagem));
 		}
-		
+
 		return ResponseEntity
 				.status(HttpStatus.BAD_REQUEST)
 				.body(ResponseDTO.comErros(erros));
 	}
+
 }

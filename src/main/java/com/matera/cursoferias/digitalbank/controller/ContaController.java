@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
@@ -27,16 +26,26 @@ import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ExtratoResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
+import com.matera.cursoferias.digitalbank.exception.handler.BusinessExceptionHandler;
+import com.matera.cursoferias.digitalbank.exception.handler.GenericExceptionHandler;
+import com.matera.cursoferias.digitalbank.exception.handler.InvalidFormatExceptionHandler;
+import com.matera.cursoferias.digitalbank.exception.handler.MethodArgumentNotValidExceptionHandler;
 import com.matera.cursoferias.digitalbank.service.ContaService;
 
 @RestController
 @RequestMapping("/api/v1/contas")
 public class ContaController extends ControllerBase {
 
-	@Autowired
-	private ContaService contaService;
+	private final ContaService contaService;
 
-	@PostMapping(value = "/{id}/depositar")
+	public ContaController(ContaService contaService, BusinessExceptionHandler businessExceptionHandler,
+	                       MethodArgumentNotValidExceptionHandler methodArgumentNotValidExceptionHandler,
+	                       InvalidFormatExceptionHandler invalidFormatExceptionHandler, GenericExceptionHandler genericExceptionHandler) {
+	    super(businessExceptionHandler, methodArgumentNotValidExceptionHandler, invalidFormatExceptionHandler, genericExceptionHandler);
+	    this.contaService = contaService;
+	}
+
+    @PostMapping(value = "/{id}/depositar")
 	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaDeposito(@PathVariable("id") Long id,
 			@Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
 		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.CREDITO, TipoLancamento.DEPOSITO);

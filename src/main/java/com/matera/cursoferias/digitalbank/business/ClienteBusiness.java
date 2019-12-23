@@ -3,7 +3,6 @@ package com.matera.cursoferias.digitalbank.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,13 +16,15 @@ import com.matera.cursoferias.digitalbank.repository.ClienteRepository;
 @Component
 public class ClienteBusiness {
 
-	@Autowired
-	private ClienteRepository clienteRepository;
+	private final ClienteRepository clienteRepository;
+	private final ContaBusiness contaBusiness;
 
-	@Autowired
-	private ContaBusiness contaBusiness;
+	public ClienteBusiness(ClienteRepository clienteRepository, ContaBusiness contaBusiness) {
+        this.clienteRepository = clienteRepository;
+        this.contaBusiness = contaBusiness;
+    }
 
-	@Transactional
+    @Transactional
 	public ContaResponseDTO cadastra(ClienteRequestDTO clienteRequestDTO) {
 		valida(clienteRequestDTO);
 

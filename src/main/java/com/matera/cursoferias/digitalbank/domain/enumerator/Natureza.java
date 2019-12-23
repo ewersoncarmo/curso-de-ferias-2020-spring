@@ -16,10 +16,11 @@ public enum Natureza {
     public String getCodigo() {
         return codigo;
     }
-    
+
     @Override
     @JsonValue
     public String toString() {
       return String.valueOf(codigo);
     }
+
 }
