@@ -3,7 +3,6 @@ package com.matera.cursoferias.digitalbank.controller.base;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,19 +19,20 @@ public abstract class ControllerBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ControllerBase.class);
 
-	@Autowired
-	private BusinessExceptionHandler businessExceptionHandler;
+	private final BusinessExceptionHandler businessExceptionHandler;
+	private final MethodArgumentNotValidExceptionHandler methodArgumentNotValidExceptionHandler;
+	private final InvalidFormatExceptionHandler invalidFormatExceptionHandler;
+	private final GenericExceptionHandler genericExceptionHandler;
 
-	@Autowired
-	private MethodArgumentNotValidExceptionHandler methodArgumentNotValidExceptionHandler;
+	public ControllerBase(BusinessExceptionHandler businessExceptionHandler, MethodArgumentNotValidExceptionHandler methodArgumentNotValidExceptionHandler,
+                          InvalidFormatExceptionHandler invalidFormatExceptionHandler, GenericExceptionHandler genericExceptionHandler) {
+        this.businessExceptionHandler = businessExceptionHandler;
+        this.methodArgumentNotValidExceptionHandler = methodArgumentNotValidExceptionHandler;
+        this.invalidFormatExceptionHandler = invalidFormatExceptionHandler;
+        this.genericExceptionHandler = genericExceptionHandler;
+    }
 
-	@Autowired
-	private InvalidFormatExceptionHandler invalidFormatExceptionHandler;
-
-	@Autowired
-	private GenericExceptionHandler genericExceptionHandler;
-
-	@ExceptionHandler(BusinessException.class)
+    @ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ResponseDTO<Object>> handleException(BusinessException exception) {
 		return businessExceptionHandler.handleException(exception);
 	}

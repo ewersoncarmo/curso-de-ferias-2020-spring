@@ -25,4 +25,5 @@ public enum TipoLancamento {
     public String toString() {
       return String.valueOf(codigo);
     }
+
 }

@@ -3,7 +3,6 @@ package com.matera.cursoferias.digitalbank.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.matera.cursoferias.digitalbank.business.ContaBusiness;
@@ -18,10 +17,13 @@ import com.matera.cursoferias.digitalbank.dto.response.ExtratoResponseDTO;
 @Service
 public class ContaService {
 
-	@Autowired
-	private ContaBusiness contaBusiness;
+	private final ContaBusiness contaBusiness;
 
-	public ComprovanteResponseDTO efetuaLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
+	public ContaService(ContaBusiness contaBusiness) {
+        this.contaBusiness = contaBusiness;
+    }
+
+    public ComprovanteResponseDTO efetuaLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
 		return contaBusiness.efetuaLancamento(id, lancamentoRequestDTO, natureza, tipoLancamento);
 	}
 

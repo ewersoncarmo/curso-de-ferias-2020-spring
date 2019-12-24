@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
@@ -23,23 +24,24 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "db_conta")
 public class Conta extends EntidadeBase {
 
-	@Column
+	@Column(precision = 4, nullable = false)
 	private Integer numeroAgencia;
 
-	@Column
+	@Column(precision = 12, nullable = false)
 	private Long numeroConta;
 
-	@Column
+	@Column(precision = 20, scale = 2, nullable = false)
 	private BigDecimal saldo;
 
-	@OneToOne
-	@JoinColumn(name = "id_cliente")
-	private Cliente cliente;
+	@Column(length = 1, nullable = false)
+    private String situacao;
 
-	@Column
-	private String situacao;
+	@OneToOne
+	@JoinColumn(name = "id_cliente", nullable = false)
+	private Cliente cliente;
 
 	@OneToMany(mappedBy = "conta")
 	private List<Lancamento> lancamentos;

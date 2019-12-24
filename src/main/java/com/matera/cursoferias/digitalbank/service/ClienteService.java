@@ -2,7 +2,6 @@ package com.matera.cursoferias.digitalbank.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.matera.cursoferias.digitalbank.business.ClienteBusiness;
@@ -13,10 +12,13 @@ import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 @Service
 public class ClienteService {
 
-	@Autowired
-	private ClienteBusiness clienteBusiness;
+	private final ClienteBusiness clienteBusiness;
 
-	public ContaResponseDTO cadastra(ClienteRequestDTO clienteRequestDTO) {
+	public ClienteService(ClienteBusiness clienteBusiness) {
+        this.clienteBusiness = clienteBusiness;
+    }
+
+    public ContaResponseDTO cadastra(ClienteRequestDTO clienteRequestDTO) {
 		return clienteBusiness.cadastra(clienteRequestDTO);
 	}
 
@@ -35,4 +37,5 @@ public class ClienteService {
 	public ContaResponseDTO consultaContaPorIdCliente(Long idCliente) {
         return clienteBusiness.consultaContaPorIdCliente(idCliente);
     }
+
 }

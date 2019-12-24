@@ -22,4 +22,5 @@ public enum SituacaoConta {
     public String toString() {
       return String.valueOf(codigo);
     }
+
 }

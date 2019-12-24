@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,16 +28,19 @@ import com.matera.cursoferias.digitalbank.utils.DigitalBankUtils;
 @Component
 public class ContaBusiness {
 
-	@Autowired
-	private ContaRepository contaRepository;
+    @Value("${agencia.numeroMaximo:5}")
+    private Integer numeroMaximoAgencia;
 
-	@Autowired
-	private LancamentoBusiness lancamentoBusiness;
+	private final ContaRepository contaRepository;
+	private final LancamentoBusiness lancamentoBusiness;
 
-	@Value("${agencia.numeroMaximo:5}")
-	private Integer numeroMaximoAgencia;
+	public ContaBusiness(ContaRepository contaRepository, LancamentoBusiness lancamentoBusiness) {
+        this.contaRepository = contaRepository;
+        this.lancamentoBusiness = lancamentoBusiness;
+    }
 
-	public ContaResponseDTO cadastra(Cliente cliente) {
+	@Transactional
+    public ContaResponseDTO cadastra(Cliente cliente) {
 		validaCadastro(cliente);
 
 		Integer numeroAgencia = new Random().nextInt(numeroMaximoAgencia) + 1;
@@ -100,6 +102,7 @@ public class ContaBusiness {
 		return extratoResponseDTO;
 	}
 
+	@Transactional
 	public ComprovanteResponseDTO estornaLancamento(Long idConta, Long idLancamento) {
 		return lancamentoBusiness.estornaLancamento(idConta, idLancamento);
 	}
@@ -123,6 +126,7 @@ public class ContaBusiness {
 	    return entidadeParaResponseDTO(conta);
 	}
 
+	@Transactional
 	public void bloqueiaConta(Long id) {
 	    Conta conta = findById(id);
 
@@ -132,6 +136,7 @@ public class ContaBusiness {
 	    contaRepository.save(conta);
 	}
 
+	@Transactional
 	public void desbloqueiaConta(Long id) {
         Conta conta = findById(id);
 

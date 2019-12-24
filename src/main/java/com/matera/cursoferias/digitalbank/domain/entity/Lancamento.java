@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
@@ -23,24 +24,25 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "db_lancamento")
 public class Lancamento extends EntidadeBase {
 
-	@Column
+	@Column(length = 50, nullable = false)
 	private String codigoAutenticacao;
 
-	@Column
+	@Column(nullable = false)
 	private LocalDateTime dataHora;
 
-	@Column
+	@Column(precision = 20, scale = 2, nullable = false)
 	private BigDecimal valor;
 
-	@Column
+	@Column(length = 1, nullable = false)
 	private String natureza;
 
-	@Column
+	@Column(length = 1, nullable = false)
 	private String tipoLancamento;
 
-	@Column
+	@Column(length = 50, nullable = true)
 	private String descricao;
 
 	@ManyToOne(cascade = CascadeType.ALL)
