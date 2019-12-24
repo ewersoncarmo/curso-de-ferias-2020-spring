@@ -96,6 +96,7 @@ public class ClienteBusiness {
                                            .complemento(cliente.getComplemento())
                                            .bairro(cliente.getBairro())
                                            .cidade(cliente.getCidade())
+                                           .estado(cliente.getEstado())
                                            .cep(cliente.getCep())
                                            .build();
     }
