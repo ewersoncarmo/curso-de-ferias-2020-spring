@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "418fe9e6-20ab-49dd-b49c-08f4048fa748",
-		"name": "Digital Bank",
+		"name": "Digitalbank",
 		"description": "Matera - Curso de férias 2020",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -631,6 +631,28 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "dfd22152-c1c4-4bb2-8ab6-6aa198c8fa13",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "2a77b98d-5176-4319-9e5d-6f05b395843f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"protocolProfileBehavior": {}
