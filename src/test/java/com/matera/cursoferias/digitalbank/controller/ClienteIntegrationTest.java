@@ -30,7 +30,7 @@ import io.restassured.specification.RequestSpecification;
 public class ClienteIntegrationTest {
 
 	private static final String URL = "digitalbank/api/v1/clientes";
-	
+
 	@Test
 	public void cadastraClienteTest() {
 		ClienteRequestDTO cliente = buildClienteRequestDTO();
@@ -50,14 +50,14 @@ public class ClienteIntegrationTest {
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
-		
+
 		RequestSpecification requestSpecification = new RequestSpecBuilder().
 			addQueryParam("id", response.getDados().getIdCliente()).
 			build();
-		
+
 		buildGetRequestWithSpec(requestSpecification, URL, HttpStatus.OK);
 	}
-	
+
 	@Test
 	public void consultaContaPorIdClienteTest() {
 		ClienteRequestDTO cliente = buildClienteRequestDTO();
@@ -66,11 +66,11 @@ public class ClienteIntegrationTest {
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
-		
+
 		RequestSpecification requestSpecification = new RequestSpecBuilder().
 			addPathParam("id", response.getDados().getIdCliente()).
 			build();
-		
+
 		buildGetRequestWithSpec(requestSpecification, URL + "/{id}/conta", HttpStatus.OK).
 			root("dados").
 				body("idCliente", equalTo(response.getDados().getIdCliente().intValue())).
@@ -80,7 +80,7 @@ public class ClienteIntegrationTest {
 				body("situacao", equalTo(response.getDados().getSituacao()));
 				// TODO - falta comparar o saldo
 	}
-	
+
 	@Test
 	public void consultaTodosClientesTest() {
 		ClienteRequestDTO cliente1 = buildClienteRequestDTO();
@@ -91,24 +91,24 @@ public class ClienteIntegrationTest {
 
 		buildPostRequest(cliente1, URL, HttpStatus.CREATED);
 		buildPostRequest(cliente2, URL, HttpStatus.CREATED);
-		
+
 		DigitalBankTestUtils.buildGetRequest(URL, HttpStatus.OK).
 			body("dados.size()", equalTo(2));
-	}	
-	
+	}
+
 	@Test
 	public void atualizaClienteTest() {
 		ClienteRequestDTO cliente = buildClienteRequestDTO();
-		
+
 		ResponseDTO<ContaResponseDTO> response = buildPostRequest(cliente, URL, HttpStatus.CREATED).
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
-		
+
 		cliente.setNome("Pedro da Silva");
 		cliente.setCpf("57573694695");
 		cliente.setTelefone(997242244L);
-		cliente.setRendaMensal(new BigDecimal(5000.0));
+		cliente.setRendaMensal(new BigDecimal(5000));
 		cliente.setLogradouro("Avenida Paulista");
 		cliente.setNumero(100);
 		cliente.setComplemento("Casa");
@@ -116,13 +116,13 @@ public class ClienteIntegrationTest {
 		cliente.setCidade("São Paulo");
 		cliente.setEstado("SP");
 		cliente.setCep("73887445");
-		
+
 		buildPutRequest(cliente, URL + "/" + response.getDados().getIdCliente(), HttpStatus.NO_CONTENT);
-		
+
 		RequestSpecification requestSpecification = new RequestSpecBuilder().
 			addQueryParam("id", response.getDados().getIdCliente()).
 			build();
-		
+
 		buildGetRequestWithSpec(requestSpecification, URL, HttpStatus.OK).
 			root("dados").
 				body("nome", hasItem(cliente.getNome())).
@@ -137,13 +137,13 @@ public class ClienteIntegrationTest {
 				body("estado", hasItem(cliente.getEstado())).
 				body("cep", hasItem(cliente.getCep()));
 	}
-	
+
 	private ClienteRequestDTO buildClienteRequestDTO() {
 		return ClienteRequestDTO.builder().
 			nome("João da Silva").
 			cpf("05728520022").
 			telefone(997542877L).
-			rendaMensal(new BigDecimal(10000.0)).
+			rendaMensal(new BigDecimal(10000)).
 			logradouro("Avenida São Paulo").
 			numero(1287).
 			complemento("Apto 207").
