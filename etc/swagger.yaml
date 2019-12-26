@@ -366,13 +366,13 @@ paths:
           format: "int64"
         - in: "query"
           name: "dataInicial"
-          description: "Data inicial (se informada, deve-se informar também a data final)"
+          description: "Data inicial (dd-MM-yyyy)"
           required: false
           type: "string"
           format: "date"
         - in: "query"
           name: "dataFinal"
-          description: "Data final (se informada, deve-se informar também a data inicial)"
+          description: "Data final (dd-MM-yyyy)"
           required: false
           type: "string"
           format: "date"
@@ -579,6 +579,7 @@ definitions:
       dataHora:
         type: "string"
         format: "date_time"
+        description: "(dd-MM-yyyy HH:mm:ss)"
       valor:
         type: "number"
         format: "double"
