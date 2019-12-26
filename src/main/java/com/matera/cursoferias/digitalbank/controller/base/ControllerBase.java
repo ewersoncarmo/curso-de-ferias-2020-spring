@@ -34,11 +34,15 @@ public abstract class ControllerBase {
 
     @ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ResponseDTO<Object>> handleException(BusinessException exception) {
+        LOG.debug("Erro de negócio ao processar a requisição: {}", exception.getMessage());
+
 		return businessExceptionHandler.handleException(exception);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseDTO<Object>> handleException(MethodArgumentNotValidException exception) {
+	    LOG.debug("Erro ao validar a requisição: {}", exception.getMessage());
+
 		return methodArgumentNotValidExceptionHandler.handleException(exception);
     }
 
@@ -49,7 +53,7 @@ public abstract class ControllerBase {
 
 	@ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDTO<Object>> handleException(Exception exception) {
-	    LOG.error(ExceptionUtils.getStackTrace(exception));
+	    LOG.error("Erro não esperado: {}", ExceptionUtils.getStackTrace(exception));
 
 	    return genericExceptionHandler.handleException(exception);
     }

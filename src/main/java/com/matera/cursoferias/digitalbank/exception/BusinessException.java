@@ -10,7 +10,7 @@ public class BusinessException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	private final String codigoErro;
-	private final Object[] parametros;
+	private final transient Object[] parametros;
 
 	public BusinessException(String codigoErro, Object... parametros) {
 		super(codigoErro + " - " + Arrays.toString(parametros));
