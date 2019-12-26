@@ -79,14 +79,7 @@
 					"name": "Consulta cliente por id",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Accept-Language",
-								"value": "en",
-								"type": "text",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/digitalbank/api/v1/clientes/1",
 							"protocol": "http",
@@ -109,13 +102,7 @@
 					"name": "Consulta todos os clientes",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Accept-Language",
-								"type": "text",
-								"value": "en"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/digitalbank/api/v1/clientes",
 							"protocol": "http",
@@ -137,14 +124,7 @@
 					"name": "Consulta conta por id cliente",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Accept-Language",
-								"type": "text",
-								"value": "en",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/digitalbank/api/v1/clientes/1/conta",
 							"protocol": "http",
@@ -396,12 +376,6 @@
 								"name": "Content-Type",
 								"type": "text",
 								"value": "application/json"
-							},
-							{
-								"key": "Accept-Language",
-								"value": "en",
-								"type": "text",
-								"disabled": true
 							}
 						],
 						"url": {
@@ -509,20 +483,7 @@
 					"name": "Consulta lançamento por id",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept-Language",
-								"type": "text",
-								"value": "en",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/digitalbank/api/v1/contas/1/lancamentos/3",
 							"protocol": "http",
@@ -538,6 +499,31 @@
 								"1",
 								"lancamentos",
 								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove lançamento de estorno por id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/digitalbank/api/v1/contas/1/lancamentos/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"digitalbank",
+								"api",
+								"v1",
+								"contas",
+								"1",
+								"lancamentos",
+								"6"
 							]
 						}
 					},
@@ -605,13 +591,7 @@
 					"name": "Consulta todas as contas",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Accept-Language",
-								"type": "text",
-								"value": "en"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/digitalbank/api/v1/contas",
 							"protocol": "http",

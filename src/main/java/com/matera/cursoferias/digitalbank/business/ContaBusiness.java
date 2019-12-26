@@ -111,6 +111,11 @@ public class ContaBusiness {
 		return lancamentoBusiness.consultaComprovanteLancamento(idConta, idLancamento);
 	}
 
+	@Transactional
+	public void removeLancamentoEstorno(Long idConta, Long idLancamento) {
+	    lancamentoBusiness.removeLancamentoEstorno(idConta, idLancamento);
+    }
+
 	public List<ContaResponseDTO> consultaTodas() {
 	    List<Conta> contas = contaRepository.findAll();
 	    List<ContaResponseDTO> contasResponseDTO = new ArrayList<>();

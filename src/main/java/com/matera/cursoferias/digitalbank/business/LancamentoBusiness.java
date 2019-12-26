@@ -26,7 +26,9 @@ import com.matera.cursoferias.digitalbank.utils.DigitalBankUtils;
 @Component
 public class LancamentoBusiness {
 
-	private final LancamentoRepository lancamentoRepository;
+    private static final String COMPLEMENTO_LANCAMENTO_ESTORNADO = " - Estornado";
+
+    private final LancamentoRepository lancamentoRepository;
 	private final TransferenciaRepository transferenciaRepository;
 	private final EstornoRepository estornoRepository;
 
@@ -105,10 +107,24 @@ public class LancamentoBusiness {
 	}
 
 	public ComprovanteResponseDTO consultaComprovanteLancamento(Long idConta, Long idLancamento) {
-		Lancamento lancamento = lancamentoRepository.findByIdAndConta_Id(idLancamento, idConta).orElseThrow(() -> new BusinessException("DB-7", idLancamento, idConta));
+		Lancamento lancamento = buscaLancamentoConta(idConta, idLancamento);
 
 		return entidadeParaComprovanteResponseDTO(lancamento);
 	}
+
+	public void removeLancamentoEstorno(Long idConta, Long idLancamento) {
+	    buscaLancamentoConta(idConta, idLancamento);
+	    Estorno estorno = estornoRepository.findByLancamentoEstorno_Id(idLancamento).orElseThrow(() -> new BusinessException("DB-16"));
+	    Lancamento lancamentoOriginal = estorno.getLancamentoOriginal();
+	    Natureza natureza = inverteNatureza(estorno.getLancamentoEstorno());
+
+	    lancamentoOriginal.getConta().setSaldo(DigitalBankUtils.calculaSaldo(natureza, lancamentoOriginal.getValor(), lancamentoOriginal.getConta().getSaldo()));
+	    lancamentoOriginal.setDescricao(lancamentoOriginal.getDescricao().replace(COMPLEMENTO_LANCAMENTO_ESTORNADO, ""));
+
+	    lancamentoRepository.save(lancamentoOriginal);
+	    estornoRepository.delete(estorno);
+	    lancamentoRepository.delete(estorno.getLancamentoEstorno());
+    }
 
 	private void validaLancamento(Lancamento lancamento) {
 	    if (SituacaoConta.BLOQUEADA.getCodigo().equals(lancamento.getConta().getSituacao())) {
@@ -153,7 +169,7 @@ public class LancamentoBusiness {
 
 	private ComprovanteResponseDTO trataEstornoLancamento(Lancamento lancamento) {
 		Conta conta = lancamento.getConta();
-		Natureza natureza = defineNaturezaEstorno(lancamento);
+		Natureza natureza = inverteNatureza(lancamento);
 		conta.setSaldo(DigitalBankUtils.calculaSaldo(natureza, lancamento.getValor(), conta.getSaldo()));
 
 		Lancamento lancamentoEstorno = Lancamento.builder().codigoAutenticacao(geraAutenticacao())
@@ -165,7 +181,7 @@ public class LancamentoBusiness {
 														   .valor(lancamento.getValor())
 														   .build();
 
-		lancamento.setDescricao(lancamento.getDescricao() + " - Estornado");
+		lancamento.setDescricao(lancamento.getDescricao() + COMPLEMENTO_LANCAMENTO_ESTORNADO);
 		lancamentoRepository.save(lancamento);
 		lancamentoRepository.save(lancamentoEstorno);
 
@@ -178,11 +194,15 @@ public class LancamentoBusiness {
 		return entidadeParaComprovanteResponseDTO(lancamentoEstorno);
 	}
 
+	private Lancamento buscaLancamentoConta(Long idConta, Long idLancamento) {
+        return lancamentoRepository.findByIdAndConta_Id(idLancamento, idConta).orElseThrow(() -> new BusinessException("DB-7", idLancamento, idConta));
+    }
+
 	private String geraAutenticacao() {
 		return UUID.randomUUID().toString();
 	}
 
-	private Natureza defineNaturezaEstorno(Lancamento lancamento) {
+	private Natureza inverteNatureza(Lancamento lancamento) {
 		return Natureza.DEBITO.getCodigo().equals(lancamento.getNatureza()) ? Natureza.CREDITO : Natureza.DEBITO;
 	}
 

@@ -394,7 +394,7 @@ paths:
       tags:
         - "contas"
       summary: "Consulta o comprovante de determinado lançamento"
-      description: "Retorna o comprovante do lançamento de uma conta com os ids informados. Caso alguma validação de negócio falhe, um erro será retornado."
+      description: "Retorna o comprovante do lançamento de uma conta de acordo com os ids informados. Caso alguma validação de negócio falhe, um erro será retornado."
       produces:
         - "application/json"
       parameters:
@@ -423,8 +423,37 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/ErroResponseDTO"
+    delete:
+      tags:
+        - "contas"
+      summary: "Remove um lançamento de estorno"
+      description: "Remove um lançamento de estorno de uma conta de acordo com os ids informados. Somente o lançamento de estorno informado será removido, ou seja, se o estorno se referir a uma transferência, o lançamento de estorno da transferência da outra conta envolvida não será removido. Caso alguma validação de negócio falhe, um erro será retornado."
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "idConta"
+          description: "Id da conta corrente"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "path"
+          name: "idLancamento"
+          description: "Id do lançamento de estorno"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        204:
+          description: "Requisição efetuada com sucesso"
+        400:
+          description: "Requisição inválida"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ErroResponseDTO"
   /contas/{idConta}/lancamentos/{idLancamento}/estornar:
-    get:
+    post:
       tags:
         - "contas"
       summary: "Realiza o estorno de determinado lançamento"

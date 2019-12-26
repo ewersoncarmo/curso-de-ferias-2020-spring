@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -143,6 +144,20 @@ public class ContaController extends ControllerBase {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseDTO<>(comprovanteResponseDTO));
+    }
+
+	@DeleteMapping(value = "/{idConta}/lancamentos/{idLancamento}")
+    public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> removeLancamentoEstorno(@PathVariable("idConta") Long idConta,
+                                                                                       @PathVariable("idLancamento") Long idLancamento) {
+        LOG.debug("Iniciando DELETE em /api/v1/contas/{idConta}/lancamentos/{idLancamento} com idConta {} e idLancamento {}", idConta, idLancamento);
+
+        contaService.removeLancamentoEstorno(idConta, idLancamento);
+
+        LOG.debug("Finalizando DELETE em /api/v1/contas/{idConta}/lancamentos/{idLancamento}");
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
 	@PostMapping(value = "/{idConta}/lancamentos/{idLancamento}/estornar")

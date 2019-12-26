@@ -46,6 +46,10 @@ public class ContaService {
 		return contaBusiness.consultaComprovanteLancamento(idConta, idLancamento);
 	}
 
+	public void removeLancamentoEstorno(Long idConta, Long idLancamento) {
+	    contaBusiness.removeLancamentoEstorno(idConta, idLancamento);
+    }
+
     public List<ContaResponseDTO> consultaTodas() {
         return contaBusiness.consultaTodas();
     }
