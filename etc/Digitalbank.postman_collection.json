@@ -573,7 +573,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/digitalbank/api/v1/contas/1/lancamentos?dataInicial=2019-12-17&dataFinal=2019-12-20",
+							"raw": "http://localhost:8080/digitalbank/api/v1/contas/1/lancamentos?dataInicial=20-12-2019&dataFinal=26-12-2019",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -590,11 +590,11 @@
 							"query": [
 								{
 									"key": "dataInicial",
-									"value": "2019-12-17"
+									"value": "20-12-2019"
 								},
 								{
 									"key": "dataFinal",
-									"value": "2019-12-20"
+									"value": "26-12-2019"
 								}
 							]
 						}

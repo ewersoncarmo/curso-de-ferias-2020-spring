@@ -6,7 +6,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,8 +99,8 @@ public class ContaController extends ControllerBase {
 
 	@GetMapping(value = "/{id}/lancamentos", params = { "dataInicial", "dataFinal" })
 	public ResponseEntity<ResponseDTO<ExtratoResponseDTO>> consultaExtratoPorPeriodo(@PathVariable("id") Long id,
-																				     @RequestParam(value = "dataInicial", required = true) @DateTimeFormat(iso = ISO.DATE) LocalDate dataInicial,
-																				     @RequestParam(value = "dataFinal", required = true) @DateTimeFormat(iso = ISO.DATE) LocalDate dataFinal) {
+																				     @RequestParam(value = "dataInicial", required = true) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate dataInicial,
+																				     @RequestParam(value = "dataFinal", required = true) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate dataFinal) {
 
 		ExtratoResponseDTO extratoResponseDTO = contaService.consultaExtratoPorPeriodo(id, dataInicial, dataFinal);
 
