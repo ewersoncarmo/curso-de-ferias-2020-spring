@@ -3,7 +3,7 @@ package com.matera.cursoferias.digitalbank.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.matera.cursoferias.digitalbank.business.ContaBusiness;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
@@ -13,7 +13,7 @@ import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ExtratoResponseDTO;
 
-@Service
+@Component
 public class ContaService {
 
 	private final ContaBusiness contaBusiness;

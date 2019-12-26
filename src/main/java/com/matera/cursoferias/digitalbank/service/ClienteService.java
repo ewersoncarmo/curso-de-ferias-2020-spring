@@ -2,14 +2,14 @@ package com.matera.cursoferias.digitalbank.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.matera.cursoferias.digitalbank.business.ClienteBusiness;
 import com.matera.cursoferias.digitalbank.dto.request.ClienteRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ClienteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 
-@Service
+@Component
 public class ClienteService {
 
 	private final ClienteBusiness clienteBusiness;
