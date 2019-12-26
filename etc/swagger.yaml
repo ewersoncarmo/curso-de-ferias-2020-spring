@@ -33,7 +33,9 @@ paths:
         201:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ContaResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ContaResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -51,9 +53,11 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/ClienteResponseDTO"
+            properties:
+              dados:
+                type: "array"
+                items:
+                  $ref: "#/definitions/ClienteResponseDTO"
   /clientes/{id}:
     get:
       tags:
@@ -73,7 +77,9 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ClienteResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ClienteResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -129,7 +135,9 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ContaResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ContaResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -148,9 +156,11 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/ContaResponseDTO"
+            properties:
+              dados:
+                type: "array"
+                items:
+                  $ref: "#/definitions/ContaResponseDTO"
   /contas/{id}/bloquear:
     post:
       tags:
@@ -225,7 +235,9 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ComprovanteResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ComprovanteResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -258,7 +270,9 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ComprovanteResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ComprovanteResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -291,7 +305,9 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ComprovanteResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ComprovanteResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -324,7 +340,9 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ComprovanteResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ComprovanteResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -362,7 +380,9 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ExtratoResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ExtratoResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -394,7 +414,9 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ComprovanteResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ComprovanteResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -426,7 +448,9 @@ paths:
         200:
           description: "Requisição efetuada com sucesso"
           schema:
-            $ref: "#/definitions/ComprovanteResponseDTO"
+            properties:
+              dados:
+                $ref: "#/definitions/ComprovanteResponseDTO"
         400:
           description: "Requisição inválida"
           schema:
@@ -504,114 +528,108 @@ definitions:
   ClienteResponseDTO:
     type: "object"
     properties:
-      dados:
-        properties:
-          id:
-            type: "integer"
-            format: "int64"
-          nome:
-            type: "string"
-          cpf:
-            type: "string"
-          telefone:
-            type: "integer"
-            format: "int64"
-          rendaMensal:
-            type: "number"
-            format: "double"
-          logradouro:
-            type: "string"
-          numero:
-            type: "integer"
-            format: "int32"
-          complemento:
-            type: "string"
-          bairro:
-            type: "string"
-          cidade:
-            type: "string"
-          estado:
-            type: "string"
-          cep:
-            type: "string"
-        required:
-          - id
-          - nome
-          - cpf
-          - telefone
-          - rendaMensal
-          - logradouro
-          - numero
-          - bairro
-          - cidade
-          - estado
-          - cep
+      id:
+        type: "integer"
+        format: "int64"
+      nome:
+        type: "string"
+      cpf:
+        type: "string"
+      telefone:
+        type: "integer"
+        format: "int64"
+      rendaMensal:
+        type: "number"
+        format: "double"
+      logradouro:
+        type: "string"
+      numero:
+        type: "integer"
+        format: "int32"
+      complemento:
+        type: "string"
+      bairro:
+        type: "string"
+      cidade:
+        type: "string"
+      estado:
+        type: "string"
+      cep:
+        type: "string"
+    required:
+      - id
+      - nome
+      - cpf
+      - telefone
+      - rendaMensal
+      - logradouro
+      - numero
+      - bairro
+      - cidade
+      - estado
+      - cep
   ComprovanteResponseDTO:
     type: "object"
     properties:
-      dados:
-        properties:
-          idLancamento:
-            type: "integer"
-            format: "int64"
-          codigoAutenticacao:
-            type: "string"
-          dataHora:
-            type: "string"
-            format: "date_time"
-          valor:
-            type: "number"
-            format: "double"
-          natureza:
-            type: "string"
-          tipoLancamento:
-            type: "string"
-          numeroAgencia:
-            type: "integer"
-            format: "int32"
-          numeroConta:
-            type: "integer"
-            format: "int64"
-          descricao:
-            type: "string"
-        required:
-          - idLancamento
-          - codigoAutenticacao
-          - dataHora
-          - valor
-          - natureza
-          - tipoLancamento
-          - numeroAgencia
-          - numeroConta
+      idLancamento:
+        type: "integer"
+        format: "int64"
+      codigoAutenticacao:
+        type: "string"
+      dataHora:
+        type: "string"
+        format: "date_time"
+      valor:
+        type: "number"
+        format: "double"
+      natureza:
+        type: "string"
+      tipoLancamento:
+        type: "string"
+      numeroAgencia:
+        type: "integer"
+        format: "int32"
+      numeroConta:
+        type: "integer"
+        format: "int64"
+      descricao:
+        type: "string"
+    required:
+      - idLancamento
+      - codigoAutenticacao
+      - dataHora
+      - valor
+      - natureza
+      - tipoLancamento
+      - numeroAgencia
+      - numeroConta
   ContaResponseDTO:
     type: "object"
     properties:
-      dados:
-        properties:
-          idCliente:
-            type: "integer"
-            format: "int64"
-          idConta:
-            type: "integer"
-            format: "int64"
-          numeroAgencia:
-            type: "integer"
-            format: "int32"
-          numeroConta:
-            type: "integer"
-            format: "int64"
-          situacao:
-            type: "string"
-          saldo:
-            type: "number"
-            format: "double"
-        required:
-          - idCliente
-          - idConta
-          - numeroAgencia
-          - numeroConta
-          - situacao
-          - saldo
+      idCliente:
+        type: "integer"
+        format: "int64"
+      idConta:
+        type: "integer"
+        format: "int64"
+      numeroAgencia:
+        type: "integer"
+        format: "int32"
+      numeroConta:
+        type: "integer"
+        format: "int64"
+      situacao:
+        type: "string"
+      saldo:
+        type: "number"
+        format: "double"
+    required:
+      - idCliente
+      - idConta
+      - numeroAgencia
+      - numeroConta
+      - situacao
+      - saldo
   ErroResponseDTO:
     type: "object"
     properties:
@@ -630,16 +648,14 @@ definitions:
   ExtratoResponseDTO:
     type: "object"
     properties:
-      dados:
-        properties:
-          conta:
-            $ref: '#/definitions/ContaResponseDTO'
-          lancamentos:
-            type: "array"
-            items:
-              $ref: '#/definitions/ComprovanteResponseDTO'
-        required:
-          - conta
+      conta:
+        $ref: '#/definitions/ContaResponseDTO'
+      lancamentos:
+        type: "array"
+        items:
+          $ref: '#/definitions/ComprovanteResponseDTO'
+    required:
+      - conta
 externalDocs:
   description: "Saiba mais sobre o Curso de Férias"
   url: "https://github.com/materasystems/curso-de-ferias-2020-spring"
