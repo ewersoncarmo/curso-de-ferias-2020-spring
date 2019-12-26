@@ -6,6 +6,8 @@ import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
 
 public class DigitalBankUtils {
 
+    private DigitalBankUtils() { }
+
 	public static BigDecimal calculaSaldo(Natureza natureza, BigDecimal valor, BigDecimal saldoAtual) {
 		BigDecimal saldoFinal;
 

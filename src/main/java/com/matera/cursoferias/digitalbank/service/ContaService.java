@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.matera.cursoferias.digitalbank.business.ContaBusiness;
-import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.TransferenciaRequestDTO;
@@ -23,8 +22,8 @@ public class ContaService {
         this.contaBusiness = contaBusiness;
     }
 
-    public ComprovanteResponseDTO efetuaLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
-		return contaBusiness.efetuaLancamento(id, lancamentoRequestDTO, natureza, tipoLancamento);
+    public ComprovanteResponseDTO efetuaLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, TipoLancamento tipoLancamento) {
+		return contaBusiness.efetuaLancamento(id, lancamentoRequestDTO, tipoLancamento);
 	}
 
 	public ComprovanteResponseDTO efetuaTransferencia(Long id, TransferenciaRequestDTO transferenciaRequestDTO) {

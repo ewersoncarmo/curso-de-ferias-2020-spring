@@ -57,15 +57,15 @@ public class ContaBusiness {
 	}
 
 	@Transactional
-	public ComprovanteResponseDTO efetuaLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, Natureza natureza, TipoLancamento tipoLancamento) {
+	public ComprovanteResponseDTO efetuaLancamento(Long id, LancamentoRequestDTO lancamentoRequestDTO, TipoLancamento tipoLancamento) {
 		Conta conta = findById(id);
 
-		Lancamento lancamento = insereLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);
+		Lancamento lancamento = insereLancamento(lancamentoRequestDTO, conta, defineNaturezaPorTipoLancamento(tipoLancamento), tipoLancamento);
 
 		return lancamentoBusiness.entidadeParaComprovanteResponseDTO(lancamento);
 	}
 
-	@Transactional
+    @Transactional
 	public ComprovanteResponseDTO efetuaTransferencia(Long id, TransferenciaRequestDTO transferenciaRequestDTO) {
 		Conta contaDebito = findById(id);
 
@@ -155,6 +155,10 @@ public class ContaBusiness {
 			throw new BusinessException("DB-4", cliente.getTelefone().toString());
 		}
 	}
+
+	private Natureza defineNaturezaPorTipoLancamento(TipoLancamento tipoLancamento) {
+	    return TipoLancamento.DEPOSITO.equals(tipoLancamento) ? Natureza.CREDITO : Natureza.DEBITO;
+    }
 
 	private Lancamento insereLancamento(LancamentoRequestDTO lancamentoRequestDTO, Conta conta, Natureza natureza, TipoLancamento tipoLancamento) {
 	    Lancamento lancamento = lancamentoBusiness.efetuaLancamento(lancamentoRequestDTO, conta, natureza, tipoLancamento);

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.matera.cursoferias.digitalbank.controller.base.ControllerBase;
-import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.TransferenciaRequestDTO;
@@ -48,7 +47,7 @@ public class ContaController extends ControllerBase {
 	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaDeposito(@PathVariable("id") Long id,
 			                                                                  @Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
 
-		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.CREDITO, TipoLancamento.DEPOSITO);
+		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, TipoLancamento.DEPOSITO);
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -59,7 +58,7 @@ public class ContaController extends ControllerBase {
 	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaSaque(@PathVariable("id") Long id,
 			                                                               @Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
 
-		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.DEBITO, TipoLancamento.SAQUE);
+		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, TipoLancamento.SAQUE);
 
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -70,7 +69,7 @@ public class ContaController extends ControllerBase {
 	public ResponseEntity<ResponseDTO<ComprovanteResponseDTO>> efetuaPagamento(@PathVariable("id") Long id,
 			                                                                   @Valid @RequestBody LancamentoRequestDTO lancamentoRequestDTO) {
 
-		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, Natureza.DEBITO, TipoLancamento.PAGAMENTO);
+		ComprovanteResponseDTO comprovanteResponseDTO = contaService.efetuaLancamento(id, lancamentoRequestDTO, TipoLancamento.PAGAMENTO);
 
 		return ResponseEntity
 				.status(HttpStatus.OK)

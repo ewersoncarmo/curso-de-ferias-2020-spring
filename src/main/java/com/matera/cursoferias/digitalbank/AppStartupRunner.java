@@ -8,7 +8,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.ClienteRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
@@ -66,7 +65,6 @@ public class AppStartupRunner implements ApplicationRunner {
                                                           .descricao("Depósito Caixa Eletrônico")
                                                           .valor(new BigDecimal(1000))
                                                           .build(),
-                                      Natureza.CREDITO,
                                       TipoLancamento.DEPOSITO);
 
         contaService.efetuaLancamento(cliente1.getIdConta(),
@@ -74,7 +72,6 @@ public class AppStartupRunner implements ApplicationRunner {
                                                           .descricao("Saque Caixa Eletrônico")
                                                           .valor(new BigDecimal(100))
                                                           .build(),
-                                      Natureza.DEBITO,
                                       TipoLancamento.SAQUE);
 
         ComprovanteResponseDTO lancamento3 = contaService.efetuaLancamento(cliente1.getIdConta(),
@@ -82,7 +79,6 @@ public class AppStartupRunner implements ApplicationRunner {
                                                                                                .descricao("Pagamento de Boleto")
                                                                                                .valor(new BigDecimal(50))
                                                                                                .build(),
-                                                                           Natureza.DEBITO,
                                                                            TipoLancamento.PAGAMENTO);
 
         contaService.efetuaTransferencia(cliente1.getIdConta(),
