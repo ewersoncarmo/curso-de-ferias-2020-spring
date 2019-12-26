@@ -151,6 +151,28 @@ public class ContaBusiness {
         contaRepository.save(conta);
     }
 
+	@Transactional
+	public Long realizaSorteio() {
+	    List<Conta> contas = contaRepository.findBySituacao(SituacaoConta.ABERTA.getCodigo());
+
+	    if (!contas.isEmpty()) {
+	        Integer indiceSorteado = new Random().nextInt(contas.size());
+	        Conta contaSorteada = contas.get(indiceSorteado);
+
+	        insereLancamento(LancamentoRequestDTO.builder()
+	                                             .valor(BigDecimal.valueOf(1000))
+	                                             .descricao("Sorteio Digitalbank")
+	                                             .build(),
+	                         contaSorteada,
+	                         Natureza.CREDITO,
+	                         TipoLancamento.DEPOSITO);
+
+	        return contaSorteada.getId();
+	    }
+
+	    return null;
+    }
+
     private Conta findById(Long id) {
 		return contaRepository.findById(id).orElseThrow(() -> new BusinessException("DB-3", id));
 	}
