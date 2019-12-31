@@ -3,8 +3,8 @@ package com.matera.cursoferias.digitalbank.controller;
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildGetRequestWithSpec;
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildPostRequest;
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildPutRequest;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
 
 import java.math.BigDecimal;
 
@@ -32,7 +32,7 @@ public class ClienteIntegrationTest {
 	private static final String URL = "digitalbank/api/v1/clientes";
 
 	@Test
-	public void cadastraClienteTest() {
+	public void cadastraClienteSucessoTest() {
 		ClienteRequestDTO cliente = buildClienteRequestDTO();
 
 		buildPostRequest(cliente, URL, HttpStatus.CREATED).
@@ -41,9 +41,21 @@ public class ClienteIntegrationTest {
 				body("situacao", equalTo(SituacaoConta.ABERTA.getCodigo())).
 				body("saldo", equalTo(BigDecimal.ZERO.intValue()));
 	}
+	
+	@Test
+	public void cadastraClienteJaExistenteTest() {
+		ClienteRequestDTO cliente = buildClienteRequestDTO();
+
+		buildPostRequest(cliente, URL, HttpStatus.CREATED);
+		
+		ClienteRequestDTO clienteJaExistente = buildClienteRequestDTO();
+		buildPostRequest(clienteJaExistente, URL, HttpStatus.BAD_REQUEST).
+			root("erros[0]").
+				body("mensagem", containsString("DB-2"));
+	}
 
 	@Test
-	public void consultaClientePorIdTest() {
+	public void consultaClientePorIdSucessoTest() {
 		ClienteRequestDTO cliente = buildClienteRequestDTO();
 
 		ResponseDTO<ContaResponseDTO> response = buildPostRequest(cliente, URL, HttpStatus.CREATED).
@@ -52,14 +64,25 @@ public class ClienteIntegrationTest {
 					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
 
 		RequestSpecification requestSpecification = new RequestSpecBuilder().
-			addQueryParam("id", response.getDados().getIdCliente()).
+			addPathParam("id", response.getDados().getIdCliente()).
 			build();
 
-		buildGetRequestWithSpec(requestSpecification, URL, HttpStatus.OK);
+		buildGetRequestWithSpec(requestSpecification, URL + "/{id}", HttpStatus.OK);
+	}
+	
+	@Test
+	public void consultaClientePorIdNaoEncontradoTest() {
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("id", 1).
+			build();
+
+		buildGetRequestWithSpec(requestSpecification, URL + "/{id}", HttpStatus.BAD_REQUEST).
+			root("erros[0]").
+				body("mensagem", containsString("DB-1"));
 	}
 
 	@Test
-	public void consultaContaPorIdClienteTest() {
+	public void consultaContaPorIdClienteSucessoTest() {
 		ClienteRequestDTO cliente = buildClienteRequestDTO();
 
 		ResponseDTO<ContaResponseDTO> response = buildPostRequest(cliente, URL, HttpStatus.CREATED).
@@ -78,11 +101,22 @@ public class ClienteIntegrationTest {
 				body("numeroAgencia", equalTo(response.getDados().getNumeroAgencia())).
 				body("numeroConta", equalTo(response.getDados().getNumeroConta().intValue())).
 				body("situacao", equalTo(response.getDados().getSituacao()));
-				// TODO - falta comparar o saldo
+//				body("saldo", equalTo(response.getDados().getSaldo().intValue()));
+	}
+	
+	@Test
+	public void consultaContaPorIdClienteNaoCadastradaTest() {
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("id", 1).
+			build();
+
+		buildGetRequestWithSpec(requestSpecification, URL + "/{id}/conta", HttpStatus.BAD_REQUEST).
+			root("erros[0]").
+				body("mensagem", containsString("DB-12"));
 	}
 
 	@Test
-	public void consultaTodosClientesTest() {
+	public void consultaTodosClientesSucessoTest() {
 		ClienteRequestDTO cliente1 = buildClienteRequestDTO();
 
 		ClienteRequestDTO cliente2 = buildClienteRequestDTO();
@@ -95,9 +129,15 @@ public class ClienteIntegrationTest {
 		DigitalBankTestUtils.buildGetRequest(URL, HttpStatus.OK).
 			body("dados.size()", equalTo(2));
 	}
+	
+	@Test
+	public void consultaTodosClientesNaoExisteSucessoTest() {
+		DigitalBankTestUtils.buildGetRequest(URL, HttpStatus.OK).
+			body("dados.size()", equalTo(0));
+	}
 
 	@Test
-	public void atualizaClienteTest() {
+	public void atualizaClienteSucessoTest() {
 		ClienteRequestDTO cliente = buildClienteRequestDTO();
 
 		ResponseDTO<ContaResponseDTO> response = buildPostRequest(cliente, URL, HttpStatus.CREATED).
@@ -120,22 +160,31 @@ public class ClienteIntegrationTest {
 		buildPutRequest(cliente, URL + "/" + response.getDados().getIdCliente(), HttpStatus.NO_CONTENT);
 
 		RequestSpecification requestSpecification = new RequestSpecBuilder().
-			addQueryParam("id", response.getDados().getIdCliente()).
+			addPathParam("id", response.getDados().getIdCliente()).
 			build();
 
-		buildGetRequestWithSpec(requestSpecification, URL, HttpStatus.OK).
+		buildGetRequestWithSpec(requestSpecification, URL + "/{id}", HttpStatus.OK).
 			root("dados").
-				body("nome", hasItem(cliente.getNome())).
-				body("cpf", hasItem(cliente.getCpf())).
-				body("telefone", hasItem(cliente.getTelefone().intValue())).
-//				body("rendaMensal", hasItem(cliente.getRendaMensal())).
-				body("logradouro", hasItem(cliente.getLogradouro())).
-				body("numero", hasItem(cliente.getNumero())).
-				body("complemento", hasItem(cliente.getComplemento())).
-				body("bairro", hasItem(cliente.getBairro())).
-				body("cidade", hasItem(cliente.getCidade())).
-				body("estado", hasItem(cliente.getEstado())).
-				body("cep", hasItem(cliente.getCep()));
+				body("nome", equalTo(cliente.getNome())).
+				body("cpf", equalTo(cliente.getCpf())).
+				body("telefone", equalTo(cliente.getTelefone().intValue())).
+//				body("rendaMensal", equalTo(cliente.getRendaMensal())).
+				body("logradouro", equalTo(cliente.getLogradouro())).
+				body("numero", equalTo(cliente.getNumero())).
+				body("complemento", equalTo(cliente.getComplemento())).
+				body("bairro", equalTo(cliente.getBairro())).
+				body("cidade", equalTo(cliente.getCidade())).
+				body("estado", equalTo(cliente.getEstado())).
+				body("cep", equalTo(cliente.getCep()));
+	}
+	
+	@Test
+	public void atualizaClienteNaoEncontradoTest() {
+		ClienteRequestDTO cliente = buildClienteRequestDTO();
+
+		buildPutRequest(cliente, URL + "/" + 1, HttpStatus.BAD_REQUEST).
+			root("erros[0]").
+				body("mensagem", containsString("DB-1"));
 	}
 
 	private ClienteRequestDTO buildClienteRequestDTO() {
