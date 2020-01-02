@@ -1,11 +1,13 @@
 package com.matera.cursoferias.digitalbank;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
@@ -24,73 +26,80 @@ public class AppStartupRunner implements ApplicationRunner {
 
     private final ClienteService clienteService;
     private final ContaService contaService;
+    private final Environment environment;
 
-    public AppStartupRunner(ClienteService clienteService, ContaService contaService) {
+    public AppStartupRunner(ClienteService clienteService, ContaService contaService, Environment environment) {
         this.clienteService = clienteService;
         this.contaService = contaService;
+        this.environment = environment;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        LOG.info("Iniciando AppStartupRunner");
+        if (!Arrays.asList(environment.getActiveProfiles()).contains("test")) {
+            LOG.info("Iniciando AppStartupRunner");
 
-        ContaResponseDTO cliente1 = clienteService.cadastra(ClienteRequestDTO.builder().nome("Cliente 1")
-                                                                                       .cpf("72979929921")
-                                                                                       .telefone(44999001234L)
-                                                                                       .rendaMensal(new BigDecimal(5000))
-                                                                                       .logradouro("Rua 1")
-                                                                                       .numero(100)
-                                                                                       .complemento("Casa 1")
-                                                                                       .bairro("Bairro 1")
-                                                                                       .cidade("Maringá")
-                                                                                       .estado("PR")
-                                                                                       .cep("87087087")
-                                                                                       .build());
 
-        ContaResponseDTO cliente2 = clienteService.cadastra(ClienteRequestDTO.builder().nome("Cliente 2")
-                                                                                       .cpf("50667427945")
-                                                                                       .telefone(44999001235L)
-                                                                                       .rendaMensal(new BigDecimal(6000))
-                                                                                       .logradouro("Rua 2")
-                                                                                       .numero(200)
-                                                                                       .complemento("Casa 2")
-                                                                                       .bairro("Bairro 2")
-                                                                                       .cidade("Maringá")
-                                                                                       .estado("PR")
-                                                                                       .cep("87087088")
-                                                                                       .build());
+            ContaResponseDTO cliente1 = clienteService.cadastra(ClienteRequestDTO.builder().nome("Cliente 1")
+                                                                                           .cpf("72979929921")
+                                                                                           .telefone(44999001234L)
+                                                                                           .rendaMensal(new BigDecimal(5000))
+                                                                                           .logradouro("Rua 1")
+                                                                                           .numero(100)
+                                                                                           .complemento("Casa 1")
+                                                                                           .bairro("Bairro 1")
+                                                                                           .cidade("Maringá")
+                                                                                           .estado("PR")
+                                                                                           .cep("87087087")
+                                                                                           .build());
 
-        contaService.efetuaLancamento(cliente1.getIdConta(),
-                                      LancamentoRequestDTO.builder()
-                                                          .descricao("Depósito Caixa Eletrônico")
-                                                          .valor(new BigDecimal(1000))
-                                                          .build(),
-                                      TipoLancamento.DEPOSITO);
+            ContaResponseDTO cliente2 = clienteService.cadastra(ClienteRequestDTO.builder().nome("Cliente 2")
+                                                                                           .cpf("50667427945")
+                                                                                           .telefone(44999001235L)
+                                                                                           .rendaMensal(new BigDecimal(6000))
+                                                                                           .logradouro("Rua 2")
+                                                                                           .numero(200)
+                                                                                           .complemento("Casa 2")
+                                                                                           .bairro("Bairro 2")
+                                                                                           .cidade("Maringá")
+                                                                                           .estado("PR")
+                                                                                           .cep("87087088")
+                                                                                           .build());
 
-        contaService.efetuaLancamento(cliente1.getIdConta(),
-                                      LancamentoRequestDTO.builder()
-                                                          .descricao("Saque Caixa Eletrônico")
-                                                          .valor(new BigDecimal(100))
-                                                          .build(),
-                                      TipoLancamento.SAQUE);
+            contaService.efetuaLancamento(cliente1.getIdConta(),
+                                          LancamentoRequestDTO.builder()
+                                                              .descricao("Depósito Caixa Eletrônico")
+                                                              .valor(new BigDecimal(1000))
+                                                              .build(),
+                                          TipoLancamento.DEPOSITO);
 
-        ComprovanteResponseDTO lancamento3 = contaService.efetuaLancamento(cliente1.getIdConta(),
-                                                                           LancamentoRequestDTO.builder()
-                                                                                               .descricao("Pagamento de Boleto")
-                                                                                               .valor(new BigDecimal(50))
-                                                                                               .build(),
-                                                                           TipoLancamento.PAGAMENTO);
+            contaService.efetuaLancamento(cliente1.getIdConta(),
+                                          LancamentoRequestDTO.builder()
+                                                              .descricao("Saque Caixa Eletrônico")
+                                                              .valor(new BigDecimal(100))
+                                                              .build(),
+                                          TipoLancamento.SAQUE);
 
-        contaService.efetuaTransferencia(cliente1.getIdConta(),
-                                         TransferenciaRequestDTO.builder()
-                                                                .descricao("Churrasco")
-                                                                .numeroAgencia(cliente2.getNumeroAgencia())
-                                                                .numeroConta(cliente2.getNumeroConta())
-                                                                .valor(new BigDecimal(30)).build());
+            ComprovanteResponseDTO lancamento3 = contaService.efetuaLancamento(cliente1.getIdConta(),
+                                                                               LancamentoRequestDTO.builder()
+                                                                                                   .descricao("Pagamento de Boleto")
+                                                                                                   .valor(new BigDecimal(50))
+                                                                                                   .build(),
+                                                                               TipoLancamento.PAGAMENTO);
 
-        contaService.estornaLancamento(cliente1.getIdConta(), lancamento3.getIdLancamento());
+            contaService.efetuaTransferencia(cliente1.getIdConta(),
+                                             TransferenciaRequestDTO.builder()
+                                                                    .descricao("Churrasco")
+                                                                    .numeroAgencia(cliente2.getNumeroAgencia())
+                                                                    .numeroConta(cliente2.getNumeroConta())
+                                                                    .valor(new BigDecimal(30)).build());
 
-        LOG.info("Finalizando AppStartupRunner");
+            contaService.estornaLancamento(cliente1.getIdConta(), lancamento3.getIdLancamento());
+
+            LOG.info("Finalizando AppStartupRunner");
+        } else {
+            LOG.info("AppStartupRunner não será executado para testes automáticos");
+        }
     }
 
 }
