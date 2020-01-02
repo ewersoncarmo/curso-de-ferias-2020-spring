@@ -2,7 +2,11 @@ package com.matera.cursoferias.digitalbank.utils;
 
 import static io.restassured.RestAssured.given;
 
+import java.math.BigDecimal;
+
 import org.springframework.http.HttpStatus;
+
+import com.matera.cursoferias.digitalbank.dto.request.ClienteRequestDTO;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -11,6 +15,8 @@ import io.restassured.specification.RequestSpecification;
 
 public class DigitalBankTestUtils {
 
+	private DigitalBankTestUtils() {}
+	
 	public static ValidatableResponse buildPostRequest(Object body, String url, HttpStatus httpStatus) {
 		return given().
 					spec(buildRequestSpecification(body)).
@@ -59,6 +65,22 @@ public class DigitalBankTestUtils {
 			setContentType(ContentType.JSON).
 			addHeader("Accept", ContentType.JSON.toString()).
 			setBody(body).
+			build();
+	}
+	
+	public static ClienteRequestDTO buildClienteRequestDTO() {
+		return ClienteRequestDTO.builder().
+			nome("João da Silva").
+			cpf("05728520022").
+			telefone(997542877L).
+			rendaMensal(new BigDecimal(10000)).
+			logradouro("Avenida São Paulo").
+			numero(1287).
+			complemento("Apto 207").
+			bairro("Centro").
+			cidade("Maringá").
+			estado("PR").
+			cep("87005002").
 			build();
 	}
 }
