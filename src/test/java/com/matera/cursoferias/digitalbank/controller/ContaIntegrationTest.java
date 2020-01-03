@@ -22,6 +22,7 @@ import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.ClienteRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
+import com.matera.cursoferias.digitalbank.dto.request.TransferenciaRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
 
@@ -125,6 +126,54 @@ public class ContaIntegrationTest {
 		buildGetRequestWithSpec(requestSpecification, "digitalbank/api/v1/clientes/{id}/conta", HttpStatus.OK).
 			root("dados").
 				body("saldo", equalTo(lancamento.getValor().floatValue()));
+	}
+	
+	@Test
+	public void efetuaTransferenciaTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito");
+
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK).
+			root("dados").
+				body("idLancamento", greaterThan(0)).
+				body("codigoAutenticacao", notNullValue()).
+				body("dataHora", notNullValue()).
+				body("valor", equalTo(transferencia.getValor().intValue())).
+				body("natureza", equalTo(Natureza.DEBITO.getCodigo())).
+				body("tipoLancamento", equalTo(TipoLancamento.TRANSFERENCIA.getCodigo())).
+				body("descricao", equalTo(transferencia.getDescricao()));
+
+		RequestSpecification requestSpecificationOrigem = new RequestSpecBuilder().
+			addPathParam("id", contaResponse.getDados().getIdCliente()).
+			build();
+
+		buildGetRequestWithSpec(requestSpecificationOrigem, "digitalbank/api/v1/clientes/{id}/conta", HttpStatus.OK).
+			root("dados").
+				body("saldo", equalTo(70));
+		
+		RequestSpecification requestSpecificationDestino = new RequestSpecBuilder().
+			addPathParam("id", contaDestino.getDados().getIdCliente()).
+			build();
+
+		buildGetRequestWithSpec(requestSpecificationDestino, "digitalbank/api/v1/clientes/{id}/conta", HttpStatus.OK).
+			root("dados").
+				body("saldo", equalTo(30));
 	}
 
 	private ValidatableResponse efetuaDeposito(BigDecimal valor, String descricao) {
