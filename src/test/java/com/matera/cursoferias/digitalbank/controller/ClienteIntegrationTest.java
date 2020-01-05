@@ -1,7 +1,7 @@
 package com.matera.cursoferias.digitalbank.controller;
 
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildClienteRequestDTO;
-import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildGetRequestWithSpec;
+import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildGetRequest;
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildPostRequest;
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildPutRequest;
 import static org.hamcrest.Matchers.containsString;
@@ -76,7 +76,7 @@ public class ClienteIntegrationTest {
 			addPathParam("id", response.getDados().getIdCliente()).
 			build();
 
-		buildGetRequestWithSpec(requestSpecification, URL_BASE + "/{id}", HttpStatus.OK);
+		buildGetRequest(requestSpecification, URL_BASE + "/{id}", HttpStatus.OK);
 	}
 	
 	@Test
@@ -85,7 +85,7 @@ public class ClienteIntegrationTest {
 			addPathParam("id", 1).
 			build();
 
-		buildGetRequestWithSpec(requestSpecification, URL_BASE + "/{id}", HttpStatus.BAD_REQUEST).
+		buildGetRequest(requestSpecification, URL_BASE + "/{id}", HttpStatus.BAD_REQUEST).
 			body("erros", hasSize(1)).
 			body("erros[0].mensagem", containsString("DB-1"));
 	}
@@ -103,7 +103,7 @@ public class ClienteIntegrationTest {
 			addPathParam("id", response.getDados().getIdCliente()).
 			build();
 
-		buildGetRequestWithSpec(requestSpecification, URL_BASE + "/{id}/conta", HttpStatus.OK).
+		buildGetRequest(requestSpecification, URL_BASE + "/{id}/conta", HttpStatus.OK).
 			root("dados").
 				body("idCliente", equalTo(response.getDados().getIdCliente().intValue())).
 				body("idConta", equalTo(response.getDados().getIdConta().intValue())).
@@ -119,7 +119,7 @@ public class ClienteIntegrationTest {
 			addPathParam("id", 1).
 			build();
 
-		buildGetRequestWithSpec(requestSpecification, URL_BASE + "/{id}/conta", HttpStatus.BAD_REQUEST).
+		buildGetRequest(requestSpecification, URL_BASE + "/{id}/conta", HttpStatus.BAD_REQUEST).
 			body("erros", hasSize(1)).
 			body("erros[0].mensagem", containsString("DB-12"));
 	}
@@ -172,7 +172,7 @@ public class ClienteIntegrationTest {
 			addPathParam("id", response.getDados().getIdCliente()).
 			build();
 
-		buildGetRequestWithSpec(requestSpecification, URL_BASE + "/{id}", HttpStatus.OK).
+		buildGetRequest(requestSpecification, URL_BASE + "/{id}", HttpStatus.OK).
 			root("dados").
 				body("nome", equalTo(cliente.getNome())).
 				body("cpf", equalTo(cliente.getCpf())).
