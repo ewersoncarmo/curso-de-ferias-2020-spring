@@ -50,6 +50,17 @@ public class DigitalBankTestUtils {
 			   		statusCode(httpStatus.value());
 	}
 	
+	public static ValidatableResponse buildDeleteRequest(RequestSpecification requestSpecification, String url, HttpStatus httpStatus) {
+		return given().
+					spec(requestSpecification).
+					log().
+						all().
+			   when().
+			   		delete(url).
+			   then().
+			   		statusCode(httpStatus.value());
+	}
+	
 	public static ValidatableResponse buildGetRequest(RequestSpecification requestSpecification, String url, HttpStatus httpStatus) {
 		return given().
 					spec(requestSpecification).

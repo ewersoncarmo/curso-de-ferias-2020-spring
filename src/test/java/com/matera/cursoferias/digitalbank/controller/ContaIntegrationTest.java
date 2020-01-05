@@ -1,6 +1,7 @@
 package com.matera.cursoferias.digitalbank.controller;
 
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildClienteRequestDTO;
+import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildDeleteRequest;
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildGetRequest;
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildPostRequest;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -26,6 +27,7 @@ import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
 import com.matera.cursoferias.digitalbank.dto.request.ClienteRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.LancamentoRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.request.TransferenciaRequestDTO;
+import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
 
@@ -68,21 +70,19 @@ public class ContaIntegrationTest {
 				body("tipoLancamento", equalTo(TipoLancamento.DEPOSITO.getCodigo())).
 				body("descricao", equalTo(descricao));
 
-		consultaConta(contaResponse.getDados().getIdCliente()).
-			root("dados").
-				body("saldo", equalTo(valor.floatValue()));
+		assertSaldoConta(contaResponse.getDados().getIdConta(), valor);
 	}
-	
+
 	@Test
 	public void efetuaDepositoContaNaoEncontradaTest() {
-		efetuaLancamentoErro("/2/depositar", "DB-3");
+		efetuaLancamentoComErro("/2/depositar", "DB-3");
 	}
 	
 	@Test
 	public void efetuaDepositoContaBloqueadaTest() {
 		bloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
 			
-		efetuaLancamentoErro("/" + contaResponse.getDados().getIdConta() + "/depositar", "DB-15");
+		efetuaLancamentoComErro("/" + contaResponse.getDados().getIdConta() + "/depositar", "DB-15");
 	}
 
 	@Test
@@ -103,14 +103,12 @@ public class ContaIntegrationTest {
 				body("tipoLancamento", equalTo(TipoLancamento.SAQUE.getCodigo())).
 				body("descricao", equalTo(saque.getDescricao()));
 
-		consultaConta(contaResponse.getDados().getIdCliente()).
-			root("dados").
-				body("saldo", equalTo(saque.getValor().floatValue()));
+		assertSaldoConta(contaResponse.getDados().getIdCliente(), saque.getValor());
 	}
 	
 	@Test
 	public void efetuaSaqueContaNaoEncontradaTest() {
-		efetuaLancamentoErro("/2/sacar", "DB-3");
+		efetuaLancamentoComErro("/2/sacar", "DB-3");
 	}
 	
 	@Test
@@ -119,12 +117,12 @@ public class ContaIntegrationTest {
 
 		bloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
 		
-		efetuaLancamentoErro("/" + contaResponse.getDados().getIdConta() + "/sacar", "DB-15");
+		efetuaLancamentoComErro("/" + contaResponse.getDados().getIdConta() + "/sacar", "DB-15");
 	}
 	
 	@Test
 	public void efetuaSaqueContaSemSaldoTest() {
-		efetuaLancamentoErro("/" + contaResponse.getDados().getIdConta() + "/sacar", "DB-6");
+		efetuaLancamentoComErro("/" + contaResponse.getDados().getIdConta() + "/sacar", "DB-6");
 	}
 
 	@Test
@@ -145,14 +143,12 @@ public class ContaIntegrationTest {
 				body("tipoLancamento", equalTo(TipoLancamento.PAGAMENTO.getCodigo())).
 				body("descricao", equalTo(lancamento.getDescricao()));
 
-		consultaConta(contaResponse.getDados().getIdCliente()).
-			root("dados").
-				body("saldo", equalTo(lancamento.getValor().floatValue()));
+		assertSaldoConta(contaResponse.getDados().getIdCliente(), lancamento.getValor());
 	}
 	
 	@Test
 	public void efetuaPagamentoContaNaoEncontradaTest() {
-		efetuaLancamentoErro("/2/pagar", "DB-3");
+		efetuaLancamentoComErro("/2/pagar", "DB-3");
 	}
 	
 	@Test
@@ -161,12 +157,12 @@ public class ContaIntegrationTest {
 
 		bloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
 		
-		efetuaLancamentoErro("/" + contaResponse.getDados().getIdConta() + "/pagar", "DB-15");
+		efetuaLancamentoComErro("/" + contaResponse.getDados().getIdConta() + "/pagar", "DB-15");
 	}
 	
 	@Test
 	public void efetuaPagamentoContaSemSaldoTest() {
-		efetuaLancamentoErro("/" + contaResponse.getDados().getIdConta() + "/pagar", "DB-6");
+		efetuaLancamentoComErro("/" + contaResponse.getDados().getIdConta() + "/pagar", "DB-6");
 	}
 	
 	@Test
@@ -200,23 +196,18 @@ public class ContaIntegrationTest {
 				body("tipoLancamento", equalTo(TipoLancamento.TRANSFERENCIA.getCodigo())).
 				body("descricao", equalTo(transferencia.getDescricao()));
 
-		consultaConta(contaResponse.getDados().getIdCliente()).
-			root("dados").
-				body("saldo", equalTo(70f));
-		
-		consultaConta(contaDestino.getDados().getIdCliente()).
-			root("dados").
-				body("saldo", equalTo(30f));
+		assertSaldoConta(contaResponse.getDados().getIdCliente(), new BigDecimal(70));
+		assertSaldoConta(contaDestino.getDados().getIdCliente(), new BigDecimal(30));
 	}
 
 	@Test
 	public void efetuaTransferenciaContaDebitoNaoEncontradaTest() {
-		efetuaTransferenciaErro(1, 2L, "/2/transferir", "DB-3");
+		efetuaTransferenciaComErro(1, 2L, "/2/transferir", "DB-3");
 	}
 	
 	@Test
 	public void efetuaTransferenciaContaCreditoNaoEncontradaTest() {
-		efetuaTransferenciaErro(1, 2L, "/" + contaResponse.getDados().getIdConta() + "/transferir", "DB-5");
+		efetuaTransferenciaComErro(1, 2L, "/" + contaResponse.getDados().getIdConta() + "/transferir", "DB-5");
 	}
 	
 	@Test
@@ -234,7 +225,7 @@ public class ContaIntegrationTest {
 				body().
 					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
 
-		efetuaTransferenciaErro(contaDestino.getDados().getNumeroAgencia(), contaDestino.getDados().getNumeroConta(), "/" + contaResponse.getDados().getIdConta() + "/transferir", "DB-15");
+		efetuaTransferenciaComErro(contaDestino.getDados().getNumeroAgencia(), contaDestino.getDados().getNumeroConta(), "/" + contaResponse.getDados().getIdConta() + "/transferir", "DB-15");
 	}
 	
 	@Test
@@ -248,7 +239,7 @@ public class ContaIntegrationTest {
 				body().
 					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
 
-		efetuaTransferenciaErro(contaDestino.getDados().getNumeroAgencia(), contaDestino.getDados().getNumeroConta(), "/" + contaResponse.getDados().getIdConta() + "/transferir", "DB-6");
+		efetuaTransferenciaComErro(contaDestino.getDados().getNumeroAgencia(), contaDestino.getDados().getNumeroConta(), "/" + contaResponse.getDados().getIdConta() + "/transferir", "DB-6");
 	}
 	
 	@Test
@@ -266,16 +257,14 @@ public class ContaIntegrationTest {
 
 		bloqueiaConta(contaDestino.getDados().getIdConta(), HttpStatus.NO_CONTENT);
 
-		efetuaTransferenciaErro(contaDestino.getDados().getNumeroAgencia(), contaDestino.getDados().getNumeroConta(), "/" + contaResponse.getDados().getIdConta() + "/transferir", "DB-15");
+		efetuaTransferenciaComErro(contaDestino.getDados().getNumeroAgencia(), contaDestino.getDados().getNumeroConta(), "/" + contaResponse.getDados().getIdConta() + "/transferir", "DB-15");
 	}
 	
 	@Test
 	public void bloqueiaContaTest() {
 		bloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
 		
-		consultaConta(contaResponse.getDados().getIdConta()).
-			root("dados").
-				body("situacao", equalTo(SituacaoConta.BLOQUEADA.getCodigo()));
+		assertSituacaoConta(contaResponse.getDados().getIdConta(), SituacaoConta.BLOQUEADA.getCodigo());
 	}
 	
 	@Test
@@ -300,9 +289,7 @@ public class ContaIntegrationTest {
 		
 		desbloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
 		
-		consultaConta(contaResponse.getDados().getIdConta()).
-			root("dados").
-				body("situacao", equalTo(SituacaoConta.ABERTA.getCodigo()));
+		assertSituacaoConta(contaResponse.getDados().getIdConta(), SituacaoConta.ABERTA.getCodigo());
 	}
 	
 	@Test
@@ -323,6 +310,680 @@ public class ContaIntegrationTest {
 			body("erros[0].mensagem", containsString("DB-14"));
 	}
 	
+	@Test
+	public void estornaLancamentoDepositoTest() {
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK).
+			root("dados").
+				body("idLancamento", greaterThan(0)).
+				body("codigoAutenticacao", notNullValue()).
+				body("dataHora", notNullValue()).
+				body("valor", equalTo(comprovante.getDados().getValor().floatValue())).
+				body("natureza", equalTo(Natureza.DEBITO.getCodigo())).
+				body("tipoLancamento", equalTo(TipoLancamento.ESTORNO.getCodigo())).
+				body("descricao", equalTo("Estorno do lançamento " + comprovante.getDados().getIdLancamento()));
+		
+		assertSaldoConta(contaResponse.getDados().getIdConta(), BigDecimal.ZERO);
+	}
+	
+	@Test
+	public void estornaLancamentoDepositoEstornoTest() {
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		ResponseDTO<ComprovanteResponseDTO> comprovanteEstorno = buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecificationEstorno = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovanteEstorno.getDados().getIdLancamento()).
+			build();
+		
+		buildPostRequest(requestSpecificationEstorno, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-8"));
+	}
+	
+	@Test
+	public void estornaLancamentoDepositoJaEstornadoTest() {
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK);
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-9"));
+	}
+	
+	@Test
+	public void estornaLancamentoDepositoContaBloqueadaTest() {
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+
+		bloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-15"));
+	}
+	
+	@Test
+	public void estornaLancamentoDepositoContaSemSaldoTest() {
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+
+		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
+		lancamento.setValor(new BigDecimal(100));
+		lancamento.setDescricao("Pagamento");
+
+		buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/pagar", HttpStatus.OK);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-11"));
+	}
+	
+	@Test
+	public void estornaLancamentoSaqueTest() {
+		estornaLancamentoDebitoTest("/sacar");
+	}
+	
+	@Test
+	public void estornaLancamentoSaqueEstornoTest() {
+		estornaLancamentoDebitoEstornoTest("/sacar");
+	}
+	
+	@Test
+	public void estornaLancamentoSaqueJaEstornadoTest() {
+		estornaLancamentoDebitoJaEstornadoTest("/sacar");
+	}
+	
+	@Test
+	public void estornaLancamentoSaqueContaBloqueadaTest() {
+		estornaLancamentoDebitoContaBloqueadaTest("/sacar");
+	}
+	
+	@Test
+	public void estornaLancamentoPagamentoTest() {
+		estornaLancamentoDebitoTest("/pagar");
+	}
+	
+	@Test
+	public void estornaLancamentoPagamentoEstornoTest() {
+		estornaLancamentoDebitoEstornoTest("/pagar");
+	}
+	
+	@Test
+	public void estornaLancamentoPagamentoJaEstornadoTest() {
+		estornaLancamentoDebitoJaEstornadoTest("/pagar");
+	}
+	
+	@Test
+	public void estornaLancamentoPagamentoContaBloqueadaTest() {
+		estornaLancamentoDebitoContaBloqueadaTest("/pagar");
+	}
+	
+	@Test
+	public void estornaLancamentoNaoEncontradoTest() {
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", 1).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-7"));
+	}
+	
+	@Test
+	public void estornaLancamentoTransferenciaTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaDestino.getDados().getIdConta()).
+			addPathParam("idLancamento", 3).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK).
+			root("dados").
+				body("idLancamento", greaterThan(0)).
+				body("codigoAutenticacao", notNullValue()).
+				body("dataHora", notNullValue()).
+				body("valor", equalTo(transferencia.getValor().floatValue())).
+				body("natureza", equalTo(Natureza.DEBITO.getCodigo())).
+				body("tipoLancamento", equalTo(TipoLancamento.ESTORNO.getCodigo())).
+				body("descricao", equalTo("Estorno do lançamento " + 3));
+		
+		assertSaldoConta(contaResponse.getDados().getIdCliente(), new BigDecimal(100));
+		assertSaldoConta(contaDestino.getDados().getIdCliente(), BigDecimal.ZERO);
+	}
+	
+	@Test
+	public void estornaLancamentoTransferenciaEstornoTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaDestino.getDados().getIdConta()).
+			addPathParam("idLancamento", 3).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK);
+
+		RequestSpecification requestSpecificationEstorno = new RequestSpecBuilder().
+			addPathParam("idConta", contaDestino.getDados().getIdConta()).
+			addPathParam("idLancamento", 5).
+			build();
+		
+		buildPostRequest(requestSpecificationEstorno, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-8"));
+	}
+	
+	@Test
+	public void estornaLancamentoTransferenciaJaEstornadoTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaDestino.getDados().getIdConta()).
+			addPathParam("idLancamento", 3).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK);
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-9"));
+	}
+	
+	@Test
+	public void estornaLancamentoTransferenciaContaDebitadaTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-10"));
+	}
+	
+	@Test
+	public void estornaLancamentoTransferenciaContaBloqueadaTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaDestino.getDados().getIdConta()).
+			addPathParam("idLancamento", 3).
+			build();
+		
+		bloqueiaConta(contaDestino.getDados().getIdConta(), HttpStatus.NO_CONTENT);
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-15"));
+	}
+	
+	@Test
+	public void estornaLancamentoTransferenciaContaSemSaldoTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK);
+		
+		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
+		lancamento.setValor(new BigDecimal(30));
+		lancamento.setDescricao("Pagamento");
+		
+		buildPostRequest(lancamento, URL_BASE + "/" + contaDestino.getDados().getIdConta() + "/pagar", HttpStatus.OK);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaDestino.getDados().getIdConta()).
+			addPathParam("idLancamento", 3).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-11"));
+	}
+	
+	@Test
+	public void removeLancamentoEstornoDepositoTest() {
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		ResponseDTO<ComprovanteResponseDTO> comprovanteEstorno = buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecificationEstorno = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovanteEstorno.getDados().getIdLancamento()).
+			build();
+		
+		buildDeleteRequest(requestSpecificationEstorno, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.NO_CONTENT);
+		
+		buildGetRequest(requestSpecificationEstorno, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-7"));
+	}
+	
+	@Test
+	public void removeLancamentoOriginalDepositoTest() {
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildDeleteRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-16"));
+	}
+	
+	@Test
+	public void removeLancamentoEstornoSaqueTest() {
+		removeLancamentoDebito("/sacar");
+	}
+	
+	@Test
+	public void removeLancamentoOriginalSaqueTest() {
+		removeLancamentoOriginalDebito("/sacar");
+	}
+	
+	@Test
+	public void removeLancamentoEstornoPagamentoTest() {
+		removeLancamentoDebito("/pagar");
+	}
+	
+	@Test
+	public void removeLancamentoOriginalPagamentoTest() {
+		removeLancamentoOriginalDebito("/pagar");
+	}
+	
+	@Test 
+	public void removeLancamentoEstornoTransferenciaTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaDestino.getDados().getIdConta()).
+			addPathParam("idLancamento", 3).
+			build();
+		
+		ResponseDTO<ComprovanteResponseDTO> comprovanteEstorno = buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+			
+		RequestSpecification requestSpecificationEstorno = new RequestSpecBuilder().
+			addPathParam("idConta", contaDestino.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovanteEstorno.getDados().getIdLancamento()).
+			build();
+		
+		buildDeleteRequest(requestSpecificationEstorno, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.NO_CONTENT);
+		
+		buildGetRequest(requestSpecificationEstorno, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-7"));
+	}
+	
+	@Test 
+	public void removeLancamentoOriginalTransferenciaTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaDestino.getDados().getIdConta()).
+			addPathParam("idLancamento", 3).
+			build();
+		
+		buildDeleteRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-16"));
+	}
+	
+	@Test
+	public void consultaComprovanteDepositoTest() {
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildGetRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.OK).
+			root("dados").
+				body("idLancamento", equalTo(comprovante.getDados().getIdLancamento().intValue())).
+				body("codigoAutenticacao", notNullValue()).
+				body("dataHora", notNullValue()).
+				body("valor", equalTo(comprovante.getDados().getValor().floatValue())).
+				body("natureza", equalTo(Natureza.CREDITO.getCodigo())).
+				body("tipoLancamento", equalTo(TipoLancamento.DEPOSITO.getCodigo())).
+				body("descricao", equalTo(comprovante.getDados().getDescricao()));
+	}
+	
+	@Test
+	public void consultaComprovanteSaqueTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		LancamentoRequestDTO saque = new LancamentoRequestDTO();
+		saque.setValor(new BigDecimal(50));
+		saque.setDescricao("Saque");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/sacar", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildGetRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.OK).
+			root("dados").
+				body("idLancamento", equalTo(comprovante.getDados().getIdLancamento().intValue())).
+				body("codigoAutenticacao", notNullValue()).
+				body("dataHora", notNullValue()).
+				body("valor", equalTo(comprovante.getDados().getValor().floatValue())).
+				body("natureza", equalTo(Natureza.DEBITO.getCodigo())).
+				body("tipoLancamento", equalTo(TipoLancamento.SAQUE.getCodigo())).
+				body("descricao", equalTo(comprovante.getDados().getDescricao()));
+	}
+	
+	@Test
+	public void consultaComprovantePagamentoTest() {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		LancamentoRequestDTO saque = new LancamentoRequestDTO();
+		saque.setValor(new BigDecimal(50));
+		saque.setDescricao("Pagamento");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/pagar", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildGetRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.OK).
+			root("dados").
+				body("idLancamento", equalTo(comprovante.getDados().getIdLancamento().intValue())).
+				body("codigoAutenticacao", notNullValue()).
+				body("dataHora", notNullValue()).
+				body("valor", equalTo(comprovante.getDados().getValor().floatValue())).
+				body("natureza", equalTo(Natureza.DEBITO.getCodigo())).
+				body("tipoLancamento", equalTo(TipoLancamento.PAGAMENTO.getCodigo())).
+				body("descricao", equalTo(comprovante.getDados().getDescricao()));
+	}
+	
+	@Test
+	public void consultaExtratoCompleto() {
+		efetuaDeposito(new BigDecimal(200), "Depósito", HttpStatus.OK);
+
+		LancamentoRequestDTO saque = new LancamentoRequestDTO();
+		saque.setValor(new BigDecimal(50));
+		saque.setDescricao("Saque");
+
+		buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/sacar", HttpStatus.OK);
+		
+		LancamentoRequestDTO pagamento = new LancamentoRequestDTO();
+		pagamento.setValor(new BigDecimal(50));
+		pagamento.setDescricao("Pagamento");
+
+		buildPostRequest(pagamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/pagar", HttpStatus.OK);
+		
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(new BigDecimal(30)).
+				descricao("Transferência").
+			build();
+		
+		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("id", contaResponse.getDados().getIdConta()).
+			build();
+		
+		buildGetRequest(requestSpecification, URL_BASE + "/{id}/lancamentos", HttpStatus.OK).
+			root("dados").
+				body("conta.idConta", equalTo(contaResponse.getDados().getIdConta().intValue())).
+				body("lancamentos", hasSize(4));
+	}
+	
+	@Test
+	public void consultaTodasContas() {
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED);
+		
+		buildGetRequest(URL_BASE, HttpStatus.OK).
+			body("dados", hasSize(2));
+	}
+	
 	private ValidatableResponse efetuaDeposito(BigDecimal valor, String descricao, HttpStatus httpStatus) {
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
 		lancamento.setValor(valor);
@@ -331,7 +992,6 @@ public class ContaIntegrationTest {
 		return buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/depositar", httpStatus);
 	}
 	
-
 	private ValidatableResponse bloqueiaConta(Long idConta, HttpStatus httpStatus) {
 		RequestSpecification requestSpecification = new RequestSpecBuilder().
 			addPathParam("id", idConta).
@@ -348,7 +1008,7 @@ public class ContaIntegrationTest {
 		return buildPostRequest(requestSpecification, URL_BASE + "/{id}/desbloquear", httpStatus);
 	}
 	
-	private void efetuaLancamentoErro(String url, String codigoErro) {
+	private void efetuaLancamentoComErro(String url, String codigoErro) {
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
 		lancamento.setValor(new BigDecimal(50));
 		lancamento.setDescricao("Lançamento");
@@ -358,7 +1018,7 @@ public class ContaIntegrationTest {
 			body("erros[0].mensagem", containsString(codigoErro));
 	}
 	
-	private void efetuaTransferenciaErro(Integer numeroAgencia, Long numeroConta, String url, String codigoErro) {
+	private void efetuaTransferenciaComErro(Integer numeroAgencia, Long numeroConta, String url, String codigoErro) {
 		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
 			builder().
 				numeroAgencia(numeroAgencia).
@@ -372,11 +1032,189 @@ public class ContaIntegrationTest {
 			body("erros[0].mensagem", containsString(codigoErro));
 	}
 	
+	private void removeLancamentoDebito(String uri) {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		LancamentoRequestDTO saque = new LancamentoRequestDTO();
+		saque.setValor(new BigDecimal(50));
+		saque.setDescricao("Saque");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		ResponseDTO<ComprovanteResponseDTO> comprovanteEstorno = buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecificationEstorno = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovanteEstorno.getDados().getIdLancamento()).
+			build();
+		
+		buildDeleteRequest(requestSpecificationEstorno, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.NO_CONTENT);
+		
+		buildGetRequest(requestSpecificationEstorno, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-7"));
+	}
+	
+	private void removeLancamentoOriginalDebito(String uri) {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		LancamentoRequestDTO saque = new LancamentoRequestDTO();
+		saque.setValor(new BigDecimal(50));
+		saque.setDescricao("Saque");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildDeleteRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-16"));
+	}
+	
+	private void estornaLancamentoDebitoTest(String uri) {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		
+		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
+		lancamento.setValor(new BigDecimal(100));
+		lancamento.setDescricao("Saque");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK).
+			root("dados").
+				body("idLancamento", greaterThan(0)).
+				body("codigoAutenticacao", notNullValue()).
+				body("dataHora", notNullValue()).
+				body("valor", equalTo(comprovante.getDados().getValor().floatValue())).
+				body("natureza", equalTo(Natureza.CREDITO.getCodigo())).
+				body("tipoLancamento", equalTo(TipoLancamento.ESTORNO.getCodigo())).
+				body("descricao", equalTo("Estorno do lançamento " + comprovante.getDados().getIdLancamento()));
+		
+		assertSaldoConta(contaResponse.getDados().getIdConta(), new BigDecimal(100));
+	}
+	
+	private void estornaLancamentoDebitoEstornoTest(String uri) {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
+		lancamento.setValor(new BigDecimal(100));
+		lancamento.setDescricao("Saque");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		ResponseDTO<ComprovanteResponseDTO> comprovanteEstorno = buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecificationEstorno = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovanteEstorno.getDados().getIdLancamento()).
+			build();
+		
+		buildPostRequest(requestSpecificationEstorno, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-8"));
+	}
+	
+	private void estornaLancamentoDebitoJaEstornadoTest(String uri) {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
+		lancamento.setValor(new BigDecimal(100));
+		lancamento.setDescricao("Saque");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.OK);
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-9"));
+	}
+	
+	private void estornaLancamentoDebitoContaBloqueadaTest(String uri) {
+		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+
+		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
+		lancamento.setValor(new BigDecimal(100));
+		lancamento.setDescricao("Saque");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("idConta", contaResponse.getDados().getIdConta()).
+			addPathParam("idLancamento", comprovante.getDados().getIdLancamento()).
+			build();
+		
+		bloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
+		
+		buildPostRequest(requestSpecification, URL_BASE + "/{idConta}/lancamentos/{idLancamento}/estornar", HttpStatus.BAD_REQUEST).
+			body("erros", hasSize(1)).
+			body("erros[0].mensagem", containsString("DB-15"));
+	}
+
 	private ValidatableResponse consultaConta(Long idConta) {
 		RequestSpecification requestSpecification = new RequestSpecBuilder().
 			addPathParam("id", idConta).
 			build();
 	
 		return buildGetRequest(requestSpecification, "digitalbank/api/v1/clientes/{id}/conta", HttpStatus.OK);
+	}
+	
+	private void assertSaldoConta(Long idConta, BigDecimal valor) {
+		consultaConta(idConta).
+			root("dados").
+				body("saldo", equalTo(valor.floatValue()));
+	}
+	
+	private void assertSituacaoConta(Long idConta, String situacao) {
+		consultaConta(idConta).
+			root("dados").
+				body("situacao", equalTo(situacao));
 	}
 }
