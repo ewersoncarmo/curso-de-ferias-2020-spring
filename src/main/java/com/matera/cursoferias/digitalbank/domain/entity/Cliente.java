@@ -8,16 +8,36 @@ import javax.persistence.Table;
 
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "db_cliente")
 public class Cliente extends EntidadeBase {
 
-	@Column(length = 100, nullable = false)
+    @Builder
+	public Cliente(Long id, String nome, String cpf, Long telefone, BigDecimal rendaMensal, String logradouro,
+            Integer numero, String complemento, String bairro, String cidade, String estado, String cep) {
+        super(id);
+        this.nome = nome;
+        this.cpf = cpf;
+        this.telefone = telefone;
+        this.rendaMensal = rendaMensal;
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
+    }
+
+    @Column(length = 100, nullable = false)
 	private String nome;
 
 	@Column(length = 11, nullable = false)

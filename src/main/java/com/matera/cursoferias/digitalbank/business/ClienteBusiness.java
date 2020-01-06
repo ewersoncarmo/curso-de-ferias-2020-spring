@@ -30,7 +30,7 @@ public class ClienteBusiness {
 
 		Cliente cliente = requestDTOParaEntidade(clienteRequestDTO, new Cliente());
 
-		cliente = clienteRepository.save(cliente);
+		clienteRepository.save(cliente);
 
 		return contaBusiness.cadastra(cliente);
 	}
