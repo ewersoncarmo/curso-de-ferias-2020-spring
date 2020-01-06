@@ -12,7 +12,6 @@ import javax.persistence.Table;
 
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,14 +19,24 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "db_conta")
 public class Conta extends EntidadeBase {
 
-	@Column(precision = 4, nullable = false)
+    @Builder
+	public Conta(Long id, Integer numeroAgencia, Long numeroConta, BigDecimal saldo, String situacao, Cliente cliente,
+            List<Lancamento> lancamentos) {
+        super(id);
+        this.numeroAgencia = numeroAgencia;
+        this.numeroConta = numeroConta;
+        this.saldo = saldo;
+        this.situacao = situacao;
+        this.cliente = cliente;
+        this.lancamentos = lancamentos;
+    }
+
+    @Column(precision = 4, nullable = false)
 	private Integer numeroAgencia;
 
 	@Column(precision = 12, nullable = false)

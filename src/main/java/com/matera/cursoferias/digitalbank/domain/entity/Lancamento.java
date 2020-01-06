@@ -12,7 +12,6 @@ import javax.persistence.Table;
 
 import com.matera.cursoferias.digitalbank.domain.entity.base.EntidadeBase;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,14 +19,25 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "db_lancamento")
 public class Lancamento extends EntidadeBase {
 
-	@Column(length = 50, nullable = false)
+    @Builder
+	public Lancamento(Long id, String codigoAutenticacao, LocalDateTime dataHora, BigDecimal valor, String natureza,
+            String tipoLancamento, String descricao, Conta conta) {
+        super(id);
+        this.codigoAutenticacao = codigoAutenticacao;
+        this.dataHora = dataHora;
+        this.valor = valor;
+        this.natureza = natureza;
+        this.tipoLancamento = tipoLancamento;
+        this.descricao = descricao;
+        this.conta = conta;
+    }
+
+    @Column(length = 50, nullable = false)
 	private String codigoAutenticacao;
 
 	@Column(nullable = false)

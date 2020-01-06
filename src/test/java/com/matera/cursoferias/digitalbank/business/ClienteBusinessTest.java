@@ -55,6 +55,8 @@ public class ClienteBusinessTest {
         verify(clienteRepository).findByCpf(eq(clienteRequest.getCpf()));
         verify(clienteRepository).save(any(Cliente.class));
         verify(contaBusiness).cadastra(any(Cliente.class));
+        verifyNoMoreInteractions(clienteRepository);
+        verifyNoMoreInteractions(contaBusiness);
 
         assertNotNull(contaResponse);
     }
