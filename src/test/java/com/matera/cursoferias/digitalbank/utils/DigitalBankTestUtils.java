@@ -106,7 +106,7 @@ public class DigitalBankTestUtils {
 			nome("João da Silva").
 			cpf("05728520022").
 			telefone(997542877L).
-			rendaMensal(new BigDecimal(10000)).
+			rendaMensal(BigDecimal.valueOf(10000)).
 			logradouro("Avenida São Paulo").
 			numero(1287).
 			complemento("Apto 207").
@@ -122,7 +122,7 @@ public class DigitalBankTestUtils {
                                 .nome("João da Silva")
                                 .cpf("05728520022")
                                 .telefone(997542877L)
-                                .rendaMensal(new BigDecimal(10000))
+                                .rendaMensal(BigDecimal.valueOf(10000))
                                 .logradouro("Avenida São Paulo")
                                 .numero(1287)
                                 .complemento("Apto 207")
@@ -137,7 +137,7 @@ public class DigitalBankTestUtils {
 	    return Conta.builder().id(2L)
                               .numeroAgencia(1234)
                               .numeroConta(102030L)
-                              .saldo(new BigDecimal(5000))
+                              .saldo(BigDecimal.valueOf(5000))
                               .situacao(SituacaoConta.ABERTA.getCodigo())
                               .cliente(buildClienteEntidade())
                               .build();
@@ -148,7 +148,7 @@ public class DigitalBankTestUtils {
 	                                     .idConta(2L)
 	                                     .numeroAgencia(1234)
 	                                     .numeroConta(102030L)
-	                                     .saldo(new BigDecimal(5000))
+	                                     .saldo(BigDecimal.valueOf(5000))
 	                                     .situacao(SituacaoConta.ABERTA.getCodigo())
 	                                     .build();
 	}
@@ -180,7 +180,7 @@ public class DigitalBankTestUtils {
 	                                           .numeroAgencia(1)
 	                                           .numeroConta(12345L)
 	                                           .tipoLancamento(TipoLancamento.DEPOSITO.getCodigo())
-	                                           .valor(new BigDecimal(100))
+	                                           .valor(BigDecimal.valueOf(100))
 	                                           .build();
 	}
 

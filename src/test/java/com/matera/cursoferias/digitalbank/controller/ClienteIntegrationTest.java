@@ -157,7 +157,7 @@ public class ClienteIntegrationTest {
 		cliente.setNome("Pedro da Silva");
 		cliente.setCpf("57573694695");
 		cliente.setTelefone(997242244L);
-		cliente.setRendaMensal(new BigDecimal(5000));
+		cliente.setRendaMensal(BigDecimal.valueOf(5000));
 		cliente.setLogradouro("Avenida Paulista");
 		cliente.setNumero(100);
 		cliente.setComplemento("Casa");

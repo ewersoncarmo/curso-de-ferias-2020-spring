@@ -101,7 +101,7 @@ public class ContaBusinessTest {
     public void efetuaLancamentoCreditoComSucesso() {
         Natureza natureza = Natureza.CREDITO;
         TipoLancamento tipoLancamento = TipoLancamento.DEPOSITO;
-        BigDecimal valor = new BigDecimal(100);
+        BigDecimal valor = BigDecimal.valueOf(100);
 
         Conta contaMock = buildContaEntidade();
         BigDecimal saldoContaAntes = contaMock.getSaldo();
@@ -127,7 +127,7 @@ public class ContaBusinessTest {
     @Test
     public void efetuaLancamentoContaInexistente() {
         TipoLancamento tipoLancamento = TipoLancamento.DEPOSITO;
-        BigDecimal valor = new BigDecimal(100);
+        BigDecimal valor = BigDecimal.valueOf(100);
         Long idConta = 1L;
         LancamentoRequestDTO lancamentoRequest = buildLancamentoRequestDTO(valor);
 
@@ -145,7 +145,7 @@ public class ContaBusinessTest {
     @Test
     public void efetuaTransferenciaComSucesso() {
         TipoLancamento tipoLancamento = TipoLancamento.TRANSFERENCIA;
-        BigDecimal valor = new BigDecimal(100);
+        BigDecimal valor = BigDecimal.valueOf(100);
 
         Conta contaDebitoMock = buildContaEntidade();
         Conta contaCreditoMock = buildContaEntidade();
@@ -185,7 +185,7 @@ public class ContaBusinessTest {
 
     @Test
     public void efetuaTransferenciaContaDebitoInexistente() {
-        BigDecimal valor = new BigDecimal(100);
+        BigDecimal valor = BigDecimal.valueOf(100);
 
         Conta contaDebitoMock = buildContaEntidade();
         Conta contaCreditoMock = buildContaEntidade();
@@ -207,7 +207,7 @@ public class ContaBusinessTest {
 
     @Test
     public void efetuaTransferenciaContaCreditoInexistente() {
-        BigDecimal valor = new BigDecimal(100);
+        BigDecimal valor = BigDecimal.valueOf(100);
 
         Conta contaDebitoMock = buildContaEntidade();
         Conta contaCreditoMock = buildContaEntidade();
@@ -486,7 +486,7 @@ public class ContaBusinessTest {
     public void realizaSorteioComSucesso() {
         TipoLancamento tipoLancamento = TipoLancamento.DEPOSITO;
         Natureza natureza = Natureza.CREDITO;
-        BigDecimal valorSorteio = new BigDecimal(1000);
+        BigDecimal valorSorteio = BigDecimal.valueOf(1000);
 
         Conta conta1 = buildContaEntidade();
         conta1.setId(1L);

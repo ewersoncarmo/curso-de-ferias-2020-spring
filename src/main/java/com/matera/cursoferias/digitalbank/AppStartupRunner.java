@@ -43,7 +43,7 @@ public class AppStartupRunner implements ApplicationRunner {
             ContaResponseDTO cliente1 = clienteService.cadastra(ClienteRequestDTO.builder().nome("Cliente 1")
                                                                                            .cpf("72979929921")
                                                                                            .telefone(44999001234L)
-                                                                                           .rendaMensal(new BigDecimal(5000))
+                                                                                           .rendaMensal(BigDecimal.valueOf(5000))
                                                                                            .logradouro("Rua 1")
                                                                                            .numero(100)
                                                                                            .complemento("Casa 1")
@@ -56,7 +56,7 @@ public class AppStartupRunner implements ApplicationRunner {
             ContaResponseDTO cliente2 = clienteService.cadastra(ClienteRequestDTO.builder().nome("Cliente 2")
                                                                                            .cpf("50667427945")
                                                                                            .telefone(44999001235L)
-                                                                                           .rendaMensal(new BigDecimal(6000))
+                                                                                           .rendaMensal(BigDecimal.valueOf(6000))
                                                                                            .logradouro("Rua 2")
                                                                                            .numero(200)
                                                                                            .complemento("Casa 2")
@@ -69,21 +69,21 @@ public class AppStartupRunner implements ApplicationRunner {
             contaService.efetuaLancamento(cliente1.getIdConta(),
                                           LancamentoRequestDTO.builder()
                                                               .descricao("Depósito Caixa Eletrônico")
-                                                              .valor(new BigDecimal(1000))
+                                                              .valor(BigDecimal.valueOf(1000))
                                                               .build(),
                                           TipoLancamento.DEPOSITO);
 
             contaService.efetuaLancamento(cliente1.getIdConta(),
                                           LancamentoRequestDTO.builder()
                                                               .descricao("Saque Caixa Eletrônico")
-                                                              .valor(new BigDecimal(100))
+                                                              .valor(BigDecimal.valueOf(100))
                                                               .build(),
                                           TipoLancamento.SAQUE);
 
             ComprovanteResponseDTO lancamento3 = contaService.efetuaLancamento(cliente1.getIdConta(),
                                                                                LancamentoRequestDTO.builder()
                                                                                                    .descricao("Pagamento de Boleto")
-                                                                                                   .valor(new BigDecimal(50))
+                                                                                                   .valor(BigDecimal.valueOf(50))
                                                                                                    .build(),
                                                                                TipoLancamento.PAGAMENTO);
 
@@ -92,7 +92,7 @@ public class AppStartupRunner implements ApplicationRunner {
                                                                     .descricao("Churrasco")
                                                                     .numeroAgencia(cliente2.getNumeroAgencia())
                                                                     .numeroConta(cliente2.getNumeroConta())
-                                                                    .valor(new BigDecimal(30)).build());
+                                                                    .valor(BigDecimal.valueOf(30)).build());
 
             contaService.estornaLancamento(cliente1.getIdConta(), lancamento3.getIdLancamento());
 

@@ -57,10 +57,10 @@ public class ContaIntegrationTest {
 
 	@Test
 	public void efetuaDepositoTest() {
-		BigDecimal valor = new BigDecimal(100);
+		BigDecimal valor = BigDecimal.valueOf(100);
 		String descricao = "Depósito";
 		
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK).
 			root("dados").
 				body("idLancamento", greaterThan(0)).
 				body("codigoAutenticacao", notNullValue()).
@@ -87,10 +87,10 @@ public class ContaIntegrationTest {
 
 	@Test
 	public void efetuaSaqueTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO saque = new LancamentoRequestDTO();
-		saque.setValor(new BigDecimal(50));
+		saque.setValor(BigDecimal.valueOf(50));
 		saque.setDescricao("Saque");
 
 		buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/sacar", HttpStatus.OK).
@@ -113,7 +113,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void efetuaSaqueContaBloqueadaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		bloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
 		
@@ -127,10 +127,10 @@ public class ContaIntegrationTest {
 
 	@Test
 	public void efetuaPagamentoTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
-		lancamento.setValor(new BigDecimal(50));
+		lancamento.setValor(BigDecimal.valueOf(50));
 		lancamento.setDescricao("Pagamento");
 
 		buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/pagar", HttpStatus.OK).
@@ -153,7 +153,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void efetuaPagamentoContaBloqueadaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		bloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
 		
@@ -167,7 +167,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void efetuaTransferenciaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -182,7 +182,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -196,8 +196,8 @@ public class ContaIntegrationTest {
 				body("tipoLancamento", equalTo(TipoLancamento.TRANSFERENCIA.getCodigo())).
 				body("descricao", equalTo(transferencia.getDescricao()));
 
-		assertSaldoConta(contaResponse.getDados().getIdCliente(), new BigDecimal(70));
-		assertSaldoConta(contaDestino.getDados().getIdCliente(), new BigDecimal(30));
+		assertSaldoConta(contaResponse.getDados().getIdCliente(), BigDecimal.valueOf(70));
+		assertSaldoConta(contaDestino.getDados().getIdCliente(), BigDecimal.valueOf(30));
 	}
 
 	@Test
@@ -212,7 +212,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void efetuaTransferenciaContaDebitoBloqueadaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		bloqueiaConta(contaResponse.getDados().getIdConta(), HttpStatus.NO_CONTENT);
 		
@@ -244,7 +244,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void efetuaTransferenciaContaCreditoBloqueadaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -312,7 +312,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoDepositoTest() {
-		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK).
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
@@ -337,7 +337,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoDepositoEstornoTest() {
-		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK).
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
@@ -364,7 +364,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoDepositoJaEstornadoTest() {
-		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK).
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
@@ -383,7 +383,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoDepositoContaBloqueadaTest() {
-		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK).
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
@@ -402,13 +402,13 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoDepositoContaSemSaldoTest() {
-		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK).
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
 
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
-		lancamento.setValor(new BigDecimal(100));
+		lancamento.setValor(BigDecimal.valueOf(100));
 		lancamento.setDescricao("Pagamento");
 
 		buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/pagar", HttpStatus.OK);
@@ -477,7 +477,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoTransferenciaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -492,7 +492,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -513,13 +513,13 @@ public class ContaIntegrationTest {
 				body("tipoLancamento", equalTo(TipoLancamento.ESTORNO.getCodigo())).
 				body("descricao", equalTo("Estorno do lançamento " + 3));
 		
-		assertSaldoConta(contaResponse.getDados().getIdCliente(), new BigDecimal(100));
+		assertSaldoConta(contaResponse.getDados().getIdCliente(), BigDecimal.valueOf(100));
 		assertSaldoConta(contaDestino.getDados().getIdCliente(), BigDecimal.ZERO);
 	}
 	
 	@Test
 	public void estornaLancamentoTransferenciaEstornoTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -534,7 +534,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -559,7 +559,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoTransferenciaJaEstornadoTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -574,7 +574,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -594,7 +594,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoTransferenciaContaDebitadaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -609,7 +609,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -630,7 +630,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoTransferenciaContaBloqueadaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -645,7 +645,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -665,7 +665,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void estornaLancamentoTransferenciaContaSemSaldoTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -680,14 +680,14 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
 		buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK);
 		
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
-		lancamento.setValor(new BigDecimal(30));
+		lancamento.setValor(BigDecimal.valueOf(30));
 		lancamento.setDescricao("Pagamento");
 		
 		buildPostRequest(lancamento, URL_BASE + "/" + contaDestino.getDados().getIdConta() + "/pagar", HttpStatus.OK);
@@ -704,7 +704,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void removeLancamentoEstornoDepositoTest() {
-		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK).
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
@@ -733,7 +733,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void removeLancamentoOriginalDepositoTest() {
-		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK).
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
@@ -770,7 +770,7 @@ public class ContaIntegrationTest {
 	
 	@Test 
 	public void removeLancamentoEstornoTransferenciaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -785,7 +785,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -815,7 +815,7 @@ public class ContaIntegrationTest {
 	
 	@Test 
 	public void removeLancamentoOriginalTransferenciaTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
 		clienteDestino.setCpf("57573694695");
@@ -830,7 +830,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -848,7 +848,7 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void consultaComprovanteDepositoTest() {
-		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK).
+		ResponseDTO<ComprovanteResponseDTO> comprovante = efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK).
 			extract().
 				body().
 					as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
@@ -871,10 +871,10 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void consultaComprovanteSaqueTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO saque = new LancamentoRequestDTO();
-		saque.setValor(new BigDecimal(50));
+		saque.setValor(BigDecimal.valueOf(50));
 		saque.setDescricao("Saque");
 
 		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/sacar", HttpStatus.OK).
@@ -900,10 +900,10 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void consultaComprovantePagamentoTest() {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO saque = new LancamentoRequestDTO();
-		saque.setValor(new BigDecimal(50));
+		saque.setValor(BigDecimal.valueOf(50));
 		saque.setDescricao("Pagamento");
 
 		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/pagar", HttpStatus.OK).
@@ -929,16 +929,16 @@ public class ContaIntegrationTest {
 	
 	@Test
 	public void consultaExtratoCompleto() {
-		efetuaDeposito(new BigDecimal(200), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(200), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO saque = new LancamentoRequestDTO();
-		saque.setValor(new BigDecimal(50));
+		saque.setValor(BigDecimal.valueOf(50));
 		saque.setDescricao("Saque");
 
 		buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/sacar", HttpStatus.OK);
 		
 		LancamentoRequestDTO pagamento = new LancamentoRequestDTO();
-		pagamento.setValor(new BigDecimal(50));
+		pagamento.setValor(BigDecimal.valueOf(50));
 		pagamento.setDescricao("Pagamento");
 
 		buildPostRequest(pagamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/pagar", HttpStatus.OK);
@@ -956,7 +956,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
 				numeroConta(contaDestino.getDados().getNumeroConta()).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -1010,7 +1010,7 @@ public class ContaIntegrationTest {
 	
 	private void efetuaLancamentoComErro(String url, String codigoErro) {
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
-		lancamento.setValor(new BigDecimal(50));
+		lancamento.setValor(BigDecimal.valueOf(50));
 		lancamento.setDescricao("Lançamento");
 
 		buildPostRequest(lancamento, URL_BASE + url, HttpStatus.BAD_REQUEST).
@@ -1023,7 +1023,7 @@ public class ContaIntegrationTest {
 			builder().
 				numeroAgencia(numeroAgencia).
 				numeroConta(numeroConta).
-				valor(new BigDecimal(30)).
+				valor(BigDecimal.valueOf(30)).
 				descricao("Transferência").
 			build();
 		
@@ -1033,10 +1033,10 @@ public class ContaIntegrationTest {
 	}
 	
 	private void removeLancamentoDebito(String uri) {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO saque = new LancamentoRequestDTO();
-		saque.setValor(new BigDecimal(50));
+		saque.setValor(BigDecimal.valueOf(50));
 		saque.setDescricao("Saque");
 
 		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
@@ -1067,10 +1067,10 @@ public class ContaIntegrationTest {
 	}
 	
 	private void removeLancamentoOriginalDebito(String uri) {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO saque = new LancamentoRequestDTO();
-		saque.setValor(new BigDecimal(50));
+		saque.setValor(BigDecimal.valueOf(50));
 		saque.setDescricao("Saque");
 
 		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
@@ -1089,10 +1089,10 @@ public class ContaIntegrationTest {
 	}
 	
 	private void estornaLancamentoDebitoTest(String uri) {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 		
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
-		lancamento.setValor(new BigDecimal(100));
+		lancamento.setValor(BigDecimal.valueOf(100));
 		lancamento.setDescricao("Saque");
 
 		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
@@ -1115,14 +1115,14 @@ public class ContaIntegrationTest {
 				body("tipoLancamento", equalTo(TipoLancamento.ESTORNO.getCodigo())).
 				body("descricao", equalTo("Estorno do lançamento " + comprovante.getDados().getIdLancamento()));
 		
-		assertSaldoConta(contaResponse.getDados().getIdConta(), new BigDecimal(100));
+		assertSaldoConta(contaResponse.getDados().getIdConta(), BigDecimal.valueOf(100));
 	}
 	
 	private void estornaLancamentoDebitoEstornoTest(String uri) {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
-		lancamento.setValor(new BigDecimal(100));
+		lancamento.setValor(BigDecimal.valueOf(100));
 		lancamento.setDescricao("Saque");
 
 		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
@@ -1151,10 +1151,10 @@ public class ContaIntegrationTest {
 	}
 	
 	private void estornaLancamentoDebitoJaEstornadoTest(String uri) {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
-		lancamento.setValor(new BigDecimal(100));
+		lancamento.setValor(BigDecimal.valueOf(100));
 		lancamento.setDescricao("Saque");
 
 		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
@@ -1175,10 +1175,10 @@ public class ContaIntegrationTest {
 	}
 	
 	private void estornaLancamentoDebitoContaBloqueadaTest(String uri) {
-		efetuaDeposito(new BigDecimal(100), "Depósito", HttpStatus.OK);
+		efetuaDeposito(BigDecimal.valueOf(100), "Depósito", HttpStatus.OK);
 
 		LancamentoRequestDTO lancamento = new LancamentoRequestDTO();
-		lancamento.setValor(new BigDecimal(100));
+		lancamento.setValor(BigDecimal.valueOf(100));
 		lancamento.setDescricao("Saque");
 
 		ResponseDTO<ComprovanteResponseDTO> comprovante = buildPostRequest(lancamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + uri, HttpStatus.OK).
