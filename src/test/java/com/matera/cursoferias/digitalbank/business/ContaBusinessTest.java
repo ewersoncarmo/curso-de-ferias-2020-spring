@@ -61,7 +61,7 @@ public class ContaBusinessTest {
     private ContaBusiness contaBusiness;
 
     @BeforeEach
-    public void beforeAll() {
+    public void beforeEach() {
         ReflectionTestUtils.setField(contaBusiness, "numeroMaximoAgencia", NUMERO_MAXIMO_AGENCIA);
     }
 
