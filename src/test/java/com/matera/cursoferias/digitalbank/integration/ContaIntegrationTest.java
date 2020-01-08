@@ -1,4 +1,4 @@
-package com.matera.cursoferias.digitalbank.controller;
+package com.matera.cursoferias.digitalbank.integration;
 
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildClienteRequestDTO;
 import static com.matera.cursoferias.digitalbank.utils.DigitalBankTestUtils.buildDeleteRequest;
