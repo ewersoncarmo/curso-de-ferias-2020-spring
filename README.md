@@ -203,46 +203,29 @@
 
   * ### Requisições
 
-      * **Cliente**
+      * **clientes**
 
-      Método | URL                                             | Entrada             | Saída
-      ------ | ----------------------------------------------- | ------------------- | ------ |
-      POST   | http://localhost:8080/api/v1/clientes           | *ClienteRequestDTO* | 201 (Created)
-      GET    | http://localhost:8080/api/v1/clientes           |                     | 200 (OK) Lista *ClienteResponseDTO*
-      GET    | http://localhost:8080/api/v1/clientes/{id}      |                     | 200 (OK) *ClienteResponseDTO*
-      GET    | http://localhost:8080/api/v1/clientes/{id}/pets |                     | 200 (OK) Lista *PetResponseDTO*
-      PUT    | http://localhost:8080/api/v1/clientes/{id}      | *ClienteRequestDTO* | 204 (No Content)
-      DELETE | http://localhost:8080/api/v1/clientes/{id}      |                     | 204 (No Content)
+      Método | URL                                              | Entrada             | Saída
+      ------ | ------------------------------------------------ | ------------------- | ------ |
+      POST   | http://localhost:8080/api/v1/clientes            | *ClienteRequestDTO* | 201 (Created)
+      GET    | http://localhost:8080/api/v1/clientes            |                     | 200 (OK) Lista *ClienteResponseDTO*
+      GET    | http://localhost:8080/api/v1/clientes/{id}       |                     | 200 (OK) *ClienteResponseDTO*
+      PUT    | http://localhost:8080/api/v1/clientes/{id}       | *ClienteRequestDTO* | 204 (No Content)
+      DELETE | http://localhost:8080/api/v1/clientes/{id}/conta | *ContaResponseDTO*  | 200 (Ok)
 
-      * **Espécie**
+      * **contas**
 
-      Método | URL                                             | Entrada             | Saída
-      ------ | ----------------------------------------------- | ------------------- | ------ |
-      POST   | http://localhost:8080/api/v1/especies           | *EspecieRequestDTO* | 201 (Created)
-      GET    | http://localhost:8080/api/v1/especies           |                     | 200 (OK) Lista *EspecieResponseDTO*
-      GET    | http://localhost:8080/api/v1/especies/{id}      |                     | 200 (OK) *EspecieResponseDTO*
-      GET    | http://localhost:8080/api/v1/especies/{id}/pets |                     | 200 (OK) Lista *PetResponseDTO*
-      PUT    | http://localhost:8080/api/v1/especies/{id}      | *EspecieRequestDTO* | 204 (No Content)
-      DELETE | http://localhost:8080/api/v1/especies/{id}      |                     | 204 (No Content)
-
-      * **Pet**
-
-      Método | URL                                             | Entrada          | Saída
-      ------ | ----------------------------------------------- | ---------------- | ------ |
-      POST   | http://localhost:8080/api/v1/pets               | *PetRequestDTO*  | 201 (Created)
-      GET    | http://localhost:8080/api/v1/pets               |                  | 200 (OK) Lista *PetResponseDTO*
-      GET    | http://localhost:8080/api/v1/pets/{id}          |                  | 200 (OK) *PetResponseDTO*
-      GET    | http://localhost:8080/api/v1/pets/{id}/servicos |                  | 200 (OK) Lista *ServicoResponseDTO*
-      PUT    | http://localhost:8080/api/v1/pets/{id}          | *PetRequestDTO*  | 204 (No Content)
-      DELETE | http://localhost:8080/api/v1/pets/{id}          |                  | 204 (No Content)
-
-      * **Serviço**
-
-      Método | URL                                             | Entrada             | Saída
-      ------ | ----------------------------------------------- | ------------------- | ------ |
-      POST   | http://localhost:8080/api/v1/servicos      	   | *ServicoRequestDTO* | 201 (Created)
-      GET    | http://localhost:8080/api/v1/servicos      	   |                     | 200 (OK) Lista *ServicoResponseDTO*
-      GET    | http://localhost:8080/api/v1/servicos/{id} 	   |                     | 200 (OK) *ServicoResponseDTO*
-      GET    | http://localhost:8080/api/v1/servicos/buscaPorData?dataInicial=dd/MM/yyyy&dataFinal=dd/MM/yyyy |                     | 200 (OK) Lista *ServicoResponseDTO*
-      PUT    | http://localhost:8080/api/v1/servicos/{id} 	   | *ServicoRequestDTO* | 204 (No Content)
-      DELETE | http://localhost:8080/api/v1/servicos/{id} 	   |                     | 204 (No Content)
+      Método | URL                                                                               | Entrada                   | Saída
+      ------ | --------------------------------------------------------------------------------- | ------------------------- | ------ |
+      GET    | http://localhost:8080/api/v1/contas                                               |                           | 200 (OK) Lista *ContaResponseDTO*
+      POST   | http://localhost:8080/api/v1/contas/{id}/bloquear                                 |                           | 204 (No Content)
+      POST   | http://localhost:8080/api/v1/contas/{id}/desbloquear                              |                           | 204 (No Content)
+      POST   | http://localhost:8080/api/v1/contas/{id}/depositar                                | *LancamentoRequestDTO*    | 200 (Ok) *ComprovanteResponseDTO*
+      POST   | http://localhost:8080/api/v1/contas/{id}/sacar                                    | *LancamentoRequestDTO*    | 200 (Ok) *ComprovanteResponseDTO*
+      POST   | http://localhost:8080/api/v1/contas/{id}/pagar                                    | *LancamentoRequestDTO*    | 200 (Ok) *ComprovanteResponseDTO*
+      POST   | http://localhost:8080/api/v1/contas/{id}/transferir                               | *TransferenciaRequestDTO* | 200 (Ok) *ComprovanteResponseDTO*
+      GET    | http://localhost:8080/api/v1/contas/{idConta}/lancamentos                         |                           | 200 (Ok) Lista *ComprovanteResponseDTO*
+      GET    | http://localhost:8080/api/v1/contas/{idConta}/lancamentos/{idLancamento}          |                           | 200 (Ok) *ComprovanteResponseDTO*
+      DELETE | http://localhost:8080/api/v1/contas/{idConta}/lancamentos/{idLancamento}          |                           | 204 (No Content)
+      POST   | http://localhost:8080/api/v1/contas/{idConta}/lancamentos/{idLancamento}/estornar |                           | 200 (Ok) *ComprovanteResponseDTO*
+      
