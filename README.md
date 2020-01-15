@@ -103,120 +103,103 @@
       }
       ```
 
-        *ClienteResponseDTO*
-        ```json
-        {
-           "dados": [
-            {
-              "id": 1,
-              "nome": "Pedro",
-              "cpf": "74739910004",
-              "telefone": 987665214,
-              "rendaMensal": 10000.0,
-              "logradouro": "Av. São Paulo",
-              "numero": 120,
-              "complemento": "Casa",
-              "bairro": "Centro",
-              "cidade": "Maringá",
-              "estado": "PR",
-              "cep": "85006854"
-            }
-          ]
-        }
-        ```
+      *ClienteResponseDTO*
+      ```json
+      {
+         "dados": {
+            "id": 1,
+            "nome": "Pedro",
+            "cpf": "74739910004",
+            "telefone": 987665214,
+            "rendaMensal": 10000.0,
+            "logradouro": "Av. São Paulo",
+            "numero": 120,
+            "complemento": "Casa",
+            "bairro": "Centro",
+            "cidade": "Maringá",
+            "estado": "PR",
+            "cep": "85006854"
+         }
+      }
+      ```
 
-        *ContaResponseDTO*
-        ```json
-        {
-          "dados": {
+      *ContaResponseDTO*
+      ```json
+      {
+         "dados": {
+           "idCliente": 1,
+           "idConta": 1,
+           "numeroAgencia": 1,
+           "numeroConta": 987665214,
+           "situacao": "A",
+           "saldo": 0
+         }
+      }
+      ```
+      
+      *LancamentoRequestDTO*
+      ```json
+      {
+        "valor": 100.0
+        "descricao": "Lançamento"
+      }
+      ```
+
+      *TransferenciaRequestDTO*
+      ```json
+      {
+        "numeroAgencia": 1,
+        "numeroConta": 995410233
+        "valor": 50.0,
+        "descricao": "Transferência"
+      }
+      ```
+
+      *ComprovanteResponseDTO*
+      ```json
+      {
+         "dados": {
+           "idLancamento": 1,
+           "codigoAutenticacao": "e2758c09-3539-4af9-b14b-66f561208b53",
+           "dataHora": "01/01/2020 15:37:28",
+           "valor": 50.0,
+           "natureza": "D",
+           "tipoLancamento": "T",
+           "numeroAgencia": 1,
+           "numeroConta": 995410233,
+           "descricao": "Transferência"
+         }
+      }
+      ```
+
+      *ExtratoResponseDTO*
+      ```json
+      {
+        "dados": {
+          "conta": {
             "idCliente": 1,
             "idConta": 1,
             "numeroAgencia": 1,
             "numeroConta": 987665214,
             "situacao": "A",
-            "saldo": 0
-          }
-        }
-        ```
-      * **Espécie**
-
-        *EspecieRequestDTO*
-        ```json
-        {
-          "descricao": "Cachorro"
-        }
-        ```
-
-        *EspecieResponseDTO*
-        ```json
-        {
-          "id": 1,
-          "descricao": "Cachorro"
-        }
-        ```
-      * **Pet**
-
-        *PetRequestDTO*
-        ```json
-        {
-          "nome": "Rex",
-          "dataNascimento": "01/01/2019",
-          "idCliente": 1,
-          "idEspecie": 1
-        }
-        ```
-
-        *PetResponseDTO*
-        ```json
-        {
-          "id": 1,
-          "nome": "Rex",
-          "dataNascimento": "01/01/2019",
-          "cliente": {
-            "id": 1,
-            "nome": "Pedro"
+            "saldo": 50.0
           },
-          "especie": {
-            "id": 1,
-            "descricao": "Cachorro"
-          }
-        }
-        ```
-      * **Serviço**
-
-        *ServicoRequestDTO*
-        ```json
-        {
-          "observacao": "Consulta",
-          "idTipoServico": 1,
-          "valor": 80.00,
-          "idPet": 1
-        }
-        ```
-
-        *ServicoResponseDTO*
-        ```json
-        {
-          "id": 1,
-          "observacao": "Consulta",
-          "dataHora": "11/01/2019 12:38:17",
-          "tipoServico": "Consulta",
-          "valor": 80.00,
-          "pet": {
-            "id": 1,
-            "nome": "Rex",
-            "dataNascimento": "01/01/2019",
-            "cliente": {
-              "id": 1,
-              "nome": "Pedro"
-            },
-            "especie": {
-              "id": 1,
-              "descricao": "Cachorro"
+          "lancamentos": [
+            {
+              "idLancamento": 1,
+              "codigoAutenticacao": "e2758c09-3539-4af9-b14b-66f561208b53",
+              "dataHora": "01/01/2020 15:37:28",
+              "valor": 50.0,
+              "natureza": "D",
+              "tipoLancamento": "T",
+              "numeroAgencia": 1,
+              "numeroConta": 995410233,
+              "descricao": "Transferência"
             }
-          }
+          ]
         }
-        ```
+      }
+      ```
 
   * ### Requisições
 
