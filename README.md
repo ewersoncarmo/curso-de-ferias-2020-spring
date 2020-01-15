@@ -79,9 +79,6 @@
     * **Swagger**: [swagger.yaml](etc/swagger.yaml)
     * **Postman**: [Digitalbank.postman_collection.json](etc/Digitalbank.postman_collection.json)
 
-  * ### Modelagem
-    ![modelagem](etc/modelagem.png)
-
   * ### Representações
 
       Os modelos de entrada e saída são representados no formato JSON
