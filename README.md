@@ -18,7 +18,7 @@
         * Uso da interface **ApplicationRunner**
         * Uso de *annotations* **@Component**, **@Autowired**, **@Primary** e **@Qualifier**
       * Uso de Spring Profiles
-      * [Branch - aula 2]
+      * [Branch - aula 2]()
   * **Aula 3**
       * JPA
       * Spring Data
@@ -26,35 +26,35 @@
       * Criação da estrutura do pacote **entity** com as entidades do banco de dados
       * Conexão estabelecida com banco de dados
       * Criação da estrutura do pacote **repository**
-      * [Branch - aula 3]
+      * [Branch - aula 3]()
   * **Aula 4**
       * Refatorando entidades com a criação da classe **EntidadeBase**
       * Alterações nos enums **Natureza**, **SituacaoConta** e **TipoLancamento** e seus mapeamentos para não gravar o ordinal dos enums
       * Criação da estrutura do pacote **business**
       * Usando a classe **AppStartupRunner** para alimentar a base de dados do H2 utilizando as classes do pacote **business**
-      * [Branch - aula 4]
+      * [Branch - aula 4]()
   * **Aula 5**
       * Criação da estrutura do pacote **dto** com classes de *Response*
       * Criação da estrutura do pacote **service**
       * Criação da estrutura do pacote **controller** com requisições *GET*
       * Anotações do Jackson para formatação do JSON
       * Requisições via Postman
-      * [Branch - aula 5]
+      * [Branch - aula 5]()
   * **Aula 6**
       * Criação das classes de *Request* no pacote **dto**
       * Criação das requisições *POST*, *PUT* e *DELETE*
       * Criação de requisições *GET* mais complexas
-      * [Branch - aula 6]
+      * [Branch - aula 6]()
   * **Aula 7**
       * Tratamento de códigos de retorno HTTP
       * *Exception handler*
       * Criação de validações na camada **business**
       * Validações nos *requests*
-      * [Branch - aula 7]
+      * [Branch - aula 7]()
   * **Aula 8**
       * Testes unitários da camada **business** com *mock*
       * Testes integrados com banco de dados H2
-      * [Branch - aula 8]
+      * [Branch - aula 8]()
   * **Aula 9**
       * Revisão
         * *Entity*
@@ -63,10 +63,10 @@
         * *Service* e *DTOs*
         * *Controller*
         * *Unit tests*
-      * [Branch - aula 9]
+      * [Branch - aula 9]()
   * **Aula 10**
       * Dúvidas
-      * [Branch - aula 10]
+      * [Branch - aula 10]()
 
 * ## Projeto
   * ### Especificações técnicas
@@ -86,20 +86,56 @@
 
       Os modelos de entrada e saída são representados no formato JSON
 
-      * **Cliente**
-
-        *ClienteRequestDTO*
-        ```json
-        {
-          "nome": "Pedro"
-        }
-        ```
+      *ClienteRequestDTO*
+      ```json
+      {
+        "nome": "Pedro",
+        "cpf": "74739910004",
+        "telefone": 987665214,
+        "rendaMensal": 10000.0,
+        "logradouro": "Av. São Paulo",
+        "numero": 120,
+        "complemento": "Casa",
+        "bairro": "Centro",
+        "cidade": "Maringá",
+        "estado": "PR",
+        "cep": "85006854"
+      }
+      ```
 
         *ClienteResponseDTO*
         ```json
         {
-          "id": 1,
-          "nome": "Pedro"
+           "dados": [
+            {
+              "id": 1,
+              "nome": "Pedro",
+              "cpf": "74739910004",
+              "telefone": 987665214,
+              "rendaMensal": 10000.0,
+              "logradouro": "Av. São Paulo",
+              "numero": 120,
+              "complemento": "Casa",
+              "bairro": "Centro",
+              "cidade": "Maringá",
+              "estado": "PR",
+              "cep": "85006854"
+            }
+          ]
+        }
+        ```
+
+        *ContaResponseDTO*
+        ```json
+        {
+          "dados": {
+            "idCliente": 1,
+            "idConta": 1,
+            "numeroAgencia": 1,
+            "numeroConta": 987665214,
+            "situacao": "A",
+            "saldo": 0
+          }
         }
         ```
       * **Espécie**
