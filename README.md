@@ -140,7 +140,7 @@
       *LancamentoRequestDTO*
       ```json
       {
-        "valor": 100.0
+        "valor": 100.0,
         "descricao": "Lançamento"
       }
       ```
@@ -149,7 +149,7 @@
       ```json
       {
         "numeroAgencia": 1,
-        "numeroConta": 995410233
+        "numeroConta": 995410233,
         "valor": 50.0,
         "descricao": "Transferência"
       }
