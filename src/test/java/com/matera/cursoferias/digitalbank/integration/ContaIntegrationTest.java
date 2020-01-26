@@ -11,9 +11,12 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.matera.cursoferias.digitalbank.domain.entity.Lancamento;
 import com.matera.cursoferias.digitalbank.domain.enumerator.Natureza;
 import com.matera.cursoferias.digitalbank.domain.enumerator.SituacaoConta;
 import com.matera.cursoferias.digitalbank.domain.enumerator.TipoLancamento;
@@ -30,6 +34,7 @@ import com.matera.cursoferias.digitalbank.dto.request.TransferenciaRequestDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ComprovanteResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ContaResponseDTO;
 import com.matera.cursoferias.digitalbank.dto.response.ResponseDTO;
+import com.matera.cursoferias.digitalbank.repository.LancamentoRepository;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.mapper.TypeRef;
@@ -44,7 +49,10 @@ public class ContaIntegrationTest {
 	private static final String URL_BASE = "digitalbank/api/v1/contas";
 
 	private ResponseDTO<ContaResponseDTO> contaResponse;
-
+	
+	@Autowired
+	private LancamentoRepository lancamentoRepository;
+	
 	@BeforeEach
 	public void buildCliente() {
 		ClienteRequestDTO clienteRequest = buildClienteRequestDTO();
@@ -972,6 +980,83 @@ public class ContaIntegrationTest {
 				body("lancamentos", hasSize(4));
 	}
 	
+	@Test
+	public void consultaExtratoPorPeriodo() {
+		LocalDateTime dataLancamento = LocalDateTime.now();
+		
+		// efetua um depósito
+		efetuaDeposito(BigDecimal.valueOf(200), "Depósito", HttpStatus.OK);
+
+		// efetua um saque
+		LancamentoRequestDTO saque = new LancamentoRequestDTO();
+		saque.setValor(BigDecimal.valueOf(50));
+		saque.setDescricao("Saque");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovanteSaque = buildPostRequest(saque, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/sacar", HttpStatus.OK)
+			.extract()
+			.body()
+				.as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		// modifica a data do lançamento de saque
+		Lancamento lancamentoSaque = lancamentoRepository.findById(comprovanteSaque.getDados().getIdLancamento()).get();
+		lancamentoSaque.setDataHora(dataLancamento.plusDays(1));
+		lancamentoRepository.save(lancamentoSaque);
+		
+		// efetua um pagamento
+		LancamentoRequestDTO pagamento = new LancamentoRequestDTO();
+		pagamento.setValor(BigDecimal.valueOf(50));
+		pagamento.setDescricao("Pagamento");
+
+		ResponseDTO<ComprovanteResponseDTO> comprovantePagamento = buildPostRequest(pagamento, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/pagar", HttpStatus.OK)
+			.extract()
+			.body()
+				.as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		// modifica a data do lançamento de pagamento
+		Lancamento lancamentoPagamento = lancamentoRepository.findById(comprovantePagamento.getDados().getIdLancamento()).get();
+		lancamentoPagamento.setDataHora(dataLancamento.plusDays(2));
+		lancamentoRepository.save(lancamentoPagamento);
+		
+		// efetua uma transferência
+		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
+		clienteDestino.setCpf("57573694695");
+		clienteDestino.setTelefone(997242244L);
+
+		ResponseDTO<ContaResponseDTO> contaDestino = buildPostRequest(clienteDestino, "digitalbank/api/v1/clientes", HttpStatus.CREATED).
+			extract().
+				body().
+					as(new TypeRef<ResponseDTO<ContaResponseDTO>>() {});
+
+		TransferenciaRequestDTO transferencia = TransferenciaRequestDTO.
+			builder().
+				numeroAgencia(contaDestino.getDados().getNumeroAgencia()).
+				numeroConta(contaDestino.getDados().getNumeroConta()).
+				valor(BigDecimal.valueOf(30)).
+				descricao("Transferência").
+			build();
+		
+		ResponseDTO<ComprovanteResponseDTO> comprovanteTransferencia = buildPostRequest(transferencia, URL_BASE + "/" + contaResponse.getDados().getIdConta() + "/transferir", HttpStatus.OK)
+			.extract()
+			.body()
+				.as(new TypeRef<ResponseDTO<ComprovanteResponseDTO>>() {});
+		
+		// modifica a data do lançamento de transferência
+		Lancamento lancamentoTransferencia = lancamentoRepository.findById(comprovanteTransferencia.getDados().getIdLancamento()).get();
+		lancamentoTransferencia.setDataHora(dataLancamento.plusDays(3));
+		lancamentoRepository.save(lancamentoTransferencia);
+		
+		RequestSpecification requestSpecification = new RequestSpecBuilder().
+			addPathParam("id", contaResponse.getDados().getIdConta()).
+			addParam("dataInicial", dataLancamento.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))).
+			addParam("dataFinal", dataLancamento.plusDays(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))).
+			build();
+		
+		buildGetRequest(requestSpecification, URL_BASE + "/{id}/lancamentos", HttpStatus.OK).
+			root("dados").
+				body("conta.idConta", equalTo(contaResponse.getDados().getIdConta().intValue())).
+				body("lancamentos", hasSize(2));
+	}
+
 	@Test
 	public void consultaTodasContas() {
 		ClienteRequestDTO clienteDestino = buildClienteRequestDTO();
